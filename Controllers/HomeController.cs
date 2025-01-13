@@ -13,9 +13,9 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index()
+    public IActionResult Index()    //IActionResult is for using Razor view
     {
-        return View();
+        return View();  
     }
 
     public IActionResult Privacy()
