@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using FWB.Models;
+using FiwFriends.Models;
 
-namespace FWB.Controllers;
+namespace FiwFriends.Controllers;
 
 public class HomeController : Controller
 {

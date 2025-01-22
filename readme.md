@@ -1,6 +1,3 @@
-dotnet new mvc -o <Project name>
-code -r <Project name>
-
 dotnet dev-certs https --trust
 
 dotnet restore

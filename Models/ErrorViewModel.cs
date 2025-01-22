@@ -1,4 +1,4 @@
-namespace FWB.Models;
+namespace FiwFriends.Models;
 
 public class ErrorViewModel
 {
