@@ -1,3 +1,6 @@
+dotnet tool install --global dotnet-aspnet-codegenerator
+dotnet tool install --global dotnet-ef
+
 dotnet dev-certs https --trust
 
 dotnet restore
@@ -5,6 +8,3 @@ dotnet restore
 dotnet build
 
 dotnet watch run
-
-name the controller [Name with Pascal case]Controller.cs in Controllers directory
-
