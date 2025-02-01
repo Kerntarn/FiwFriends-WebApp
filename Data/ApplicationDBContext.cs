@@ -9,4 +9,5 @@ public class ApplicationDBContext : DbContext
     {
     }
     public DbSet<User> Users { get; set; } // Replace `YourEntity` with your actual model class.
+    public DbSet<Post> Posts { get; set; }
 }
