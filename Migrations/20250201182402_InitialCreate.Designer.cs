@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FiwFriends.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250201120643_InitialCreate")]
+    [Migration("20250201182402_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,10 +37,6 @@ namespace FiwFriends.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("AppointmentTime")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("DOMM")
                         .IsRequired()
                         .HasColumnType("text");
 

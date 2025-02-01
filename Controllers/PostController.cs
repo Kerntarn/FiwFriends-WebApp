@@ -11,11 +11,34 @@ public class PostController : Controller
         _db = db;
     }
 
-    public IActionResult Index()   
-    {
-        return View();
+
+    //GET
+    public IEnumerable<Post> Index(){
+        IEnumerable<Post> allPost = _db.Posts;
+        return allPost;
     }
 
+    public IActionResult Create(){
+        return View();
+    }
+    //POST
+    [HttpPost]
+    public IActionResult Create(Post post){
+        
+        if (!ModelState.IsValid){
+            return BadRequest("Invalid product data.");
+        }
+
+        Console.WriteLine(post);
+        _db.Add(post);
+        _db.SaveChanges();
+        return RedirectToAction("Index");
+    }
+
+    //DELETE
+
+
+    //PUT
     public string Info(){
         return "Some Info";
     }

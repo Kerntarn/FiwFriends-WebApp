@@ -5,10 +5,13 @@ public class Post
     {
         [Key]
         public int Id { get; set; }
-        public string Activity { get; set; }
-        public string Description { get; set; }
-
-        public string ExpiredTime { get; set; }
-        public string AppointmentTime { get; set; }
-        public string Tag { get; set; }
+        public required string Activity { get; set; }
+        [Required]
+        public required string Description { get; set; }
+        [Required]
+        public required string ExpiredTime { get; set; }
+        [Required]
+        public required string AppointmentTime { get; set; }
+        [Required]
+        public required string Tag { get; set; }
     }

@@ -37,10 +37,6 @@ namespace FiwFriends.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("DOMM")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");

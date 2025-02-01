@@ -21,8 +21,7 @@ namespace FiwFriends.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     ExpiredTime = table.Column<string>(type: "text", nullable: false),
                     AppointmentTime = table.Column<string>(type: "text", nullable: false),
-                    Tag = table.Column<string>(type: "text", nullable: false),
-                    DOMM = table.Column<string>(type: "text", nullable: false)
+                    Tag = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
