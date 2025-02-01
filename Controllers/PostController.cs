@@ -11,8 +11,12 @@ public class PostController : Controller
         _db = db;
     }
 
-    public IActionResult Index()    //IActionResult is for using Razor view
+    public IActionResult Index()   
     {
         return View();
+    }
+
+    public string Info(){
+        return "Some Info";
     }
 }
