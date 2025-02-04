@@ -1,10 +1,13 @@
+using System.ComponentModel.DataAnnotations;
 namespace FiwFriends.Models;
 
 public class Form{
-    public int FormId { get; set; }
-    public bool IsApproved { get; set; }
-    public int UserId { get; set; }
-    public User User { get; set; } //Who answer
+    [Key]
+    public int Id { get; set; }
     public int PostId { get; set; }
     public Post Post { get; set; }
+
+    // public ICollection<User> PendingUsers { get; set; }
+
+    // public ICollection<Question> Questions { get; set; }
 }

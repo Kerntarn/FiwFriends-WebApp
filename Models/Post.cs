@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FiwFriends.Models;
 public class Post
@@ -9,13 +10,16 @@ public class Post
         public string Description { get; set; }
         public string ExpiredTime { get; set; }
         public string AppointmentTime { get; set; }
-        public string Tag { get; set; }
 
-        public int UserId { get; set; }
+        [AllowNull]
+        public Form Form { get; set; }
+        // public string Tag { get; set; }
+
+        public int OwnerId { get; set; }
         public User Owner { get; set; }
 
-        public ICollection<Favorite> Favorites { get; set; }
+        public ICollection<Favorite> FavoriteBy { get; set; }
 
-        public ICollection<Participate> Participants { get; set; }
+        public ICollection<Join> Participants { get; set; }
 
     }

@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace FiwFriends.Models;
 
 public class Favorite{

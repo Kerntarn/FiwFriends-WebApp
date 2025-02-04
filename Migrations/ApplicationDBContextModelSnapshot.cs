@@ -21,6 +21,53 @@ namespace FiwFriends.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("FiwFriends.Models.Favorite", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "PostId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Favorites");
+                });
+
+            modelBuilder.Entity("FiwFriends.Models.Form", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId")
+                        .IsUnique();
+
+                    b.ToTable("Forms");
+                });
+
+            modelBuilder.Entity("FiwFriends.Models.Join", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "PostId");
+
+                    b.ToTable("Joins");
+                });
+
             modelBuilder.Entity("FiwFriends.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -45,11 +92,12 @@ namespace FiwFriends.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Tag")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Posts");
                 });
@@ -85,6 +133,85 @@ namespace FiwFriends.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("FiwFriends.Models.Favorite", b =>
+                {
+                    b.HasOne("FiwFriends.Models.Post", "Post")
+                        .WithMany("FavoriteBy")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FiwFriends.Models.User", "User")
+                        .WithMany("FavoritePosts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FiwFriends.Models.Form", b =>
+                {
+                    b.HasOne("FiwFriends.Models.Post", "Post")
+                        .WithOne("Form")
+                        .HasForeignKey("FiwFriends.Models.Form", "PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("FiwFriends.Models.Join", b =>
+                {
+                    b.HasOne("FiwFriends.Models.Post", "Post")
+                        .WithMany("Participants")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FiwFriends.Models.User", "User")
+                        .WithMany("JoinedPosts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FiwFriends.Models.Post", b =>
+                {
+                    b.HasOne("FiwFriends.Models.User", "Owner")
+                        .WithMany("OwnPosts")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("FiwFriends.Models.Post", b =>
+                {
+                    b.Navigation("FavoriteBy");
+
+                    b.Navigation("Form")
+                        .IsRequired();
+
+                    b.Navigation("Participants");
+                });
+
+            modelBuilder.Entity("FiwFriends.Models.User", b =>
+                {
+                    b.Navigation("FavoritePosts");
+
+                    b.Navigation("JoinedPosts");
+
+                    b.Navigation("OwnPosts");
                 });
 #pragma warning restore 612, 618
         }
