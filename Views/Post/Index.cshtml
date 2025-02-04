@@ -1,5 +1,23 @@
-@{  //Razor view of home's index
+@model IEnumerable<Post>;
+@{ 
     ViewData["Title"] = "Posts Page";
 }
 
-<h1> All Posts </h1>
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th> ID </th>
+            <th> Activity </th>
+            <th> Description </th>
+        </tr>
+    </thead>
+    @foreach (var post in Model){
+        <tbody>
+            <tr>
+                <td>@post.Id</td> 
+                <td>@post.Activity</td> 
+                <td>@post.Description</td> 
+            </tr>
+        </tbody>
+    }
+</table>
