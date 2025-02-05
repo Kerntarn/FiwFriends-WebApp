@@ -57,7 +57,7 @@ public class PostController : Controller
     public IActionResult Edit(int id,[FromBody] Post post){ //Delete [FromBody] if need to send request from View.
         Console.WriteLine(post.ToJson());
         int row_affected = _db.Posts
-                            .Where(p => p.Id == id)
+                            .Where(p => p.PostId == id)
                             .ExecuteUpdate(setters => setters
                                 .SetProperty(p => p.Activity, post.Activity)
                                 .SetProperty(p => p.Description, post.Description)

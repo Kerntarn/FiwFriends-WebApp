@@ -4,7 +4,7 @@ namespace FiwFriends.Models;
 public class User
     {
         [Key]
-        public int Id { get; set; }
+        public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
@@ -13,8 +13,7 @@ public class User
         public string Bio { get; set; }
 
         public ICollection<Post> OwnPosts { get; set; }
-        public ICollection<Favorite> FavoritePosts { get; set; }
+        public ICollection<Post> FavoritePosts { get; set; } = new List<Post>();
         public ICollection<Join> JoinedPosts { get; set; }
-
-
+        public ICollection<Form> SubmittedForms { get; set; }
     }

@@ -3,11 +3,11 @@ namespace FiwFriends.Models;
 
 public class Form{
     [Key]
-    public int Id { get; set; }
-    public int PostId { get; set; }
+    public int FormId { get; set; }
+    public bool IsApproved { get; set; }
+    public int PostId { get; set; } 
     public Post Post { get; set; }
-
-    // public ICollection<User> PendingUsers { get; set; }
-
-    // public ICollection<Question> Questions { get; set; }
+    public int UserId { get; set; }
+    public User User { get; set ;}
+    public ICollection<Answer> Answers { get; set; }
 }
