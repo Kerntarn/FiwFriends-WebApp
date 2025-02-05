@@ -21,8 +21,8 @@ public class PostController : Controller
     }
 
     //GET Create page
-    public IActionResult Create(){
-        return View();
+    public string Create(){
+        return "Show page to create new post.";
     }
     //POST Create
     [HttpPost]
@@ -36,9 +36,9 @@ public class PostController : Controller
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
-    //GET Delete Page, maybe neccessary
-    public IActionResult Delete(){
-        return View();
+    //GET Delete Page, maybe unneccessary
+    public string Delete(){
+        return "Show page to delete post."; 
     }
     //DELETE Post
     [HttpDelete]
