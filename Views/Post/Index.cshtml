@@ -1,0 +1,23 @@
+@model IEnumerable<Post>;
+@{ 
+    ViewData["Title"] = "Posts Page";
+}
+
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th> ID </th>
+            <th> Activity </th>
+            <th> Description </th>
+        </tr>
+    </thead>
+    @foreach (var post in Model){
+        <tbody>
+            <tr>
+                <td>@post.Id</td> 
+                <td>@post.Activity</td> 
+                <td>@post.Description</td> 
+            </tr>
+        </tbody>
+    }
+</table>
