@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using FiwFriends.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace FiwFriends.Data;
-public class ApplicationDBContext : DbContext
+public class ApplicationDBContext : IdentityDbContext
 {
     public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
         : base(options)
