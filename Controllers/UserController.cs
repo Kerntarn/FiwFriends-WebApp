@@ -8,6 +8,5 @@ namespace FiwFriends.Controllers
         {
             return View();
         }
-        public 
     }
 }
