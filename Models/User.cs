@@ -5,11 +5,15 @@ public class User
 {
     [Key]
     public int UserId { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Username { get; set; }
-    public string Password { get; set; }
-    public string Bio { get; set; }
+    [Required]
+    public required string FirstName { get; set; }
+    [Required]
+    public required string LastName { get; set; }
+    [Required]
+    public required string Username { get; set; }
+    [Required]
+    public required string Password { get; set; }
+    public string? Bio { get; set; }
 
     public ICollection<Post> OwnPosts { get; set; } = new List<Post>();
     public ICollection<Post> FavoritePosts { get; set; } = new List<Post>();
