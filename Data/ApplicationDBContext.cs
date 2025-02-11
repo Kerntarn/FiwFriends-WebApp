@@ -41,12 +41,12 @@ public class ApplicationDBContext : DbContext
         modelBuilder.Entity<Join>()
             .HasOne(j => j.User)
             .WithMany(u => u.JoinedPosts)
-            .HasForeignKey(j => j.PostId);
+            .HasForeignKey(j => j.UserId);
 
         modelBuilder.Entity<Join>()
             .HasOne(j => j.Post)
             .WithMany(p => p.Participants)
-            .HasForeignKey(j => j.UserId);
+            .HasForeignKey(j => j.PostId);
 
         //M:N Post and Tag
         modelBuilder.Entity<Post>()

@@ -8,7 +8,6 @@ namespace FiwFriends.Controllers;
 
 public class PostController : Controller
 {
-    //define DB context
     private readonly ApplicationDBContext _db;
     public PostController(ApplicationDBContext db){
         _db = db;
@@ -19,12 +18,13 @@ public class PostController : Controller
         IEnumerable<Post> allPost = _db.Posts;
         return Ok(allPost);
     }
-
+    [HttpGet("Post/{id}")]
     public IActionResult Detail(int id){
         var post = _db.Posts
                     .Where(p => p.PostId == id)
                     .Include(p => p.Participants)
                     .ThenInclude(j => j.User)
+                    .Include(p => p.FavoritedBy)
                     .FirstOrDefault();
         if(post == null){
             return NotFound();
@@ -38,20 +38,23 @@ public class PostController : Controller
             Participants = post.Participants.Select(j => new {
                 j.UserId,
                 j.User.Username
+            }),
+            FavoritedBy = post.FavoritedBy.Select(u => new {
+                u.UserId,
+                u.Username
             })
         });
     }
+
     //GET Create page
-    public string Create(){
-        return "Show page to create new post.";
+    public IActionResult Create(){
+        return Ok("Show page to create new post.");
     }
+
     //POST Create
-    [HttpPost]
+    [HttpPost("Post")]
     public IActionResult Create([FromBody] Post post){ //Delete [FromBody] if need to send request from View.
         if (!ModelState.IsValid){
-            foreach (var error in ModelState.Values.SelectMany(v => v.Errors)){
-                Console.WriteLine(error.ErrorMessage);
-            }
             return BadRequest(ModelState);
         }
 
@@ -60,10 +63,12 @@ public class PostController : Controller
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
+
     //GET Delete Page, maybe unneccessary
     public string Delete(){
         return "Show page to delete post."; 
     }
+
     //DELETE Post
     [HttpDelete("Post/{id}")]
     public IActionResult Delete(int id){
@@ -98,7 +103,7 @@ public class PostController : Controller
 
     [HttpPost("Post/Join/{id}")]
     public IActionResult Join(int id){
-        var user = _db.Users.Find(1);   //get current user
+        var user = _db.Users.Find(2);   //get current user
         var post = _db.Posts.Find(id);
         if (post == null){
             return NotFound("Post is not found.");
@@ -114,9 +119,10 @@ public class PostController : Controller
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
+
     [HttpPost("Post/Favorite/{id}")]
     public IActionResult Favorite(int id){
-        var user = _db.Users.Find(1);   //get current user
+        var user = _db.Users.Find(2);   //get current user
         var post = _db.Posts.Find(id);
         if (post == null){
             return NotFound("Post is not found.");
@@ -124,8 +130,14 @@ public class PostController : Controller
         if (user == null){
             return NotFound("User is not found.");
         }
-        post.FavoritedBy.Add(user);
+        if (post.FavoritedBy.Any(u => u.UserId == user.UserId)){
+            post.FavoritedBy.Remove(user);
+        } else {
+            post.FavoritedBy.Add(user);
+        }
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
+    
+
 }

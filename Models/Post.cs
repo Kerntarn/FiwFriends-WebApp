@@ -20,7 +20,6 @@ public class Post : BaseModel
         public User? Owner { get; set; } = null!;
 
         public ICollection<User> FavoritedBy { get; set; } = new List<User>();
-
         public ICollection<Join> Participants { get; set; }  = new List<Join>();
         public ICollection<Tag> Tags { get; set; } = new List<Tag>();
         public ICollection<Form> Forms { get; set; } = new List<Form>();
