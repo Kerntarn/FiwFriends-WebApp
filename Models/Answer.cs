@@ -5,8 +5,8 @@ namespace FiwFriends.Models
         public int AnswerId { get; set; }
         public string Content { get; set; }
         public int QuestionId { get; set; }
-        public Question Question { get; set; }
+        public Question Question { get; set; } = null!;
         public int FormId { get; set; }
-        public Form Form { get; set; }
+        public Form Form { get; set; } = null!;
     }
 }

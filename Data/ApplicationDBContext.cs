@@ -41,7 +41,7 @@ public class ApplicationDBContext : DbContext
         modelBuilder.Entity<Join>()
             .HasOne(j => j.User)
             .WithMany(u => u.JoinedPosts)
-            .HasForeignKey(j => j.UserId);
+            .HasForeignKey(j => j.PostId);
 
         modelBuilder.Entity<Join>()
             .HasOne(j => j.Post)
