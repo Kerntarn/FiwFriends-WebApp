@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FiwFriends.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250205144055_InitialCreate")]
+    [Migration("20250210090656_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
