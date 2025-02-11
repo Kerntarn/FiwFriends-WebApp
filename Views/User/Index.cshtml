@@ -1,0 +1,38 @@
+@model IEnumerable<FiwFriends.Models.User>
+
+@{
+    ViewData["Title"] = "User List";
+}
+
+<h2>User List</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>UserId</th>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Bio</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.Username</td>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@user.Bio</td>
+                <td>
+                    <a asp-action="GetUserById" asp-route-id="@user.UserId" class="btn btn-info">View</a>
+                    <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-warning">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@user.UserId" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">Create New User</a>

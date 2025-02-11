@@ -13,3 +13,5 @@
 ## Drop db
 - `dotnet ef database drop --force`
 - `dotnet ef migrations remove`
+
+

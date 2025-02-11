@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 
 namespace FiwFriends.Models;
+
 public class Post : BaseModel
     {
         [Key]
