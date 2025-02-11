@@ -15,9 +15,9 @@ public class PostController : Controller
     }
 
     //GET all
-    public IEnumerable<Post> Index(){   
+    public IActionResult Index(){   
         IEnumerable<Post> allPost = _db.Posts;
-        return allPost;
+        return Ok(allPost);
     }
 
     public IActionResult Detail(int id){
@@ -27,7 +27,7 @@ public class PostController : Controller
                     .ThenInclude(j => j.User)
                     .FirstOrDefault();
         if(post == null){
-            return Ok(new Post());
+            return NotFound();
         }
         return Ok(new {
             post.PostId,
@@ -87,7 +87,8 @@ public class PostController : Controller
                                 .SetProperty(p => p.Activity, post.Activity)
                                 .SetProperty(p => p.Description, post.Description)
                                 .SetProperty(p => p.ExpiredTime, post.ExpiredTime)
-                                .SetProperty(p => p.AppointmentTime, post.AppointmentTime));
+                                .SetProperty(p => p.AppointmentTime, post.AppointmentTime)
+                                .SetProperty(p => p.UpdatedAt, DateTime.UtcNow));
         if (row_affected == 0){
             return NotFound("Post is not found to delete.");
         }
@@ -110,6 +111,20 @@ public class PostController : Controller
             PostId = post.PostId
         };
         _db.Joins.Add(join);
+        _db.SaveChanges();
+        return RedirectToAction("Index");
+    }
+    [HttpPost("Post/Favorite/{id}")]
+    public IActionResult Favorite(int id){
+        var user = _db.Users.Find(1);   //get current user
+        var post = _db.Posts.Find(id);
+        if (post == null){
+            return NotFound("Post is not found.");
+        }
+        if (user == null){
+            return NotFound("User is not found.");
+        }
+        post.FavoritedBy.Add(user);
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
