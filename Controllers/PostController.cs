@@ -18,6 +18,7 @@ public class PostController : Controller
         IEnumerable<Post> allPost = _db.Posts;
         return Ok(allPost);
     }
+
     [HttpGet("Post/{id}")]
     public IActionResult Detail(int id){
         var post = _db.Posts
@@ -25,6 +26,9 @@ public class PostController : Controller
                     .Include(p => p.Participants)
                     .ThenInclude(j => j.User)
                     .Include(p => p.FavoritedBy)
+                    .Include(p => p.Questions)
+                    .Include(p => p.Forms)
+                    .ThenInclude(f => f.Answers)
                     .FirstOrDefault();
         if(post == null){
             return NotFound();
@@ -42,6 +46,19 @@ public class PostController : Controller
             FavoritedBy = post.FavoritedBy.Select(u => new {
                 u.UserId,
                 u.Username
+            }),
+            Questions = post.Questions.Select(q => new {
+                q.QuestionId,
+                q.Content
+            }),
+            Forms = post.Forms.Select(f => new {
+                f.FormId,
+                f.UserId,
+                f.IsApproved,
+                Answers = f.Answers.Select(a => new {
+                    a.Content,
+                    a.QuestionId
+                })
             })
         });
     }
@@ -57,9 +74,15 @@ public class PostController : Controller
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
-
-        post.OwnerId = 1;  //From current user
-        _db.Add(post);
+        if (post.OwnerId != 1){  //not current user
+            return Unauthorized();
+        }
+        _db.Posts.Add(post);
+        
+        foreach (var question in post.Questions){
+            question.PostId = post.PostId;
+        }
+        _db.Questions.AddRange(post.Questions);
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
@@ -139,5 +162,4 @@ public class PostController : Controller
         return RedirectToAction("Index");
     }
     
-
 }
