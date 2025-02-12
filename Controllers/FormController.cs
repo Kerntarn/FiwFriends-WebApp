@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using FiwFriends.Models;
 using FiwFriends.Data;
 using Microsoft.EntityFrameworkCore;
+using FiwFriends.DTOs;
 namespace FiwFriends.Controllers;
 
 public class FormController : Controller{
@@ -11,13 +12,19 @@ public class FormController : Controller{
     }
 
     [HttpPost("Form/Submit")]
-    public IActionResult Submit([FromBody] Form form){
+    public IActionResult Submit([FromBody] FormDTO form){
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
-        form.IsApproved = false;
         
-        _db.Forms.Add(form);
+        _db.Forms.Add(new Form{
+            UserId = 1,         //get current user
+            PostId = form.PostId,
+            Answers = form.Answers.Select(a => new Answer{
+                Content = a.Content,
+                QuestionId = a.QuestionId
+            }).ToList()
+        });
         _db.SaveChanges();
         return Ok();
     }

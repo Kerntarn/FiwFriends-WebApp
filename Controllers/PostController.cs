@@ -3,6 +3,7 @@ using FiwFriends.Data;
 using FiwFriends.Models;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
+using FiwFriends.DTOs;
 
 namespace FiwFriends.Controllers;
 
@@ -25,6 +26,7 @@ public class PostController : Controller
                     .Where(p => p.PostId == id)
                     .Include(p => p.Participants)
                     .ThenInclude(j => j.User)
+                    .Include(p => p.Owner)
                     .Include(p => p.FavoritedBy)
                     .Include(p => p.Questions)
                     .Include(p => p.Forms)
@@ -39,6 +41,10 @@ public class PostController : Controller
             post.Description,
             post.AppointmentTime,
             post.ExpiredTime,
+            Owner = new {
+                post.Owner.UserId,
+                post.Owner.Username
+            },
             Participants = post.Participants.Select(j => new {
                 j.UserId,
                 j.User.Username
@@ -70,19 +76,23 @@ public class PostController : Controller
 
     //POST Create
     [HttpPost("Post")]
-    public IActionResult Create([FromBody] Post post){ //Delete [FromBody] if need to send request from View.
+    public IActionResult Create([FromBody] PostDTO post){ //Delete [FromBody] if need to send request from View.
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
-        if (post.OwnerId != 1){  //not current user
-            return Unauthorized();
-        }
-        _db.Posts.Add(post);
-        
-        foreach (var question in post.Questions){
-            question.PostId = post.PostId;
-        }
-        _db.Questions.AddRange(post.Questions);
+        var ownerId = 1; //get current user
+        _db.Posts.Add(new Post{
+            Activity = post.Activity,
+            Description = post.Description,
+            ExpiredTime = post.ExpiredTime,
+            AppointmentTime = post.AppointmentTime,
+            OwnerId = ownerId,
+            Tags = _db.Tags.Where(t => post.Tags.Select( dto => dto.Name ).Contains(t.Name)).ToList(),   //Attach Tags
+            Questions = post.Questions.Select(q => new Question{
+                Content = q.Content
+            }).ToList()
+        });
+
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
@@ -107,8 +117,7 @@ public class PostController : Controller
 
     //PUT Update Post
     [HttpPut("Post/{id}")]
-    public IActionResult Edit(int id, [FromBody] Post post){ //Delete [FromBody] if need to send request from View.
-        Console.WriteLine(post.ToJson());
+    public IActionResult Edit(int id, [FromBody] PostDTO post){ //Delete [FromBody] if need to send request from View.
         int row_affected = _db.Posts
                             .Where(p => p.PostId == id)
                             .ExecuteUpdate(setters => setters
@@ -116,7 +125,8 @@ public class PostController : Controller
                                 .SetProperty(p => p.Description, post.Description)
                                 .SetProperty(p => p.ExpiredTime, post.ExpiredTime)
                                 .SetProperty(p => p.AppointmentTime, post.AppointmentTime)
-                                .SetProperty(p => p.UpdatedAt, DateTime.UtcNow));
+                                .SetProperty(p => p.UpdatedAt, DateTime.UtcNow)
+                                .SetProperty(p => p.Tags, _db.Tags.Where(t => post.Tags.Select( dto => dto.Name ).Contains(t.Name)).ToList()));
         if (row_affected == 0){
             return NotFound("Post is not found to delete.");
         }
@@ -126,7 +136,7 @@ public class PostController : Controller
 
     [HttpPost("Post/Join/{id}")]
     public IActionResult Join(int id){
-        var user = _db.Users.Find(2);   //get current user
+        var user = _db.Users.Find(1);   //get current user
         var post = _db.Posts.Find(id);
         if (post == null){
             return NotFound("Post is not found.");
@@ -145,7 +155,7 @@ public class PostController : Controller
 
     [HttpPost("Post/Favorite/{id}")]
     public IActionResult Favorite(int id){
-        var user = _db.Users.Find(2);   //get current user
+        var user = _db.Users.Find(1);   //get current user
         var post = _db.Posts.Find(id);
         if (post == null){
             return NotFound("Post is not found.");
