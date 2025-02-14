@@ -5,6 +5,8 @@ using FiwFriends.Data;
 using FiwFriends.Models;
 using System.Threading.Tasks;
 using Azure.Identity;
+using Microsoft.Identity.Client;
+using Microsoft.EntityFrameworkCore;
 
 namespace FiwFriends.Controllers
 {
@@ -32,7 +34,20 @@ namespace FiwFriends.Controllers
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return View(registerDto);
-            var user = new User { UserName = registerDto.Username, FirstName = registerDto.FirstName, LastName = registerDto.Lastname };
+            
+            var existingUser = await _db.Users.FirstOrDefaultAsync(u => u.UserName == registerDto.Username);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Username", "Username already exists.");
+                return View(registerDto);
+            }
+            
+                var user = new User 
+            {
+                 UserName = registerDto.Username, 
+                 FirstName = registerDto.FirstName, 
+                 LastName = registerDto.Lastname
+                 };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (result.Succeeded)
             {
@@ -49,6 +64,16 @@ namespace FiwFriends.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
+            var badResult = View(loginDto);
+            badResult.StatusCode = 400;
+            if(!ModelState.IsValid) return badResult;
+
+            var ExistingUser = _db.Users.FirstOrDefaultAsync(u => u.Username == loginDto.Username);
+            if(ExistingUser == null){
+                ModelState.AddModelError("Username", "Username not found.");
+                return View(loginDto);
+            }
+            
             var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
