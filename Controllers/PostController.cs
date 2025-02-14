@@ -17,7 +17,7 @@ public class PostController : Controller
     //GET all
     public IActionResult Index(){   
         IEnumerable<Post> allPost = _db.Posts;
-        return Ok(allPost);
+        return View(allPost);
     }
 
     [HttpGet("Post/{id}")]
@@ -31,57 +31,27 @@ public class PostController : Controller
                     .Include(p => p.Questions)
                     .Include(p => p.Forms)
                     .ThenInclude(f => f.Answers)
+                    .Include(p => p.Tags)
                     .FirstOrDefault();
         if(post == null){
             return NotFound();
         }
-        return Ok(new {
-            post.PostId,
-            post.Activity,
-            post.Description,
-            post.AppointmentTime,
-            post.ExpiredTime,
-            Owner = new {
-                post.Owner.UserId,
-                post.Owner.Username
-            },
-            Participants = post.Participants.Select(j => new {
-                j.UserId,
-                j.User.Username
-            }),
-            FavoritedBy = post.FavoritedBy.Select(u => new {
-                u.UserId,
-                u.Username
-            }),
-            Questions = post.Questions.Select(q => new {
-                q.QuestionId,
-                q.Content
-            }),
-            Forms = post.Forms.Select(f => new {
-                f.FormId,
-                f.UserId,
-                f.IsApproved,
-                Answers = f.Answers.Select(a => new {
-                    a.Content,
-                    a.QuestionId
-                })
-            })
-        });
-    }
 
+        return View(post);
+    }
     //GET Create page
     public IActionResult Create(){
-        return Ok("Show page to create new post.");
+        return View();
     }
 
     //POST Create
     [HttpPost("Post")]
-    public IActionResult Create([FromBody] PostDTO post){ //Delete [FromBody] if need to send request from View.
+    public IActionResult Create(PostDTO post){ //Delete [FromBody] if need to send request from View.
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
         var ownerId = 1; //get current user
-        _db.Posts.Add(new Post{
+        var postId = _db.Posts.Add(new Post{
             Activity = post.Activity,
             Description = post.Description,
             ExpiredTime = post.ExpiredTime,
@@ -91,15 +61,9 @@ public class PostController : Controller
             Questions = post.Questions.Select(q => new Question{
                 Content = q.Content
             }).ToList()
-        });
-
+        }).Entity.PostId;
         _db.SaveChanges();
         return RedirectToAction("Index");
-    }
-
-    //GET Delete Page, maybe unneccessary
-    public string Delete(){
-        return "Show page to delete post."; 
     }
 
     //DELETE Post
@@ -117,7 +81,7 @@ public class PostController : Controller
 
     //PUT Update Post
     [HttpPut("Post/{id}")]
-    public IActionResult Edit(int id, [FromBody] PostDTO post){ //Delete [FromBody] if need to send request from View.
+    public IActionResult Edit(int id, PostDTO post){ //Delete [FromBody] if need to send request from View.
         int row_affected = _db.Posts
                             .Where(p => p.PostId == id)
                             .ExecuteUpdate(setters => setters

@@ -12,7 +12,7 @@ public class FormController : Controller{
     }
 
     [HttpPost("Form/Submit")]
-    public IActionResult Submit([FromBody] FormDTO form){
+    public IActionResult Submit(FormDTO form){
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
@@ -26,7 +26,7 @@ public class FormController : Controller{
             }).ToList()
         });
         _db.SaveChanges();
-        return Ok();
+        return RedirectToAction("Index", "Post");
     }
 
     [HttpPost("Form/Approve/{PostId}/{UserId}")]
@@ -44,6 +44,6 @@ public class FormController : Controller{
         };
         _db.Joins.Add(join);
         _db.SaveChanges();
-        return Ok();
+        return RedirectToAction("Index");
     }
 }
