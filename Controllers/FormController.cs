@@ -11,6 +11,14 @@ public class FormController : Controller{
         _db = db;
     }
 
+    [HttpGet("Form/{PostId}")]
+    public IActionResult Index(int PostId){
+        IEnumerable<Form> forms = _db.Forms
+                        .Where(f => f.PostId == PostId)
+                        .Include(f => f.Answers);
+        return View(forms);
+    }
+
     [HttpPost("Form/Submit")]
     public IActionResult Submit(FormDTO form){
         if (!ModelState.IsValid){
