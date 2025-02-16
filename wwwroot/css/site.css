@@ -76,13 +76,10 @@ a {
 .main {
   margin: auto;
   width: 60%;
-}
-
-.container {
   margin-top: 30px;
 }
 
-.container > div {
+.main > div {
   margin: 10px 0px;
 }
 
@@ -155,13 +152,45 @@ a {
   border-radius: 5px;
 }
 
-.btn-join {
+.btn {
   margin-top: 5px;
-  float: right;
   border: 0 solid #242424;
   background-color: #FF8A80;
   border-radius: 5px;
   padding: 5px 15px;
+  box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.field {
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.login-body {
+  position: relative;
+  background-color: #FFE0B2;
+  border-radius: 5px;
+  padding: 10px 15px;
+  padding-bottom: 35px;
+  margin-top: -1px;
+  z-index: 1;
+  box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.login-p {
+  margin-left: 10px;
+  margin-bottom: 7px;
+}
+
+.inp {
+  position: inherit;
+  width: 90%;
+  height: 100%;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 7px 0px 7px 20px;
   box-shadow: 0px 4px 4px rgba(24,24,24,.25);
 }
 
@@ -173,4 +202,39 @@ a {
   line-height: 60px;
   font-size: 12px;
   text-align: center;
+}
+
+.blue {
+  background-color: #B2DFDC;
+}
+
+.right {
+  float: right;
+}
+
+.algn-start {
+  text-align: start;
+}
+
+.algn-center {
+  text-align: center;
+}
+
+.mh-40 {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.btn-login-property {
+  display: block;
+  margin-top: 40px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-60%, -0%);
+}
+
+.main-login-property {
+  margin-top: 100px;
+  width: 40%;
 }
