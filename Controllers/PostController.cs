@@ -43,7 +43,7 @@ public class PostController : Controller
             post.AppointmentTime,
             post.ExpiredTime,
             Owner = new {
-                post.Owner.UserId,
+                post.Owner.Id,
                 post.Owner.UserName
             },
             Participants = post.Participants.Select(j => new {
@@ -51,7 +51,7 @@ public class PostController : Controller
                 j.User.UserName
             }),
             FavoritedBy = post.FavoritedBy.Select(u => new {
-                u.UserId,
+                u.Id,
                 u.UserName
             }),
             Questions = post.Questions.Select(q => new {
@@ -60,7 +60,6 @@ public class PostController : Controller
             }),
             Forms = post.Forms.Select(f => new {
                 f.FormId,
-                f.UserId,
                 f.IsApproved,
                 Answers = f.Answers.Select(a => new {
                     a.Content,
@@ -138,7 +137,7 @@ public class PostController : Controller
 
     [HttpPost("Post/Join/{id}")]
     public IActionResult Join(int id){
-        var user = _db.Users.Find(1);   //get current user
+        var user = _db.Users.Find(1);   // Replace with actual current user logic
         var post = _db.Posts.Find(id);
         if (post == null){
             return NotFound("Post is not found.");
@@ -147,7 +146,7 @@ public class PostController : Controller
             return NotFound("User is not found.");
         }
         var join = new Join{
-            UserId = user.UserId,
+            UserId = user.Id,  
             PostId = post.PostId
         };
         _db.Joins.Add(join);
@@ -165,7 +164,7 @@ public class PostController : Controller
         if (user == null){
             return NotFound("User is not found.");
         }
-        if (post.FavoritedBy.Any(u => u.UserId == user.UserId)){
+        if (post.FavoritedBy.Any(u => u.Id == user.Id)){
             post.FavoritedBy.Remove(user);
         } else {
             post.FavoritedBy.Add(user);
