@@ -3,47 +3,56 @@ using FiwFriends.Models;
 using FiwFriends.Data;
 using Microsoft.EntityFrameworkCore;
 using FiwFriends.DTOs;
+using FiwFriends.Services;
 namespace FiwFriends.Controllers;
 
 public class FormController : Controller{
     private readonly ApplicationDBContext _db;
-    public FormController(ApplicationDBContext db){
+    private readonly CurrentUserService _currentUser;
+    public FormController(ApplicationDBContext db, CurrentUserService currentUser){
         _db = db;
+        _currentUser = currentUser;
     }
 
     [HttpPost("Form/Submit")]
-    public IActionResult Submit([FromBody] FormDTO form){
+    async public Task<IActionResult> Submit([FromBody] FormDTO form){
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
-        
-        _db.Forms.Add(new Form{
-            UserId = "1",         //get current user
+        var userId = await _currentUser.GetCurrentUserId();
+        if (userId == null){
+            return RedirectToAction("Login", "Auth");
+        }
+        await _db.Forms.AddAsync(new Form{
+            UserId = userId,         //get current user
             PostId = form.PostId,
             Answers = form.Answers.Select(a => new Answer{
                 Content = a.Content,
                 QuestionId = a.QuestionId
             }).ToList()
         });
-        _db.SaveChanges();
-        return Ok();
+        await _db.SaveChangesAsync();
+        return RedirectToAction("Post", "Detail", new { id = form.PostId });
     }
 
-    [HttpPost("Form/Approve/{PostId}/{UserId}")]
-    public IActionResult Approve(int PostId, string UserId){
-        var form = _db.Forms.Where(f => f.UserId == UserId && f.PostId == PostId)
+    [HttpPost("Form/Approve/{FormId}")]
+    async public Task<IActionResult> Approve(int FormId){
+        var form = await _db.Forms.Where(f => f.FormId == FormId)
                                     .Include(f => f.Post)
-                                    .FirstOrDefault();
+                                    .FirstOrDefaultAsync();
         if (form == null){
             return NotFound();
+        }
+        if (form.Post.OwnerId != _currentUser.GetCurrentUserId().Result){
+            return Unauthorized();
         }
         form.IsApproved = true;
         var join = new Join{
             UserId = form.UserId,
             PostId = form.PostId
         };
-        _db.Joins.Add(join);
-        _db.SaveChanges();
-        return Ok();
+        await _db.Joins.AddAsync(join);
+        await _db.SaveChangesAsync();
+        return RedirectToAction("Index", new { id = form.PostId });
     }
 }
