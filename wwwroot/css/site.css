@@ -97,14 +97,15 @@ a {
 
 .home-body {
   margin: 0px;
-  width: calc();
+  width: 150%;
   padding: 20px;
 }
 
 .category {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1.5fr);
   grid-gap: 15px;
+  width: auto;
 
 }
 
@@ -276,4 +277,5 @@ a {
 
 .home-container {
   display: inline-flex;
+  max-width: 1260px;
 }
