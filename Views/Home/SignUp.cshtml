@@ -1,6 +1,42 @@
 ﻿@{
-    ViewData["Title"] = "Login Page";
+    ViewData["Title"] = "Sign-up Page";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="main main-login-property">
+
+        <div class="card">
+            <div class="login-body algn-center">
+                <h2>Create Account</h2>
+                <div class=" login-body blue mh-40 ">
+                    <div class="field">
+                        <div class="mh-40">
+                            <p class="algn-start login-p" >name</p>
+                            <input class="inp" type="text" id="register-name">
+                        </div>
+                        
+                        <div class="mh-40">
+                            <p class="algn-start login-p" >username</p>
+                            <input class="inp" type="text" id="register-username">
+                        </div>
+                        
+                        <div class="mh-40">
+                            <p class="algn-start login-p">password</p>
+                            <input class="inp" type="password" id="register-pswd">
+                        </div>
+
+                        <div class="mh-40">
+                            <p class="algn-start login-p">confirm password</p>
+                            <input class="inp" type="password" id="confirm-register-pswd">
+                        </div>
+
+                        
+                        <p id="register-text"></p>
+
+                        <button class="navbar-item btn-login-property" onclick=login()>sign up</button>
+                        <p>Already have an account? <a asp-controller="Home" asp-action="Login">login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>

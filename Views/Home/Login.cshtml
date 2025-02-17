@@ -11,15 +11,18 @@
                     <div class="field">
                         <div class="mh-40">
                             <p class="algn-start login-p" >username</p>
-                            <input class="inp" type="text" id="username">
+                            <input class="inp" type="text" id="login-username">
                         </div>
                         
                         <div class="mh-40">
                             <p class="algn-start login-p">password</p>
-                            <input class="inp" type="password" id="pswd">
+                            <input class="inp" type="password" id="login-pswd">
                         </div>
                         
-                        <button class="navbar-item btn-login-property">login</button>
+                        <p id="login-text"></p>
+
+                        <button class="navbar-item btn-login-property" onclick=login()>login</button>
+                        <p>Don't have an account? <a asp-controller="Home" asp-action="SignUp">sign up</a></p>
                     </div>
                 </div>
             </div>
