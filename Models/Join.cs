@@ -1,5 +1,5 @@
 namespace FiwFriends.Models;
-public class Join
+public class Join : BaseModel
 {
     public string UserId { get; set; }  
     public int PostId { get; set; }
