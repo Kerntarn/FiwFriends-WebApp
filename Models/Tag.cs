@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FiwFriends.Models;
 
 public class Tag{
+    [Key]
     public int TagId { get; set; }
     [Required]
     public required string Name { get; set; }
