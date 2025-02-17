@@ -14,8 +14,16 @@ public class FormController : Controller{
         _currentUser = currentUser;
     }
 
+    [HttpGet("Form/{PostId}")]
+    public IActionResult Index(int PostId){
+        IEnumerable<Form> forms = _db.Forms
+                        .Where(f => f.PostId == PostId)
+                        .Include(f => f.Answers);
+        return View(forms);
+    }
+
     [HttpPost("Form/Submit")]
-    async public Task<IActionResult> Submit([FromBody] FormDTO form){
+    async public Task<IActionResult> Submit(FormDTO form){
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }

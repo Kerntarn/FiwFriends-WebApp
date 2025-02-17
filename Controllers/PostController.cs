@@ -41,10 +41,9 @@ public class PostController : Controller
         }
         return View(post);
     }
-
     //GET Create page
     public IActionResult Create(){
-        return Ok("Show page to create new post.");
+        return View();
     }
 
     //POST Create
@@ -68,14 +67,8 @@ public class PostController : Controller
                 Content = q.Content
             }).ToList()
         });
-
         await _db.SaveChangesAsync();
         return RedirectToAction("Index");
-    }
-
-    //GET Delete Page, maybe unneccessary
-    public string Delete(){
-        return "Show page to delete post."; 
     }
 
     //DELETE Post

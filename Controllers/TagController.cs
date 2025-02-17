@@ -1,5 +1,7 @@
 using FiwFriends.Data;
+using FiwFriends.Models;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace FiwFriends.Controllers;
 
@@ -12,7 +14,7 @@ public class TagController : Controller
     }
     public IActionResult Index()
     {
-        var tags = _db.Tags;
-        return Ok(tags);
+        IEnumerable<Tag> tags = _db.Tags;
+        return View(tags);
     }
 }
