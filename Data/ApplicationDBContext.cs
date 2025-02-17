@@ -36,7 +36,7 @@ public class ApplicationDBContext : DbContext
 
         //M:N Users JOIN Posts 
         modelBuilder.Entity<Join>()
-            .HasKey(j => new {j.UserId, j.PostId}); //Set Composite Key
+            .HasKey(j => new {j.UserId, j.PostId});
 
         modelBuilder.Entity<Join>()
             .HasOne(j => j.User)
