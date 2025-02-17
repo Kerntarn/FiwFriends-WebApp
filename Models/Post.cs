@@ -15,7 +15,7 @@ public class Post : BaseModel
         [Required]
         public required string AppointmentTime { get; set; }
         [Required]
-        public required int OwnerId { get; set; }  
+        public required string OwnerId { get; set; }  
         public User? Owner { get; set; } = null!;
 
         public ICollection<User> FavoritedBy { get; set; } = new List<User>();
