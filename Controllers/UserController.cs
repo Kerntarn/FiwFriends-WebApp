@@ -24,7 +24,7 @@ namespace FiwFriends.Controllers
 
         private async Task<User?> GetCurrentUserAsync()
         {
-            var userId = await _currentUserService.GetCurrentuserId();
+            var userId = await _currentUserService.GetCurrentUserId();
             if (userId is null) return null;
             return await _db.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString());
         }
@@ -38,6 +38,7 @@ namespace FiwFriends.Controllers
 
             return View(user);
         }
+        
 
         [Authorize]
         [HttpGet("user/profile/edit")]
@@ -56,6 +57,8 @@ namespace FiwFriends.Controllers
 
             return View(userDto);
         }
+
+
 
         [Authorize]
         [HttpPost("user/profile/edit")]
