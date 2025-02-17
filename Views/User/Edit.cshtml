@@ -1,4 +1,4 @@
-@model FiwFriends.Models.User
+@* @model FiwFriends.Models.User
 
 @{
     ViewData["Title"] = "Edit User";
@@ -12,7 +12,7 @@
         <div class="col-md-6">
             <form asp-action="Edit" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="Id" />
 
                 <div class="form-group mb-3">
                     <label asp-for="FirstName" class="control-label">First Name</label>
@@ -29,7 +29,7 @@
                 <div class="form-group mb-3">
                     <label asp-for="UserName" class="control-label">Username</label>
                     <input asp-for="UserName" class="form-control" />
-                    <span asp-validation-for="UserName" class="text-danger"></span>
+                    <span asp-validation-for="Userame" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-3">
@@ -55,4 +55,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+} *@
