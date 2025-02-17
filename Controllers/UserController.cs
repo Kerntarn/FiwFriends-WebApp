@@ -25,7 +25,7 @@ public class UserController : Controller
     // GET: User by ID
     public async Task<IActionResult> GetUserById(int id)
     {
-        var user = await _db.Users.FindAsync(id);
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.UserId == id);
         if (user == null)
         {
             return NotFound();
@@ -56,7 +56,7 @@ public class UserController : Controller
     // GET: Edit User Form
     public async Task<IActionResult> Edit(int id)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(i => i.UserId == id);
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.UserId == id);
         if (user == null)
         {
             return NotFound();
@@ -86,7 +86,7 @@ public class UserController : Controller
                 // Update only the properties that are provided in the form
                 existingUser.FirstName = user.FirstName;
                 existingUser.LastName = user.LastName;
-                existingUser.Username = user.Username;
+                existingUser.UserName = user.UserName;
                 existingUser.Bio = user.Bio;
 
                 // Only update the password if it's provided

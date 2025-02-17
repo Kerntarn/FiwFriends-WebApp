@@ -36,7 +36,40 @@ public class PostController : Controller
         if(post == null){
             return NotFound();
         }
-
+        return Ok(new {
+            post.PostId,
+            post.Activity,
+            post.Description,
+            post.AppointmentTime,
+            post.ExpiredTime,
+            Owner = new {
+                post.Owner.UserId,
+                post.Owner.UserName
+            },
+            Participants = post.Participants.Select(j => new {
+                j.UserId,
+                j.User.UserName
+            }),
+            FavoritedBy = post.FavoritedBy.Select(u => new {
+                u.UserId,
+                u.UserName
+            }),
+            Questions = post.Questions.Select(q => new {
+                q.QuestionId,
+                q.Content
+            }),
+            Forms = post.Forms.Select(f => new {
+                f.FormId,
+                f.UserId,
+                f.IsApproved,
+                Answers = f.Answers.Select(a => new {
+                    a.Content,
+                    a.QuestionId
+                })
+            }),
+            Tags = post.Tags.Select(t => t.Name)
+        });
+    }
         return View(post);
     }
     //GET Create page
@@ -50,8 +83,9 @@ public class PostController : Controller
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
-        var ownerId = 1; //get current user
+        var ownerId = 8; //get current user
         var postId = _db.Posts.Add(new Post{
+
             Activity = post.Activity,
             Description = post.Description,
             ExpiredTime = post.ExpiredTime,
