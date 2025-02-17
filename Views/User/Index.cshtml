@@ -1,4 +1,4 @@
-@model IEnumerable<FiwFriends.Models.User>
+@* @model IEnumerable<FiwFriends.Models.User>
 
 @{
     ViewData["Title"] = "User List";
@@ -19,14 +19,14 @@
         @foreach (var user in Model)
         {
             <tr>
-                <td>@user.UserId</td>
+                <td>@user.Id</td>
                 <td>@user.UserName</td>
                 <td>@user.FirstName @user.LastName</td>
                 <td>@user.Bio</td>
                 <td>
-                    <a asp-action="GetUserById" asp-route-id="@user.UserId" class="btn btn-info">View</a>
-                    <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-warning">Edit</a>
-                    <form asp-action="Delete" asp-route-id="@user.UserId" method="post" style="display:inline;">
+                    <a asp-action="GetUserById" asp-route-id="@user.Id" class="btn btn-info">View</a>
+                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@user.Id" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                     </form>
                 </td>
@@ -35,4 +35,4 @@
     </tbody>
 </table>
 
-<a asp-action="Create" class="btn btn-success">Create New User</a>
+<a asp-action="Create" class="btn btn-success">Create New User</a> *@

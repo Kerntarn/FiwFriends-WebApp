@@ -18,7 +18,7 @@ public class FormController : Controller{
         }
         
         _db.Forms.Add(new Form{
-            UserId = 1,         //get current user
+            UserId = "1",         //get current user
             PostId = form.PostId,
             Answers = form.Answers.Select(a => new Answer{
                 Content = a.Content,
@@ -30,7 +30,7 @@ public class FormController : Controller{
     }
 
     [HttpPost("Form/Approve/{PostId}/{UserId}")]
-    public IActionResult Approve(int PostId, int UserId){
+    public IActionResult Approve(int PostId, string UserId){
         var form = _db.Forms.Where(f => f.UserId == UserId && f.PostId == PostId)
                                     .Include(f => f.Post)
                                     .FirstOrDefault();
