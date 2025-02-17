@@ -2,143 +2,107 @@ using Microsoft.AspNetCore.Mvc;
 using FiwFriends.Data;
 using FiwFriends.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using FiwFriends.Services;
+using FiwFriends.DTOs;
 
-namespace FiwFriends.Controllers;
-
-public class UserController : Controller
+namespace FiwFriends.Controllers
 {
-    private readonly ApplicationDBContext _db;
-    
-    public UserController(ApplicationDBContext db)
+    public class UserController : Controller
     {
-        _db = db;
-    }
+        private readonly ApplicationDBContext _db;
+        private readonly UserManager<User> _userManager;
+        private readonly CurrentUserService _currentUserService;
 
-    // GET: Users
-    [HttpGet]
-    public async Task<IActionResult> Index()
-    {
-        var users = await _db.Users.ToListAsync();
-        return View(users);
-    }
-
-    // GET: User by ID
-    public async Task<IActionResult> GetUserById(int id)
-    {
-        var user = await _db.Users.FindAsync(id);
-        if (user == null)
+        public UserController(ApplicationDBContext db, UserManager<User> userManager, CurrentUserService currentUserService)
         {
-            return NotFound();
-        }
-        return View(user);
-    }
-
-    // GET: Create User Form
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    // POST: Create User
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(User user)
-    {
-        if (ModelState.IsValid)
-        {
-            _db.Add(user);
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-        return View(user);
-    }
-
-    // GET: Edit User Form
-    public async Task<IActionResult> Edit(int id)
-    {
-        var user = await _db.Users.FirstOrDefaultAsync(i => i.UserId == id);
-        if (user == null)
-        {
-            return NotFound();
-        }
-        return View(user);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, User user)
-    {
-        if (id != user.UserId)
-        {
-            return NotFound();
+            _db = db;
+            _userManager = userManager;
+            _currentUserService = currentUserService;
         }
 
-        if (ModelState.IsValid)
+        private async Task<User?> GetCurrentUserAsync()
         {
-            try
+            var userId = await _currentUserService.GetCurrentuserId();
+            if (userId is null) return null;
+            return await _db.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString());
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+                return RedirectToAction("Login", "Auth");
+
+            return View(user);
+        }
+
+        [Authorize]
+        [HttpGet("user/profile/edit")]
+        public async Task<IActionResult> Edit()
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+                return RedirectToAction("Login", "Auth");
+
+            var userDto = new UpdateUserDto
             {
-                var existingUser = await _db.Users.FirstOrDefaultAsync(u => u.UserId == id);
-                if (existingUser == null)
-                {
-                    return NotFound();
-                }
+                Username = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
 
-                // Update only the properties that are provided in the form
-                existingUser.FirstName = user.FirstName;
-                existingUser.LastName = user.LastName;
-                existingUser.Username = user.Username;
-                existingUser.Bio = user.Bio;
+            return View(userDto);
+        }
 
-                // Only update the password if it's provided
-                if (!string.IsNullOrEmpty(user.Password))
-                {
-                    existingUser.Password = user.Password;
-                }
+        [Authorize]
+        [HttpPost("user/profile/edit")]
+        public async Task<IActionResult> Edit(UpdateUserDto userEditor)
+        {
+            if (!ModelState.IsValid)
+                return View(userEditor);
 
-                _db.Entry(existingUser).State = EntityState.Modified;
-                await _db.SaveChangesAsync();
-                return RedirectToAction("Index");
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+                return RedirectToAction("Login", "Auth");
+
+            // Check for username duplication
+            var existingUser = await _userManager.FindByNameAsync(userEditor.Username);
+            if (existingUser != null && existingUser.Id != user.Id)
+            {
+                TempData["Error"] = "Username already exists";
+                return View(userEditor);
             }
-            catch (DbUpdateConcurrencyException)
+
+            // Update user fields
+            user.UserName = userEditor.Username;
+            user.FirstName = userEditor.FirstName;
+            user.LastName = userEditor.LastName;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
             {
-                if (!_db.Users.Any(u => u.UserId == user.UserId))
+                TempData["Error"] = "Failed to update user information";
+                return View(userEditor);
+            }
+
+            // Update password if provided
+            if (!string.IsNullOrEmpty(userEditor.Password))
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetResult = await _userManager.ResetPasswordAsync(user, token, userEditor.Password);
+
+                if (!resetResult.Succeeded)
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
+                    TempData["Error"] = "Password reset failed";
+                    return View(userEditor);
                 }
             }
-        }
 
-        // If we got this far, something failed; redisplay the form
-        return View(user);
-    }
-    // GET: Delete User Confirmation
-    public async Task<IActionResult> Delete(int id)
-    {
-        var user = await _db.Users.FindAsync(id);
-        if (user == null)
-        {
-            return NotFound();
+            TempData["Success"] = "Profile updated successfully";
+            return RedirectToAction("Profile");
         }
-        return View(user);
-    }
-
-    // POST: Delete User
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        var user = await _db.Users.FindAsync(id);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        _db.Users.Remove(user);
-        await _db.SaveChangesAsync();
-        return RedirectToAction("Index");
     }
 }
