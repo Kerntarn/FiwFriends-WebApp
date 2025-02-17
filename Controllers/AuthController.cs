@@ -46,7 +46,7 @@ namespace FiwFriends.Controllers
             {
                  UserName = registerDto.Username, 
                  FirstName = registerDto.FirstName, 
-                 LastName = registerDto.Lastname
+                 LastName = registerDto.LastName
                  };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (result.Succeeded)
@@ -68,7 +68,7 @@ namespace FiwFriends.Controllers
             if (!ModelState.IsValid) 
                 return View(loginDto);
 
-            var existingUser = await _db.Users.FirstOrDefaultAsync(u => u.Username == loginDto.Username);
+            var existingUser = await _db.Users.FirstOrDefaultAsync(u => u.UserName == loginDto.Username);
             if (existingUser == null)
             {
                 ModelState.AddModelError("Username", "Username not found.");

@@ -86,7 +86,7 @@ public class UserController : Controller
                 // Update only the properties that are provided in the form
                 existingUser.FirstName = user.FirstName;
                 existingUser.LastName = user.LastName;
-                existingUser.Username = user.Username;
+                existingUser.UserName = user.UserName;
                 existingUser.Bio = user.Bio;
 
                 // Only update the password if it's provided

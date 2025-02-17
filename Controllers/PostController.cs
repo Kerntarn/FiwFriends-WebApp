@@ -31,6 +31,7 @@ public class PostController : Controller
                     .Include(p => p.Questions)
                     .Include(p => p.Forms)
                     .ThenInclude(f => f.Answers)
+                    .Include(p => p.Tags)
                     .FirstOrDefault();
         if(post == null){
             return NotFound();
@@ -43,15 +44,15 @@ public class PostController : Controller
             post.ExpiredTime,
             Owner = new {
                 post.Owner.UserId,
-                post.Owner.Username
+                post.Owner.UserName
             },
             Participants = post.Participants.Select(j => new {
                 j.UserId,
-                j.User.Username
+                j.User.UserName
             }),
             FavoritedBy = post.FavoritedBy.Select(u => new {
                 u.UserId,
-                u.Username
+                u.UserName
             }),
             Questions = post.Questions.Select(q => new {
                 q.QuestionId,
@@ -65,7 +66,8 @@ public class PostController : Controller
                     a.Content,
                     a.QuestionId
                 })
-            })
+            }),
+            Tags = post.Tags.Select(t => t.Name)
         });
     }
 
@@ -80,7 +82,7 @@ public class PostController : Controller
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
-        var ownerId = 1; //get current user
+        var ownerId = 8; //get current user
         _db.Posts.Add(new Post{
             Activity = post.Activity,
             Description = post.Description,
