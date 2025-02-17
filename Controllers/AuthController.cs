@@ -53,7 +53,7 @@ namespace FiwFriends.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View(result.Errors);
+            return View(registerDto);
         }
         
         [HttpGet]
@@ -61,26 +61,33 @@ namespace FiwFriends.Controllers
             var response = new LoginDto();
             return View(response);
         }
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            var badResult = View(loginDto);
-            badResult.StatusCode = 400;
-            if(!ModelState.IsValid) return badResult;
+            if (!ModelState.IsValid) 
+                return View(loginDto);
 
-            var ExistingUser = _db.Users.FirstOrDefaultAsync(u => u.Username == loginDto.Username);
-            if(ExistingUser == null){
+            var existingUser = await _db.Users.FirstOrDefaultAsync(u => u.Username == loginDto.Username);
+            if (existingUser == null)
+            {
                 ModelState.AddModelError("Username", "Username not found.");
                 return View(loginDto);
             }
-            
+
             var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+            
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View("LoginFailed");
+
+            ModelState.AddModelError("Password", "Incorrect password.");
+            var badResult = View(loginDto);
+            badResult.StatusCode = 401;
+            return badResult;
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Logout()
