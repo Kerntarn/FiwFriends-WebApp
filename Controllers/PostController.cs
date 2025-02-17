@@ -29,6 +29,7 @@ public class PostController : Controller
                     .Include(p => p.Owner)
                     .Include(p => p.FavoritedBy)
                     .Include(p => p.Questions)
+                    .Include(p => p.Tags)
                     .Include(p => p.Forms)
                     .ThenInclude(f => f.Answers)
                     .FirstOrDefault();
@@ -57,6 +58,10 @@ public class PostController : Controller
                 q.QuestionId,
                 q.Content
             }),
+            Tags = post.Tags.Select(k => new {
+                k.TagId,
+                k.Name
+            }),
             Forms = post.Forms.Select(f => new {
                 f.FormId,
                 f.UserId,
@@ -80,7 +85,7 @@ public class PostController : Controller
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
-        var ownerId = 1; //get current user
+        var ownerId = 2; //get current user
         _db.Posts.Add(new Post{
             Activity = post.Activity,
             Description = post.Description,
@@ -136,7 +141,7 @@ public class PostController : Controller
 
     [HttpPost("Post/Join/{id}")]
     public IActionResult Join(int id){
-        var user = _db.Users.Find(1);   //get current user
+        var user = _db.Users.Find(2);   //get current user
         var post = _db.Posts.Find(id);
         if (post == null){
             return NotFound("Post is not found.");
