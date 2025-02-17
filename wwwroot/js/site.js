@@ -8,5 +8,10 @@ function login() {
 }
 
 function signup() {
-        document.getElementById("register-text").textContent="incorrect username or password"
+        document.getElementById("register-text").textContent="username already used"
+        document.getElementById("register-text").textContent="unmatch password"
+}
+
+function create_Post {
+        // api ปิ้วๆ
 }
