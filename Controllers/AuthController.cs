@@ -1,12 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using FiwFriends.DTOs.Auth;
-using FiwFriends.Data;
 using FiwFriends.Models;
 using System.Threading.Tasks;
-using Azure.Identity;
-using Microsoft.Identity.Client;
-using Microsoft.EntityFrameworkCore;
 
 namespace FiwFriends.Controllers
 {
@@ -14,20 +10,17 @@ namespace FiwFriends.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly ApplicationDBContext _db;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDBContext db)
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _db = db;
         }
 
         [HttpGet]
         public IActionResult Register()
         {
-            var response = new RegisterDto();
-            return View(response);
+            return View(new RegisterDto());
         }
 
         [HttpPost]
@@ -35,31 +28,39 @@ namespace FiwFriends.Controllers
         {
             if (!ModelState.IsValid) return View(registerDto);
             
-            var existingUser = await _db.Users.FirstOrDefaultAsync(u => u.UserName == registerDto.Username);
+            var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
             if (existingUser != null)
             {
                 ModelState.AddModelError("Username", "Username already exists.");
                 return View(registerDto);
             }
             
-                var user = new User 
+            var user = new User 
             {
-                 UserName = registerDto.Username, 
-                 FirstName = registerDto.FirstName, 
-                 LastName = registerDto.Lastname
-                 };
+                UserName = registerDto.Username, 
+                FirstName = registerDto.FirstName, 
+                LastName = registerDto.Lastname
+            };
+            
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (result.Succeeded)
             {
+                await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
             return View(registerDto);
         }
         
         [HttpGet]
-        public IActionResult Login(){
-            var response = new LoginDto();
-            return View(response);
+        public IActionResult Login()
+        {
+            return View(new LoginDto());
         }
 
         [HttpPost]
@@ -68,14 +69,14 @@ namespace FiwFriends.Controllers
             if (!ModelState.IsValid) 
                 return View(loginDto);
 
-            var existingUser = await _db.Users.FirstOrDefaultAsync(u => u.Username == loginDto.Username);
+            var existingUser = await _userManager.FindByNameAsync(loginDto.Username);
             if (existingUser == null)
             {
                 ModelState.AddModelError("Username", "Username not found.");
                 return View(loginDto);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, false, false);
             
             if (result.Succeeded)
             {
@@ -83,11 +84,8 @@ namespace FiwFriends.Controllers
             }
 
             ModelState.AddModelError("Password", "Incorrect password.");
-            var badResult = View(loginDto);
-            badResult.StatusCode = 401;
-            return badResult;
+            return View(loginDto);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Logout()
