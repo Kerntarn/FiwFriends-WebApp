@@ -63,16 +63,16 @@ namespace FiwFriends.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid) 
-                return View(loginDto);
+                return Ok(loginDto);
 
             var existingUser = await _userManager.FindByNameAsync(loginDto.Username);
             if (existingUser == null)
             {
                 ModelState.AddModelError("Username", "Username not found.");
-                return View(loginDto);
+                return Ok(loginDto);
             }
 
             var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, false, false);
@@ -83,7 +83,7 @@ namespace FiwFriends.Controllers
             }
 
             ModelState.AddModelError("Password", "Incorrect password.");
-            return View(loginDto);
+            return Ok(loginDto);
         }
 
         [HttpPost]
