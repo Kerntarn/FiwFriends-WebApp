@@ -14,9 +14,9 @@ public class CurrentUserService
         _userManager = userManager;
     }
 
-    public async Task<Guid?> GetCurrentuserId()
+    public async Task<string?> GetCurrentUserId()
     {
         var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User!);
-        return currentUser?.Id == null ? null : Guid.Parse(currentUser.Id);
+        return currentUser?.Id;
     }
 }

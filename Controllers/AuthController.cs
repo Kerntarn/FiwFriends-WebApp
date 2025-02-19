@@ -37,11 +37,10 @@ namespace FiwFriends.Controllers
             
             var user = new User 
             {
-                UserName = registerDto.Username, 
-                FirstName = registerDto.FirstName, 
-                LastName = registerDto.Lastname
-            };
-            
+                 UserName = registerDto.Username, 
+                 FirstName = registerDto.FirstName, 
+                 LastName = registerDto.LastName
+                 };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (result.Succeeded)
             {

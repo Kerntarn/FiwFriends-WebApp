@@ -1,13 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using FiwFriends.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace FiwFriends.Data;
-public class ApplicationDBContext : DbContext
+public class ApplicationDBContext : IdentityDbContext<User>
 {
     public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
     public DbSet<User> Users { get; set; } // Replace `YourEntity` with your actual model class.
     public DbSet<Post> Posts { get; set; }
     public DbSet<Join> Joins { get; set; }
@@ -17,6 +16,7 @@ public class ApplicationDBContext : DbContext
     public DbSet<Tag> Tags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder){
+        base.OnModelCreating(modelBuilder); 
         //1:N User MAKE Posts
         modelBuilder.Entity<Post>()
             .HasOne(p => p.Owner)

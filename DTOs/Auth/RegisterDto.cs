@@ -8,9 +8,9 @@ public class RegisterDto
     [StringLength(50, MinimumLength = 1, ErrorMessage = "Firstname must be between 1 and 50 characters long")]
     public string FirstName { get; set; }
 
-    [Required(ErrorMessage = "Lastname is required")]
-    [StringLength(50, MinimumLength = 1, ErrorMessage = "Lastname must be between 1 and 50 characters long")]
-    public string Lastname { get; set; }
+    [Required(ErrorMessage ="Lastname is required")]
+    [StringLength(50,MinimumLength = 1,ErrorMessage = "Lastname must be between 1 and 50 characters long")]
+    public string LastName {get; set;}
 
     [Required(ErrorMessage = "Username is required")]
     [StringLength(50, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 50 characters long")]
