@@ -1,5 +1,6 @@
 html {
   font-size: 14px;
+  background-color: #FFF9F0;
 }
 
 @media (min-width: 768px) {
@@ -17,8 +18,16 @@ html {
   min-height: 100%;
 }
 
+header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
 body {
+  margin: 0px;
   margin-bottom: 60px;
+  
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -28,4 +37,245 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+a {
+  text-decoration: none;
+  color: #242424;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #B2DFDC;
+  padding: 10px 0px;
+  box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.navbar-contain {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  margin: auto;
+  
+}
+
+.navbar-menu {
+  display:flex;
+  justify-content: center;
+  align-items:center;
+}
+
+.navbar-item {
+  background-color: #FF8A80;
+  margin: 0px 10px;
+  padding: 7px 30px;
+  border-radius: 5px;
+  margin-right: 0px;
+}
+
+.main {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+
+.menu {
+  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu > a {
+  padding: 10px 30px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.home-body {
+  margin: 0px;
+  width: 150%;
+  padding: 20px;
+}
+
+.category {
+  display: grid;
+  grid-template-columns: repeat(2, 1.5fr);
+  grid-gap: 15px;
+  width: auto;
+
+}
+
+.property {
+  display: flex;
+  justify-content: space-between;
+}
+
+.property-contain {
+  display: inline-flex;
+}
+
+.property-item {
+  margin-right: 40px;
+}
+
+.property-search {
+  display: flex;
+  justify-content: end;
+  color: #242424;
+  padding: 5px 15px;
+  border: 2px solid #242424;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.genre {
+  display: inline-flex;
+}
+
+.genre-item {
+  margin-right: 25px;
+}
+
+.card-header {
+  position: relative;
+  background-color: #B2DFDC;
+  padding: 10px 10px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+  z-index: 2;
+}
+
+.card-body {
+  position: relative;
+  background-color: #FFE0B2;
+  border-radius: 5px;
+  padding: 10px 15px;
+  padding-bottom: 45px;
+  margin-top: -1px;
+  z-index: 1;
+  box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.card-body > div {
+  margin: 5px 0px;
+}
+
+.user-and-like {
+  display: flex;
+  justify-content: space-between;
+}
+
+.place-and-gruop {
+  display: flex;
+}
+
+.place-and-gruop > div {
+  margin-right: 25px;
+}
+
+.detail {
+  background-color: #FEFEFE;
+  height: 100px;
+  padding: 10px 10px;
+  border-radius: 5px;
+}
+
+.btn {
+  margin-top: 5px;
+  border: 0 solid #242424;
+  background-color: #FF8A80;
+  border-radius: 5px;
+  padding: 5px 15px;
+  box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.field {
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.login-body {
+  position: relative;
+  background-color: #FFE0B2;
+  border-radius: 5px;
+  padding: 10px 15px;
+  padding-bottom: 35px;
+  margin-top: -1px;
+  z-index: 1;
+  box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.login-p {
+  margin-left: 10px;
+  margin-bottom: 7px;
+}
+
+.inp {
+  position: inherit;
+  width: 90%;
+  height: 100%;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 7px 0px 7px 20px;
+  box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.blue {
+  background-color: #B2DFDC;
+}
+
+.right {
+  float: right;
+}
+
+.algn-start {
+  text-align: start;
+}
+
+.algn-center {
+  text-align: center;
+}
+
+.mh-40 {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.mv-10 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.btn-login-property {
+  display: block;
+  margin-top: 40px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-60%, -0%);
+}
+
+.main-login-property {
+  width: 40%;
+}
+
+.home-container {
+  display: inline-flex;
+  max-width: 1260px;
 }
