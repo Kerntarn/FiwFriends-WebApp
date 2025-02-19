@@ -12,6 +12,6 @@ function signup() {
         document.getElementById("register-text").textContent="unmatch password"
 }
 
-function create_Post {
-        // api ปิ้วๆ
-}
+// function create_Post {
+//         // api ปิ้วๆ
+// }
