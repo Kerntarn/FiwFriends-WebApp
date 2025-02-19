@@ -95,10 +95,15 @@ a {
   border-radius: 5px 5px 0px 0px;
 }
 
+.home-container {
+  display: inline-flex;
+  max-width: 1260px;
+}
+
 .home-body {
   margin: 0px;
-  width: 150%;
-  padding: 20px;
+  width: 600px;
+  padding: 0px 20px;
 }
 
 .category {
@@ -275,7 +280,8 @@ a {
   width: 40%;
 }
 
-.home-container {
-  display: inline-flex;
-  max-width: 1260px;
+
+
+.big-width {
+  width: 600px;
 }

@@ -7,6 +7,7 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FiwFriends.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
@@ -18,8 +19,8 @@
                     </div>
 
                    <div class="navbar-menu">
-                        <a class="navbar-item" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
-                        <a class="navbar-item" asp-area="" asp-controller="Home" asp-action="SignUp">Sign up</a>
+                        <a class="navbar-item" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+                        <a class="navbar-item" asp-area="" asp-controller="Auth" asp-action="Register">Sign up</a>
                     </div>
 
             </div>

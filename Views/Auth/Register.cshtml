@@ -1,5 +1,4 @@
-﻿@using FiwFriends.Dtos.Auth
-@model RegisterDto
+﻿@using FiwFriends.DTOs.Auth
 
 @{
     ViewData["Title"] = "Sign-up Page";
@@ -10,40 +9,52 @@
   <script src="~/js/auth/register/register_form_animate.js"></script>
 }
 
+@if (TempData["error"] != null)
+{
+  <div class="error-text">
+    @TempData["error"]
+  </div>
+}
+
 <div class="main main-login-property">
-
+        
         <div class="card">
+            
             <div class="login-body algn-center">
-                <h2>Create Account</h2>
-                <div class=" login-body blue mh-40 ">
-                    <div class="field">
-                        <div class="mh-40">
-                            <p class="algn-start login-p" >name</p>
-                            <input class="inp" type="text" id="register-name">
-                        </div>
-                        
-                        <div class="mh-40">
-                            <p class="algn-start login-p" >username</p>
-                            <input class="inp" type="text" id="register-username">
-                        </div>
-                        
-                        <div class="mh-40">
-                            <p class="algn-start login-p">password</p>
-                            <input class="inp" type="password" id="register-pswd">
-                        </div>
+                    <h2>Create Account</h2>
 
-                        <div class="mh-40">
-                            <p class="algn-start login-p">confirm password</p>
-                            <input class="inp" type="password" id="confirm-register-pswd">
-                        </div>
+                    <form asp-action="Register" id="form" class="field">
+                        <div asp-validation-summary="ModelOnly"></div>
+                        <div class=" login-body blue mh-40 ">
 
+                            <div class="mh-40">
+                                <p class="algn-start login-p" >name</p>
+                                <input class="inp" type="text" id="register-name">
+                            </div>
+                            
+                            <div class="mh-40">
+                                <p class="algn-start login-p" >username</p>
+                                <input class="inp" type="text" id="register-username">
+                            </div>
+                            
+                            <div class="mh-40">
+                                <p class="algn-start login-p">password</p>
+                                <input class="inp" type="password" id="register-pswd">
+                            </div>
+
+                            <div class="mh-40">
+                                <p class="algn-start login-p">confirm password</p>
+                                <input class="inp" type="password" id="confirm-register-pswd">
+                            </div>
+
+                            
+                            <p id="register-text"></p>
+
+                            <button class="navbar-item btn-login-property" onclick=signup()>sign up</button>
+                            <p>Already have an account? <a asp-controller="Home" asp-action="Login">login</a></p>
                         
-                        <p id="register-text"></p>
-
-                        <button class="navbar-item btn-login-property" onclick=signup()>sign up</button>
-                        <p>Already have an account? <a asp-controller="Home" asp-action="Login">login</a></p>
-                    </div>
-                </div>
+                        </div>
+                    </form>
             </div>
         </div>
 
