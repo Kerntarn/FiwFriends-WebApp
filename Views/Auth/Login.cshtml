@@ -2,13 +2,19 @@
     ViewData["Title"] = "Login Page";
 }
 
+@section Scripts {
+  <script src="~/js/auth/login/ajaxLogin.js"></script>
+  <script src="~/js/auth/login/login_form_validate.js"></script>
+}
+
 <div class="main main-login-property">
 
         <div class="card">
             <div class="login-body algn-center">
                 <h2>Welcome Back!</h2>
                 <div class=" login-body blue mh-40 ">
-                    <div class="field">
+
+                    <form class="field" id="form">
                         <div class="mh-40">
                             <p class="algn-start login-p" >username</p>
                             <input class="inp" type="text" id="login-username">
@@ -21,9 +27,10 @@
                         
                         <p id="login-text"></p>
 
-                        <button class="navbar-item btn-login-property" onclick=login()>login</button>
+                        <button class="navbar-item btn-login-property" type="submit">login</button>
                         <p>Don't have an account? <a asp-controller="Home" asp-action="SignUp">sign up</a></p>
-                    </div>
+
+                    </form>
                 </div>
             </div>
         </div>

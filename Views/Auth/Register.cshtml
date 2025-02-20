@@ -1,4 +1,4 @@
-﻿@using FiwFriends.DTOs.Auth
+﻿@model FiwFriends.DTOs.Auth.RegisterDto
 
 @{
     ViewData["Title"] = "Sign-up Page";
@@ -25,32 +25,43 @@
 
                     <form asp-action="Register" id="form" class="field">
                         <div asp-validation-summary="ModelOnly"></div>
-                        <div class=" login-body blue mh-40 ">
+
+                        <div class="login-body blue mh-40 ">
 
                             <div class="mh-40">
-                                <p class="algn-start login-p" >name</p>
-                                <input class="inp" type="text" id="register-name">
-                            </div>
-                            
-                            <div class="mh-40">
-                                <p class="algn-start login-p" >username</p>
-                                <input class="inp" type="text" id="register-username">
-                            </div>
-                            
-                            <div class="mh-40">
-                                <p class="algn-start login-p">password</p>
-                                <input class="inp" type="password" id="register-pswd">
+                                <p class="algn-start login-p" >First name</p>
+                                <span asp-validation-for="FirstName" class="error-text"></span>
+                                <input class="inp" type="text" asp-for="FirstName" >
+                                
                             </div>
 
                             <div class="mh-40">
-                                <p class="algn-start login-p">confirm password</p>
-                                <input class="inp" type="password" id="confirm-register-pswd">
+                                <p class="algn-start login-p" >Last name</p>
+                                <span asp-validation-for="LastName" class="error-text"></span>
+                                <input class="inp" type="text" asp-for="LastName" >
+                            </div>
+                            
+                            <div class="mh-40">
+                                <p class="algn-start login-p" >Username</p>
+                                <span asp-validation-for="Username" class="error-text"></span>
+                                <input class="inp" type="text" asp-for="Username" >
+                            </div>
+                            
+                            <div class="mh-40">
+                                <p class="algn-start login-p">Password</p>
+                                <span asp-validation-for="Password" class="error-text"></span>
+                                <input class="inp" type="password"  asp-for="Password" >
+                            </div>
+
+                            <div class="mh-40">
+                                <p class="algn-start login-p">Confirm password</p>
+                                <input class="inp" type="password" >
                             </div>
 
                             
                             <p id="register-text"></p>
 
-                            <button class="navbar-item btn-login-property" onclick=signup()>sign up</button>
+                            <button class="navbar-item btn-login-property" type="submit">sign up</button>
                             <p>Already have an account? <a asp-controller="Home" asp-action="Login">login</a></p>
                         
                         </div>
