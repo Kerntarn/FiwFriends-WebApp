@@ -4,6 +4,10 @@
     ViewData["Title"] = "Sign-up Page";
 }
 
+@section Styles {
+        <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
+}
+
 @section Scripts {
   <script src="~/js/auth/register/profile_image.js"></script>
   <script src="~/js/auth/register/register_form_animate.js"></script>
@@ -28,30 +32,30 @@
                         <div class=" login-body blue mh-40 ">
 
                             <div class="mh-40">
-                                <p class="algn-start login-p" >name</p>
+                                <p class="algn-start login-p" ><b>name</b></p>
                                 <input class="inp" type="text" id="register-name">
                             </div>
                             
                             <div class="mh-40">
-                                <p class="algn-start login-p" >username</p>
+                                <p class="algn-start login-p" ><b>username</b></p>
                                 <input class="inp" type="text" id="register-username">
                             </div>
                             
                             <div class="mh-40">
-                                <p class="algn-start login-p">password</p>
+                                <p class="algn-start login-p"><b>password</b></p>
                                 <input class="inp" type="password" id="register-pswd">
                             </div>
 
                             <div class="mh-40">
-                                <p class="algn-start login-p">confirm password</p>
+                                <p class="algn-start login-p"><b>confirm password</b></p>
                                 <input class="inp" type="password" id="confirm-register-pswd">
                             </div>
 
                             
                             <p id="register-text"></p>
 
-                            <button class="navbar-item btn-login-property" onclick=signup()>sign up</button>
-                            <p>Already have an account? <a asp-controller="Home" asp-action="Login">login</a></p>
+                            <button class="navbar-item btn-login-property" onclick=signup()><b>sign up</b></button>
+                            <p>Already have an account? <a asp-controller="Auth" asp-action="Login" class="login-link"><u>login</u> </a></p>
                         
                         </div>
                     </form>

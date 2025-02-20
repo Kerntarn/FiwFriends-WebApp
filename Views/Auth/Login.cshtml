@@ -2,6 +2,10 @@
     ViewData["Title"] = "Login Page";
 }
 
+@section Styles {
+        <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
+
 <div class="main main-login-property">
 
         <div class="card">
@@ -10,19 +14,19 @@
                 <div class=" login-body blue mh-40 ">
                     <div class="field">
                         <div class="mh-40">
-                            <p class="algn-start login-p" >username</p>
+                            <p class="algn-start login-p" ><b>username</b></p>
                             <input class="inp" type="text" id="login-username">
                         </div>
                         
                         <div class="mh-40">
-                            <p class="algn-start login-p">password</p>
+                            <p class="algn-start login-p"><b>password</b></p>
                             <input class="inp" type="password" id="login-pswd">
                         </div>
                         
                         <p id="login-text"></p>
 
-                        <button class="navbar-item btn-login-property" onclick=login()>login</button>
-                        <p>Don't have an account? <a asp-controller="Home" asp-action="SignUp">sign up</a></p>
+                        <button class="navbar-item btn-login-property" onclick=login()><b>login</b></button>
+                        <p>Don't have an account? <a asp-controller="Auth" asp-action="Register" class="signup-link"><u>sign up</u></a></p>
                     </div>
                 </div>
             </div>
