@@ -25,7 +25,7 @@
             <h2>Welcome Back!</h2>
             <div class=" login-body blue mh-40 ">
 
-                <form class="field" id="loginForm">
+                <form class="field" method="post" action="/Auth/Login">
                     <div asp-validation-summary="ModelOnly" class="error-text"></div>
 
                     <div class="mh-40">
@@ -36,16 +36,26 @@
                     
                     <div class="mh-40">
                         <p class="algn-start login-p">password</p>
-                        <input name="Password" class="inp" type="password" >
+                        <input name="Password" class="inp" type="password">
                         <span asp-validation-for="Password" class="error-text"></span>
                     </div>
                     
                     <p id="errorMessage" style="color: red;"></p>
 
-                    <button class="navbar-item btn-login-property" type="submit"">login</button>
+                    <button class="navbar-item btn-login-property" type="submit">login</button>
                     <p>Don't have an account? <a asp-controller="Home" asp-action="SignUp">sign up</a></p>
 
                 </form>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div style="color: red;">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <p>@error.ErrorMessage</p>
+                        }
+                    </div>
+                }
             </div>
         </div>
     </div>
