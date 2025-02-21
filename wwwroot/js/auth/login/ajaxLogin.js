@@ -1,36 +1,28 @@
-var xmlhttp = false;
-try {
-    xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-    console.log("You are using MS IE.");
-} catch (e) {
-    xmlhttp = false;
-}
-
-if (!xmlhttp && typeof XMLHttpRequest != "undefined") {
-    xmlhttp = new XMLHttpRequest();
-    console.log("You are not using MS IE");
-}
-
-function makeRequest(method, serverPage, objID) {
-    const obj = document.querySelector(objID);
-    const formData = new FormData(obj);
-    const json = JSON.stringify({
-        EmailOrUsername: formData.get('EmailOrUsername'),
-        Password: formData.get('Password')
-    });
-    xmlhttp.open(method, serverPage, true);
-    xmlhttp.setRequestHeader(
-        'Content-type', 'application/json'
-        );
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 ) {
-            if (xmlhttp.status == 200) {
-                window.location.href = `${window.location.origin}/Home`
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
+        e.preventDefault(); // ป้องกันหน้ารีเฟรช
+    
+        const formData = new FormData(this);
+        const loginData = {
+            Username: formData.get("Username"),
+            Password: formData.get("Password")
+        };
+    
+        try {
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(loginData)
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                alert("Login Successful!");
+                window.location.href = "/Home"; // ไปหน้า Home
+            } else {
+                document.getElementById("errorMessage").innerText = data.message;
             }
-            else {
-                document.documentElement.innerHTML = xmlhttp.responseText;
-            }
+        } catch (error) {
+            console.error("Error:", error);
         }
-    };
-    xmlhttp.send(json);
-}
+    });

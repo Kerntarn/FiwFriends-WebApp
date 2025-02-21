@@ -62,28 +62,21 @@ namespace FiwFriends.Controllers
             return View(new LoginDto());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        [HttpPost("api/auth/login")]
+        public async Task<IActionResult> LoginApi([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid) 
-                return View(loginDto);
+                return BadRequest(ModelState);
 
-            var existingUser = await _userManager.FindByNameAsync(loginDto.Username);
-            if (existingUser == null)
-            {
-                ModelState.AddModelError("Username", "Username not found.");
-                return View(loginDto);
-            }
+            var user = await _userManager.FindByNameAsync(loginDto.Username);
+            if (user == null)
+                return Unauthorized(new { message = "Invalid username or password" });
 
             var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, false, false);
-            
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            if (!result.Succeeded)
+                return Unauthorized(new { message = "Invalid username or password" });
 
-            ModelState.AddModelError("Password", "Incorrect password.");
-            return View(loginDto);
+            return Ok(new { message = "Login successful" });
         }
 
         [HttpPost]

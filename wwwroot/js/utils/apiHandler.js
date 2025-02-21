@@ -28,7 +28,7 @@ export async function apiHandler(
     cache=true
 ) {
     try {
-        const baseURL = "http://localhost:5010/"
+        const baseURL = "http://localhost:7258/"
         const response = await fetch(
             baseURL + path, 
             {
