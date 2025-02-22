@@ -23,7 +23,7 @@ public class FormController : Controller{
     }
 
     [HttpPost("Form/Submit")]
-    async public Task<IActionResult> Submit(FormDTO form){
+    async public Task<IActionResult> Submit([FromBody] FormDTO form){
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
@@ -40,12 +40,12 @@ public class FormController : Controller{
             }).ToList()
         });
         await _db.SaveChangesAsync();
-        return RedirectToAction("Post", "Detail", new { id = form.PostId });
+        return RedirectToAction("Detail", "Post", new { id = form.PostId });
     }
 
-    [HttpPost("Form/Approve/{FormId}")]
-    async public Task<IActionResult> Approve(int FormId){
-        var form = await _db.Forms.Where(f => f.FormId == FormId)
+    [HttpPost("Form/Approve/{PostId}/{UserId}")]
+    async public Task<IActionResult> Approve(int PostId, string UserId){
+        var form = await _db.Forms.Where(f => f.PostId == PostId && f.UserId == UserId)
                                     .Include(f => f.Post)
                                     .FirstOrDefaultAsync();
         if (form == null){
