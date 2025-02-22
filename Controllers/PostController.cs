@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using FiwFriends.DTOs;
 using FiwFriends.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FiwFriends.Controllers;
 
@@ -18,6 +19,7 @@ public class PostController : Controller
     }
 
     //GET all
+    [Authorize]
     public IActionResult Index(){   
         IEnumerable<Post> allPost = _db.Posts;
         return View(allPost);
