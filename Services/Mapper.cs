@@ -34,13 +34,15 @@ public class MapperService{
     }
 
     async private Task<Post> DTO2Post([NotNull] PostDTO post){
+        var user = await _currentUser.GetCurrentUser();
+        if ( user == null ){ throw new Exception("Just for not warning in MapAsync<PostDTO, Post>"); }
         return new Post {
             Activity = post.Activity,
             Description = post.Description,
             Location = post.Location,
             ExpiredTime = DateTimeOffset.Parse(post.ExpiredTime),
             AppointmentTime = DateTimeOffset.Parse(post.AppointmentTime),
-            OwnerId = await _currentUser.GetCurrentUserId() ?? throw new Exception("Just for not warning."),
+            OwnerId = user.Id,
             Tags = _db.Tags.Where(t => post.Tags.Select( dto => dto.Name.ToLower() ).Contains(t.Name.ToLower())).ToList(),   //Attach Tags
             Questions = post.Questions.Select(q => new Question{
                 Content = q.Content
@@ -50,22 +52,25 @@ public class MapperService{
     }
 
     async private Task<IndexPost> Post2Index(Post post){
-        var userId = await _currentUser.GetCurrentUserId();
+        var user = await _currentUser.GetCurrentUser();
+        if ( user == null ){ throw new Exception("Just for not warning in MapAsync<Post, IndexPost> #1"); }
+
         return new IndexPost{
             PostId = post.PostId,
             Activity = post.Activity,
             Description = post.Description,
             Location = post.Location,
             AppointmentTime = post.AppointmentTime,
-            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning."),
+            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, IndexPost> #2"),
             ParticipantsCount = post.Participants.Count(),
-            IsFav = post.FavoritedBy.Any(u => u.Id == userId),
+            IsFav = post.FavoritedBy.Any(u => u.Id == user.Id),
             Tags = post.Tags
         };
     }
 
     async private Task<DetailPost> Post2Detail(Post post){
-        var userId = await _currentUser.GetCurrentUserId();
+        var user = await _currentUser.GetCurrentUser();
+        if ( user == null ){ throw new Exception("Just for not warning in MapAsync<Post, DetailPost> #1"); }
         return new DetailPost{
             PostId = post.PostId,
             Activity = post.Activity,
@@ -73,9 +78,9 @@ public class MapperService{
             Location = post.Location,
             AppointmentTime = post.AppointmentTime,
             ExpiredTime = post.ExpiredTime,
-            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning."),
+            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, DetailPost> #2"),
             ParticipantsCount = post.Participants.Count(),
-            IsFav = post.FavoritedBy.Any(u => u.Id == userId),
+            IsFav = post.FavoritedBy.Any(u => u.Id == user.Id),
             Tags = post.Tags,
             Participants = post.Participants.Select(j => j.User),
             Questions = post.Questions

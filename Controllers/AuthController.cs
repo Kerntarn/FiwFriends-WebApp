@@ -11,7 +11,7 @@ namespace FiwFriends.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+         public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -20,19 +20,20 @@ namespace FiwFriends.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View(new RegisterDto());
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            if (!ModelState.IsValid) return View(registerDto);
-            
+
+            if (!ModelState.IsValid) return Ok(registerDto);
+
             var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
             if (existingUser != null)
             {
                 ModelState.AddModelError("Username", "Username already exists.");
-                return View(registerDto);
+                return Ok(registerDto);
             }
             
             var user = new User 
@@ -59,20 +60,20 @@ namespace FiwFriends.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View(new LoginDto());
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> Login(LoginDto loginDto)
         {
             if (!ModelState.IsValid) 
-                return Ok(loginDto);
+                return View(loginDto);
 
             var existingUser = await _userManager.FindByNameAsync(loginDto.Username);
             if (existingUser == null)
             {
                 ModelState.AddModelError("Username", "Username not found.");
-                return Ok(loginDto);
+                return View(loginDto);
             }
 
             var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, false, false);
@@ -83,7 +84,7 @@ namespace FiwFriends.Controllers
             }
 
             ModelState.AddModelError("Password", "Incorrect password.");
-            return Ok(loginDto);
+            return View(loginDto);
         }
 
         [HttpPost]

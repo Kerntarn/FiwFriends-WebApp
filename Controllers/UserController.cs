@@ -24,9 +24,9 @@ namespace FiwFriends.Controllers
 
         private async Task<User?> GetCurrentUserAsync()
         {
-            var userId = await _currentUserService.GetCurrentUserId();
-            if (userId is null) return null;
-            return await _db.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString());
+            var user = await _currentUserService.GetCurrentUser();
+            if (user is null) return null;
+            return await _db.Users.FirstOrDefaultAsync(u => u.Id == user.Id.ToString());
         }
 
         [Authorize]
@@ -50,7 +50,7 @@ namespace FiwFriends.Controllers
 
             var userDto = new UpdateUserDto
             {
-                Username = user.UserName,
+                Username = user.UserName ?? "",
                 FirstName = user.FirstName,
                 LastName = user.LastName
             };

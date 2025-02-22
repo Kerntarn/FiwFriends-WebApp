@@ -27,12 +27,12 @@ public class FormController : Controller{
         if (!ModelState.IsValid){
             return BadRequest(ModelState);
         }
-        var userId = await _currentUser.GetCurrentUserId();
-        if (userId == null){
+        var user = await _currentUser.GetCurrentUser();
+        if (user == null){
             return RedirectToAction("Login", "Auth");
         }
         await _db.Forms.AddAsync(new Form{
-            UserId = userId,         //get current user
+            UserId = user.Id,         //get current user
             PostId = form.PostId,
             Answers = form.Answers.Select(a => new Answer{
                 Content = a.Content,
@@ -51,7 +51,11 @@ public class FormController : Controller{
         if (form == null){
             return NotFound();
         }
-        if (form.Post.OwnerId != _currentUser.GetCurrentUserId().Result){
+        var user = await _currentUser.GetCurrentUser();
+        if (user == null){
+            return RedirectToAction("Login", "Auth");
+        }
+        if (form.Post.OwnerId != user.Id){
             return Unauthorized();
         }
         form.IsApproved = true;
