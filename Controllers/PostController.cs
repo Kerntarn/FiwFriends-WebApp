@@ -31,7 +31,7 @@ public class PostController : Controller
         foreach (var post in allPost){
             indexPosts.Add(await _mapper.MapAsync<Post, IndexPost>(post));
         }
-        return Ok(indexPosts.Select(p => p.Activity));
+        return Ok(indexPosts.Select(p => new { p.PostId, p.Activity }));
     }
 
     [HttpGet("Search/{search}")]
@@ -60,17 +60,17 @@ public class PostController : Controller
 
     [HttpGet("Post/{id}")]
     async public Task<IActionResult> Detail(int id){
-        var post = _db.Posts.Where(p => p.PostId == id)
+        var post = await _db.Posts.Where(p => p.PostId == id)
                     .Include(p => p.Participants).ThenInclude(j => j.User)
                     .Include(p => p.Owner)
                     .Include(p => p.FavoritedBy)
                     .Include(p => p.Questions)
                     .Include(p => p.Forms).ThenInclude(f => f.Answers)
-                    .Include(p => p.Tags).FirstOrDefault();
+                    .Include(p => p.Tags).FirstOrDefaultAsync();
         if(post == null){
             return NotFound();
         }
-        return Ok(await _mapper.MapAsync<Post, DetailPost>(post));
+        return Ok(_mapper.MapAsync<Post, DetailPost>(post).GetAwaiter().GetResult().Activity);
     }
     //GET Create page
     public IActionResult Create(){
