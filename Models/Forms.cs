@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 namespace FiwFriends.Models;
 
-public class Form{
+public class Form : BaseModel{
     [Key]
     public int FormId { get; set; }
     [Required]
