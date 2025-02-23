@@ -1,15 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html {
+    font-size: 14px;
+    background-color: #FFF9F0;
+    font-family: 'Inter';
+
+}
+
+.accepted-status {
+        color: #19A143;
+    }
+
+.rejected-status {
+        color: #FF0000;
+    }
+
+.pending-status {
+        color: #F4B942;
+    }
+
 table {
-        font-family: arial, sans-serif;
+        font-family: 'Inter';
         border-collapse: collapse;
         width: 100%;
+        text-align: center;
 }
 
 td, th {
-        border: 1px solid #dddddd;
         text-align: left;
-        padding: 8px;
+        padding: 12px;
+
 }
 
 th {
         background-color: #B2DFDC
+}
+
+tr.border-bottom {
+        border-bottom: 1px solid #D9D9D9;
 }
