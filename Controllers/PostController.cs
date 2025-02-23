@@ -20,7 +20,30 @@ public class PostController : Controller
     //GET all
     public IActionResult Index(){   
         IEnumerable<Post> allPost = _db.Posts;
-        return View(allPost);
+        return Ok(allPost);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Post>> GetPostById(int id)
+    {
+        var post = await _db.Posts
+            .Where(p => p.PostId == id)
+            .Include(p => p.Participants)
+                .ThenInclude(j => j.User)
+            .Include(p => p.Owner)
+            .Include(p => p.FavoritedBy)
+            .Include(p => p.Questions)
+            .Include(p => p.Forms)
+                .ThenInclude(f => f.Answers)
+            .Include(p => p.Tags)
+            .FirstOrDefaultAsync();
+
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(post);
     }
 
     [HttpGet("Post/{id}")]
@@ -39,116 +62,189 @@ public class PostController : Controller
         if(post == null){
             return NotFound();
         }
-        return View(post);
+        return Ok(new{
+            post.PostId,
+            user = post.Participants.Select(p => p.UserId)}
+            );
     }
     //GET Create page
     public IActionResult Create(){
-        return View();
+        return Ok();
     }
 
     //POST Create
-    [HttpPost("Post")]
-    async public Task<IActionResult> Create(PostDTO post){ //Delete [FromBody] if need to send request from View.
-        if (!ModelState.IsValid){
-            return BadRequest(ModelState);
+    [HttpPost("/Post/Create")]
+    public async Task<ActionResult<Post>> CreatePost([FromBody] PostDTO postDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var ownerId = await _currentUser.GetCurrentUserId();
+            if (ownerId == null)
+            {
+                return Unauthorized("User not logged in");
+            }
+
+            var tags = await _db.Tags
+                .Where(t => postDto.Tags.Select(dto => dto.Name).Contains(t.Name))
+                .ToListAsync();
+
+            var post = new Post
+            {
+                Activity = postDto.Activity,
+                Description = postDto.Description,
+                ExpiredTime = postDto.ExpiredTime,
+                AppointmentTime = postDto.AppointmentTime,
+                OwnerId = ownerId,
+                Tags = tags,
+                Questions = postDto.Questions.Select(q => new Question
+                {
+                    Content = q.Content
+                }).ToList()
+            };
+
+            await _db.Posts.AddAsync(post);
+            await _db.SaveChangesAsync();
+
+            return Ok(new {post.PostId});
         }
-        var ownerId = await _currentUser.GetCurrentUserId(); //Replace with actual current user logic
-        if (ownerId == null){
-            return RedirectToAction("Login", "Auth");
-        }
-        await _db.Posts.AddAsync(new Post{
-            Activity = post.Activity,
-            Description = post.Description,
-            ExpiredTime = post.ExpiredTime,
-            AppointmentTime = post.AppointmentTime,
-            OwnerId = ownerId,
-            Tags = _db.Tags.Where(t => post.Tags.Select( dto => dto.Name ).Contains(t.Name)).ToList(),   //Attach Tags
-            Questions = post.Questions.Select(q => new Question{
-                Content = q.Content
-            }).ToList()
-        });
-        await _db.SaveChangesAsync();
-        return RedirectToAction("Index");
-    }
 
     //DELETE Post
     [HttpDelete("Post/{id}")]
-    async public Task<IActionResult> Delete(int id){
-        //todo: Check if post belong to current user
-        var post = _db.Posts.Find(id);
-        if (post == null){
+    public async Task<IActionResult> DeletePost(int id)
+    {
+        var post = await _db.Posts.FindAsync(id);
+        if (post == null)
+        {
             return NotFound();
         }
-        if (post.OwnerId != await _currentUser.GetCurrentUserId()){
-            return Unauthorized();
+
+        var userId = await _currentUser.GetCurrentUserId();
+        if (post.OwnerId != userId)
+        {
+            return Unauthorized("Not authorized to delete this post");
         }
+
         _db.Posts.Remove(post);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Index");
+
+        return NoContent();
     }
 
     //PUT Update Post
     [HttpPut("Post/{id}")]
-    async public Task<IActionResult> Edit(int id, PostDTO post){ //Delete [FromBody] if need to send request from View.
-        var tags = await _db.Tags
-                        .Where(t => post.Tags.Select(dto => dto.Name).Contains(t.Name))
-                        .ToListAsync();
-        int row_affected = await _db.Posts
-                            .Where(p => p.PostId == id)
-                            .ExecuteUpdateAsync(setters => setters
-                                .SetProperty(p => p.Activity, post.Activity)
-                                .SetProperty(p => p.Description, post.Description)
-                                .SetProperty(p => p.ExpiredTime, post.ExpiredTime)
-                                .SetProperty(p => p.AppointmentTime, post.AppointmentTime)
-                                .SetProperty(p => p.UpdatedAt, DateTime.UtcNow)
-                                .SetProperty(p => p.Tags, tags));
-        if (row_affected == 0){
-            return NotFound("Post is not found to delete.");
+    public async Task<IActionResult> UpdatePost(int id, [FromBody] PostDTO postDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
         }
 
-        return RedirectToAction("Detail", new { id });
+        var post = await _db.Posts
+            .Include(p => p.Tags)
+            .FirstOrDefaultAsync(p => p.PostId == id);
+
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        var userId = await _currentUser.GetCurrentUserId();
+        if (post.OwnerId != userId)
+        {
+            return Unauthorized("Not authorized to update this post");
+        }
+
+        var tags = await _db.Tags
+            .Where(t => postDto.Tags.Select(dto => dto.Name).Contains(t.Name))
+            .ToListAsync();
+
+        post.Activity = postDto.Activity;
+        post.Description = postDto.Description;
+        post.ExpiredTime = postDto.ExpiredTime;
+        post.AppointmentTime = postDto.AppointmentTime;
+        post.UpdatedAt = DateTime.UtcNow;
+        post.Tags = tags;
+
+        await _db.SaveChangesAsync();
+
+        return NoContent();
     }
 
-    [HttpPost("Post/Join/{id}")]
-    async public Task<IActionResult> Join(int id){
-        var userId = await _currentUser.GetCurrentUserId();   
-        var post = await _db.Posts.FindAsync(id);
-        if (post == null){
-            return NotFound("Post is not found.");
+
+    [HttpPost("Post/Join/{postId}")]
+    public async Task<IActionResult> JoinPost(int postId)
+    {
+        var userId = await _currentUser.GetCurrentUserId();
+        if (userId == null)
+        {
+            return Unauthorized("User not logged in");
         }
-        if (userId == null){
-            return RedirectToAction("Login", "Auth");
+
+        var post = await _db.Posts.FindAsync(postId);
+        if (post == null)
+        {
+            return NotFound("Post not found");
         }
-        var join = new Join{
-            UserId = userId,  
-            PostId = id
+
+        var existingJoin = await _db.Joins
+            .FirstOrDefaultAsync(j => j.UserId == userId && j.PostId == postId);
+
+        if (existingJoin != null)
+        {
+            return BadRequest("Already joined this event");
+        }
+
+        var join = new Join
+        {
+            UserId = userId,
+            PostId = postId
         };
+
         await _db.Joins.AddAsync(join);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Detail", new { id });
+
+        return Ok(new { message = "Joined successfully", postId });
     }
 
+
     [HttpPost("Post/Favorite/{id}")]
-    async public Task<IActionResult> Favorite(int id){
-        var userId = await _currentUser.GetCurrentUserId();   
-        var post = await _db.Posts.FindAsync(id);
-        if (post == null){
-            return NotFound("Post is not found.");
+    public async Task<IActionResult> ToggleFavorite(int id)
+    {
+        var userId = await _currentUser.GetCurrentUserId();
+        if (userId == null)
+        {
+            return Unauthorized("User not logged in");
         }
-        if (userId == null){
-            return RedirectToAction("Login", "Auth");
+
+        var post = await _db.Posts
+            .Include(p => p.FavoritedBy)
+            .FirstOrDefaultAsync(p => p.PostId == id);
+
+        if (post == null)
+        {
+            return NotFound("Post not found");
         }
-        if (post.FavoritedBy.Any(u => u.Id == userId)){
-            post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == userId));
-        } else {
-            var user = await _db.Users.FindAsync(userId);
-            if (user == null){
-                return NotFound("User is not found.");
-            }
+
+        var user = await _db.Users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        if (post.FavoritedBy.Any(u => u.Id == userId))
+        {
+            post.FavoritedBy.Remove(user);
+            await _db.SaveChangesAsync();
+            return Ok(new { message = "Post unfavorited", postId = id });
+        }
+        else
+        {
             post.FavoritedBy.Add(user);
+            await _db.SaveChangesAsync();
+            return Ok();
         }
-        await _db.SaveChangesAsync();
-        return Ok("Index");
     }
-    
 }

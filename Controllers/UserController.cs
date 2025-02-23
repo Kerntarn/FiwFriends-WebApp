@@ -58,14 +58,12 @@ namespace FiwFriends.Controllers
             return View(userDto);
         }
 
-
-
         [Authorize]
         [HttpPost("user/profile/edit")]
         public async Task<IActionResult> Edit(UpdateUserDto userEditor)
         {
             if (!ModelState.IsValid)
-                return View(userEditor);
+                return BadRequest("wtf");
 
             var user = await GetCurrentUserAsync();
             if (user == null)
@@ -107,5 +105,77 @@ namespace FiwFriends.Controllers
             TempData["Success"] = "Profile updated successfully";
             return RedirectToAction("Profile");
         }
+
+        [HttpGet("user/posts/status")]
+        public async Task<IActionResult> UserPostStatus()
+        {
+            var userId = await _currentUserService.GetCurrentUserId();
+            System.Console.WriteLine(userId);
+            if (userId == null)
+            {
+                return NoContent();
+            }
+
+            var joinedPosts = await _db.Joins
+                .Where(f => f.UserId == userId)
+                .Select(f => new UserPostStatusDTO
+                {
+                    Activity = f.Post.Activity,
+                    Owner = _db.Users.Where(j => j.Id == f.Post.OwnerId).Select(k => k.UserName).FirstOrDefault(),
+                    AppointmentTime = f.Post.AppointmentTime,
+                    Status = "Joined" // Explicitly setting status
+                })
+                .ToListAsync();
+
+            var userForms = await _db.Forms
+                .Where(f => f.UserId == userId)
+                .Include(f => f.Post)
+                .ThenInclude(p => p.Tags)
+                .Include(f => f.Post.Questions)
+                .ToListAsync();
+
+            var pendingPosts = userForms
+                .Where(f => f.Status == FormStatus.Pending && f.Post != null)
+                .Select(f => new UserPostStatusDTO
+                {
+                    Activity = f.Post.Activity,
+                    Owner = _db.Users.Where(j => j.Id == f.Post.OwnerId).Select(k => k.UserName).FirstOrDefault(),
+                    AppointmentTime = f.Post.AppointmentTime,
+                    Status = "Pending" // Setting status dynamically
+                })
+                .ToList();
+
+            var rejectedPosts = userForms
+                .Where(f => f.Status == FormStatus.Rejected && f.Post != null)
+                .Select(f => new UserPostStatusDTO
+                {
+                    Activity = f.Post.Activity,
+                    Owner = _db.Users.Where(j => j.Id == f.Post.OwnerId).Select(k => k.UserName).FirstOrDefault(),
+                    AppointmentTime = f.Post.AppointmentTime,
+                    Status = "Rejected" // Setting status dynamically
+                })
+                .ToList();
+
+            // Ensure all lists contain the same type (List<UserPostStatusDTO>)
+            var uniqueJoinedPosts = joinedPosts
+                .Except(pendingPosts)
+                .Except(rejectedPosts)
+                .ToList();
+
+            var allPosts = joinedPosts
+                .Concat(pendingPosts)
+                .Concat(rejectedPosts)
+                .ToList();
+            System.Console.WriteLine("Hi");
+
+            var model = new UserPostStatusViewModel
+            {
+                Posts = allPosts
+            };
+            
+            return Ok(model);
+
+        }
+
     }
 }

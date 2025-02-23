@@ -48,7 +48,10 @@ builder.Services.AddCors(options =>
 });
 
 // Add controllers with views
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    });
 
 // Add HTTP context accessor for services like CurrentUserService
 builder.Services.AddHttpContextAccessor();

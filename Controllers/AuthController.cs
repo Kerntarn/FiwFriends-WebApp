@@ -23,37 +23,33 @@ namespace FiwFriends.Controllers
             return View(new RegisterDto());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        [HttpPost("/auth/register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            if (!ModelState.IsValid) return View(registerDto);
-            
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
             var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
             if (existingUser != null)
             {
-                ModelState.AddModelError("Username", "Username already exists.");
-                return View(registerDto);
+                return BadRequest(new { error = "Username already exists." });
             }
-            
+
             var user = new User 
             {
-                 UserName = registerDto.Username, 
-                 FirstName = registerDto.FirstName, 
-                 LastName = registerDto.LastName
-                 };
+                UserName = registerDto.Username, 
+                FirstName = registerDto.FirstName, 
+                LastName = registerDto.LastName
+            };
+            
             var result = await _userManager.CreateAsync(user, registerDto.Password);
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                return BadRequest(result.Errors);
             }
 
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
-
-            return View(registerDto);
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return Ok(new { message = "User registered successfully!" });
         }
         
         [HttpGet]
@@ -62,35 +58,32 @@ namespace FiwFriends.Controllers
             return View(new LoginDto());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        [HttpPost("/auth/login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid) 
-                return View(loginDto);
+                return BadRequest(ModelState);
 
             var existingUser = await _userManager.FindByNameAsync(loginDto.Username);
             if (existingUser == null)
             {
-                ModelState.AddModelError("Username", "Username not found.");
-                return View(loginDto);
+                return BadRequest(new { error = "Username not found." });
             }
 
             var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, false, false);
-            
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                return BadRequest(new { error = "Incorrect username or password." });
             }
 
-            ModelState.AddModelError("Password", "Incorrect password.");
-            return View(loginDto);
+            return Ok(new { message = "Login successful!" });
         }
 
-        [HttpPost]
+        [HttpPost("/auth/logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return Ok(new { message = "Logged out successfully!" });
         }
     }
 }
