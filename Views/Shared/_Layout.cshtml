@@ -19,8 +19,11 @@
                     </div>
 
                    <div class="navbar-menu">
-                        <a class="navbar-item" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
-                        <a class="navbar-item" asp-area="" asp-controller="Auth" asp-action="Register">Sign up</a>
+                        <a class="navbar-item"  asp-controller="Auth" asp-action="Login">Login</a>
+                        <a class="navbar-item"  asp-controller="Auth" asp-action="Register">Sign up</a>
+                        <form method="post" action="/Auth/Logout">
+                            <button class="navbar-item" type="submit">Logout</button>
+                        </form>
                     </div>
 
             </div>

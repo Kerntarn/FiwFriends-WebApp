@@ -89,6 +89,7 @@ namespace FiwFriends.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            Console.Write("Logout");
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

@@ -83,6 +83,7 @@ public class PostController : Controller
     }
     //GET Create page
     [Authorize]
+    [HttpGet("Post/Create")]
     public IActionResult Create(){                                              //Get Create page
         return View();
     }

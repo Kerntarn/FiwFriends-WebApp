@@ -1,4 +1,71 @@
+@model FiwFriends.DTOs.PostDTO
 
-@{
-    ViewData["Title"] = "Create Post";
+@{  //Razor view of home's index
+    ViewData["Title"] = "Home Page";
 }
+
+<div class="main">
+
+        <div class="home-container">
+
+            <div class="menu">
+                <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
+                <h2>DarthVader</h2>
+                <p>ThelordLnwza0072547</p>
+                <a href="https://www.google.com/" class="menu-home">Home</a>
+                <a class="menu-status">Status</a>
+                <a class="menu-like">like</a>
+            </div>
+
+            <div class="home-body">
+
+                <div class="card">
+                        <div class="card-body">
+                            <form asp-action="Create" method="post">
+                                <div class="mh-40">
+                                    <p class="algn-start login-p">Activity</p>
+                                    <span asp-validation-for="Activity" class="error-text"></span>
+                                    <input class="inp" type="text"  asp-for="Activity" >
+                                </div>
+
+                                <div class="mh-40">
+                                    <p class="algn-start login-p">Description</p>
+                                    <span asp-validation-for="Description" class="error-text"></span>
+                                    <input class="inp" type="text"  asp-for="Description" >
+                                </div>
+
+                                <div class="mh-40">
+                                    <p class="algn-start login-p">ExpiredTime</p>
+                                    <span asp-validation-for="ExpiredTime" class="error-text"></span>
+                                    <input class="inp" type="datetime-local"  asp-for="ExpiredTime" >
+                                </div>
+
+                                <div class="mh-40">
+                                    <p class="algn-start login-p">AppointmentTime</p>
+                                    <span asp-validation-for="AppointmentTime" class="error-text"></span>
+                                    <input class="inp" type="datetime-local"  asp-for="AppointmentTime" >
+                                </div>
+
+                                <div class="mh-40">
+                                    <p class="algn-start login-p">Limit</p>
+                                    <span asp-validation-for="Limit" class="error-text"></span>
+                                    <input class="inp" type="text"  asp-for="Limit" >
+                                </div>
+
+                                <div class="mh-40">
+                                    <p class="algn-start login-p">Location</p>
+                                    <span asp-validation-for="Location" class="error-text"></span>
+                                    <input class="inp" type="text"  asp-for="Location" >
+                                </div>
+
+                                <button class="navbar-item btn-login-property" type="submit">Create Post</button>
+                                
+                            </form>
+                        </div>
+                    </div>
+
+            </div>
+
+        </div>
+
+</div>
