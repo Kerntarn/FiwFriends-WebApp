@@ -130,8 +130,8 @@ public class PostController : Controller
                                 .SetProperty(p => p.Activity, post.Activity)
                                 .SetProperty(p => p.Description, post.Description)
                                 .SetProperty(p => p.Location, post.Location)
-                                .SetProperty(p => p.ExpiredTime, DateTimeOffset.Parse(post.ExpiredTime))
-                                .SetProperty(p => p.AppointmentTime, DateTimeOffset.Parse(post.AppointmentTime))
+                                .SetProperty(p => p.ExpiredTime, post.ExpiredTime)
+                                .SetProperty(p => p.AppointmentTime, post.AppointmentTime)
                                 .SetProperty(p => p.Limit, post.Limit)
                                 .SetProperty(p => p.UpdatedAt, DateTimeOffset.UtcNow));
                                 //Question??

@@ -40,8 +40,8 @@ public class MapperService{
             Activity = post.Activity,
             Description = post.Description,
             Location = post.Location,
-            ExpiredTime = DateTimeOffset.Parse(post.ExpiredTime),
-            AppointmentTime = DateTimeOffset.Parse(post.AppointmentTime),
+            ExpiredTime = post.ExpiredTime,
+            AppointmentTime = post.AppointmentTime,
             OwnerId = user.Id,
             Tags = _db.Tags.Where(t => post.Tags.Select( dto => dto.Name.ToLower() ).Contains(t.Name.ToLower())).ToList(),   //Attach Tags
             Questions = post.Questions.Select(q => new Question{
