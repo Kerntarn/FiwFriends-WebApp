@@ -1,0 +1,72 @@
+﻿@model FiwFriends.DTOs.Auth.RegisterDto
+
+@{
+    ViewData["Title"] = "Sign-up Page";
+}
+
+@section Scripts {
+  <script src="~/js/auth/register/profile_image.js"></script>
+  <script src="~/js/auth/register/register_form_animate.js"></script>
+}
+
+@if (TempData["error"] != null)
+{
+  <div class="error-text">
+    @TempData["error"]
+  </div>
+}
+
+<div class="main main-login-property">
+        
+        <div class="card">
+            
+            <div class="login-body algn-center">
+                    <h2>Create Account</h2>
+
+                    <form asp-action="Register" id="form" class="field">
+                        <div asp-validation-summary="ModelOnly"></div>
+
+                        <div class="login-body blue mh-40 ">
+
+                            <div class="mh-40">
+                                <p class="algn-start login-p" >First name</p>
+                                <span asp-validation-for="FirstName" class="error-text"></span>
+                                <input class="inp" type="text" asp-for="FirstName" >
+                                
+                            </div>
+
+                            <div class="mh-40">
+                                <p class="algn-start login-p" >Last name</p>
+                                <span asp-validation-for="LastName" class="error-text"></span>
+                                <input class="inp" type="text" asp-for="LastName" >
+                            </div>
+                            
+                            <div class="mh-40">
+                                <p class="algn-start login-p" >Username</p>
+                                <span asp-validation-for="Username" class="error-text"></span>
+                                <input class="inp" type="text" asp-for="Username" >
+                            </div>
+                            
+                            <div class="mh-40">
+                                <p class="algn-start login-p">Password</p>
+                                <span asp-validation-for="Password" class="error-text"></span>
+                                <input class="inp" type="password"  asp-for="Password" >
+                            </div>
+
+                            <div class="mh-40">
+                                <p class="algn-start login-p">Confirm password</p>
+                                <input class="inp" type="password" >
+                            </div>
+
+                            
+                            <p id="register-text"></p>
+
+                            <button class="navbar-item btn-login-property" type="submit">sign up</button>
+                            <p>Already have an account? <a asp-controller="Auth" asp-action="Login">login</a></p>
+                        
+                        </div>
+                    </form>
+            </div>
+        </div>
+
+</div>
