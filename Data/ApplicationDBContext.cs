@@ -7,7 +7,7 @@ public class ApplicationDBContext : IdentityDbContext<User>
 {
     public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
         : base(options) { }
-    public DbSet<User> Users { get; set; } // Replace `YourEntity` with your actual model class.
+    public new DbSet<User> Users { get; set; } // Replace `YourEntity` with your actual model class.
     public DbSet<Post> Posts { get; set; }
     public DbSet<Join> Joins { get; set; }
     public DbSet<Form> Forms { get; set; }
