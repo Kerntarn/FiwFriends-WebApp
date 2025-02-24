@@ -33,38 +33,43 @@
                         <div class="login-body blue mh-40 ">
 
                             <div class="mh-40">
-                                <p class="algn-start login-p" >First name</p>
-                                <span asp-validation-for="FirstName" class="error-text"></span>
+                                <p class="algn-start login-p" ><b>First name</b></p>
                                 <input class="inp" type="text" asp-for="FirstName" >
                                 
                             </div>
 
                             <div class="mh-40">
-                                <p class="algn-start login-p" >Last name</p>
-                                <span asp-validation-for="LastName" class="error-text"></span>
+                                <p class="algn-start login-p" ><b>Last name</b></p>
                                 <input class="inp" type="text" asp-for="LastName" >
                             </div>
                             
                             <div class="mh-40">
-                                <p class="algn-start login-p" >username</p>
-                                <input class="inp" type="text" id="register-username">
+                                <p class="algn-start login-p" ><b>Username</b></p>
+                                <input class="inp" type="text" asp-for="Username" >
                             </div>
                             
                             <div class="mh-40">
-                                <p class="algn-start login-p">password</p>
-                                <input class="inp" type="password" id="register-pswd">
+                                <p class="algn-start login-p"><b>Password</b></p>
+                                <input class="inp" type="password"  asp-for="Password" >
                             </div>
 
                             <div class="mh-40">
-                                <p class="algn-start login-p">confirm password</p>
-                                <input class="inp" type="password" id="confirm-register-pswd">
+                                <p class="algn-start login-p"><b>Confirm password</b></p>
+                                <input class="inp" type="password" >
                             </div>
 
-                            
-                            <p id="register-text"></p>
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div style="color: red;">
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <p>@error.ErrorMessage</p>
+                                    }
+                                </div>
+                            }
 
-                            <button class="navbar-item btn-login-property" onclick=signup()>sign up</button>
-                            <p>Already have an account? <a asp-controller="Home" asp-action="Login">login</a></p>
+                            <button class="navbar-item btn-login-property" type="submit"><b>sign up</b></button>
+                            <p>Already have an account? <a asp-controller="Home" asp-action="Login" class="login-link"><u>login</u></a></p>
                         
                         </div>
                     </form>

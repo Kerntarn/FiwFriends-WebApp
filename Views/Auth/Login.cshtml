@@ -34,7 +34,7 @@
                     <div asp-validation-summary="ModelOnly" class="error-text"></div>
 
                     <div class="mh-40">
-                        <p class="algn-start login-p" >username</p>
+                        <p class="algn-start login-p" ><b>username</b></p>
                         <input name="Username" class="inp" type="text">
                         @if (ViewData.ModelState["UserName"]?.Errors.Count > 0)
                         {
@@ -43,37 +43,17 @@
                     </div>
                     
                     <div class="mh-40">
-                        <p class="algn-start login-p">password</p>
+                        <p class="algn-start login-p"><b>password</b></p>
                         <input name="Password" class="inp" type="password">
                         @if (ViewData.ModelState["Password"]?.Errors.Count > 0)
                         {
                         <div class="text-danger">@ViewData.ModelState["Password"].Errors[0].ErrorMessage</div>
                         }
-        <div class="card">
-            <div class="login-body algn-center">
-                <h2>Welcome Back!</h2>
-                <div class=" login-body blue mh-40 ">
-                    <div class="field">
-                        <div class="mh-40">
-                            <p class="algn-start login-p" ><b>username</b></p>
-                            <input class="inp" type="text" id="login-username">
-                        </div>
-                        
-                        <div class="mh-40">
-                            <p class="algn-start login-p"><b>password</b></p>
-                            <input class="inp" type="password" id="login-pswd">
-                        </div>
-                        
-                        <p id="login-text"></p>
 
-                        <button class="navbar-item btn-login-property" onclick=login()><b>login</b></button>
-                        <p>Don't have an account? <a asp-controller="Auth" asp-action="Register"  class="signup-link"><u> sign up </u></a></p>
-                    </div>
-                    
                     <p id="errorMessage" style="color: red;"></p>
                     <input type="hidden" name="ReturnUrl" value="@returnUrl" />
-                    <button class="navbar-item btn-login-property" type="submit">login</button>
-                    <p>Don't have an account? <a asp-controller="Auth" asp-action="Register">sign up</a></p>
+                    <button class="navbar-item btn-login-property" type="submit"><b>login</b></button>
+                    <p>Don't have an account? <a asp-controller="Auth" asp-action="Register" class="signup-link"><u> sign up </u></a></p>
 
                 </form>
 
