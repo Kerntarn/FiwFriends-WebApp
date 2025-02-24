@@ -57,13 +57,14 @@ namespace FiwFriends.Controllers
         }
         
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl ?? Url.Content("~/");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl = null)
         {
             if (!ModelState.IsValid) 
                 return View(loginDto);
@@ -79,7 +80,8 @@ namespace FiwFriends.Controllers
             
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                if(Url.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
+                return RedirectToAction("Index", "Post");
             }
 
             ModelState.AddModelError("Password", "Incorrect password.");

@@ -2,6 +2,7 @@
 
 @{  //Razor view of home's index
     ViewData["Title"] = "Login Page";
+    var returnUrl = ViewData["ReturnUrl"] as string;
 }
 
 @section Scripts {
@@ -47,7 +48,7 @@
                     </div>
                     
                     <p id="errorMessage" style="color: red;"></p>
-
+                    <input type="hidden" name="ReturnUrl" value="@returnUrl" />
                     <button class="navbar-item btn-login-property" type="submit">login</button>
                     <p>Don't have an account? <a asp-controller="Auth" asp-action="Register">sign up</a></p>
 

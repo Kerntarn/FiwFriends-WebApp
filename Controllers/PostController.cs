@@ -24,7 +24,7 @@ public class PostController : Controller
     }
 
     public async Task<IActionResult> Index(){                                   //Get all post
-        IEnumerable<Post> allPost = await _db.Posts.Where(p => p.ExpiredTime < DateTimeOffset.UtcNow)
+        IEnumerable<Post> allPost = await _db.Posts.Where(p => p.ExpiredTime > DateTimeOffset.UtcNow)
                                             .Include(p => p.Owner)
                                             .Include(p => p.Participants).ThenInclude(j => j.User)
                                             .Include(p => p.Tags)
@@ -38,7 +38,7 @@ public class PostController : Controller
 
     [HttpGet("Search/{search}")]
     async public Task<IActionResult> Search(string search){                     //Search by check activity and description string
-        var posts = await _db.Posts.Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || p.Description.ToLower().Contains(search.ToLower())) && p.ExpiredTime < DateTimeOffset.UtcNow )
+        var posts = await _db.Posts.Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || p.Description.ToLower().Contains(search.ToLower())) && p.ExpiredTime > DateTimeOffset.UtcNow )
                                     .Include(p => p.Owner)
                                     .Include(p => p.Participants).ThenInclude(j => j.User)
                                     .Include(p => p.Tags)
@@ -55,7 +55,7 @@ public class PostController : Controller
     async public Task<IActionResult> Filter(IEnumerable<TagDTO> tags){          //Filter by Tags
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var posts = await _db.Posts.Where(p => tags.Select(t => t.Name.ToLower()).All(t => p.Tags.Select(t => t.Name.ToLower()).Contains(t)))
+        var posts = await _db.Posts.Where(p => p.ExpiredTime > DateTimeOffset.UtcNow && tags.Select(t => t.Name.ToLower()).All(t => p.Tags.Select(t => t.Name.ToLower()).Contains(t)))
                         .Include(p => p.Owner)
                         .Include(p => p.Participants).ThenInclude(j => j.User)
                         .Include(p => p.Tags)
@@ -131,8 +131,8 @@ public class PostController : Controller
                                 .SetProperty(p => p.Activity, post.Activity)
                                 .SetProperty(p => p.Description, post.Description)
                                 .SetProperty(p => p.Location, post.Location)
-                                .SetProperty(p => p.ExpiredTime, DateTimeOffset.Parse(post.ExpiredTime))
-                                .SetProperty(p => p.AppointmentTime, DateTimeOffset.Parse(post.AppointmentTime))
+                                .SetProperty(p => p.ExpiredTime, post.ExpiredTime)
+                                .SetProperty(p => p.AppointmentTime, post.AppointmentTime)
                                 .SetProperty(p => p.Limit, post.Limit)
                                 .SetProperty(p => p.UpdatedAt, DateTimeOffset.UtcNow));
                                 //Question??

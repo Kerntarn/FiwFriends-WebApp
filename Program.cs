@@ -47,6 +47,12 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";  // Redirect to login page
+    options.AccessDeniedPath = "/Auth/Login";  // Redirect if no permission
+});
+
 // Add controllers with views
 builder.Services.AddControllersWithViews();
 

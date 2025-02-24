@@ -9,9 +9,9 @@ public class PostDTO
         [Required]
         public required string Description { get; set; }
         [Required]
-        public required string ExpiredTime { get; set; }
+        public required DateTimeOffset ExpiredTime { get; set; }
         [Required]
-        public required string AppointmentTime { get; set; }
+        public required DateTimeOffset AppointmentTime { get; set; }
         [Required]
         public required int Limit { get; set; }
         [Required]
