@@ -28,6 +28,17 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult My_post()
+    {
+        return View();
+    }
+
+    public IActionResult Likes()
+    {
+        return View();
+    }
+
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

@@ -12,6 +12,10 @@
 
 
 
+@section Styles {
+        <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
+
 <div class="main main-login-property">
 
     @if (TempData["error"] != null)
@@ -45,6 +49,25 @@
                         {
                         <div class="text-danger">@ViewData.ModelState["Password"].Errors[0].ErrorMessage</div>
                         }
+        <div class="card">
+            <div class="login-body algn-center">
+                <h2>Welcome Back!</h2>
+                <div class=" login-body blue mh-40 ">
+                    <div class="field">
+                        <div class="mh-40">
+                            <p class="algn-start login-p" ><b>username</b></p>
+                            <input class="inp" type="text" id="login-username">
+                        </div>
+                        
+                        <div class="mh-40">
+                            <p class="algn-start login-p"><b>password</b></p>
+                            <input class="inp" type="password" id="login-pswd">
+                        </div>
+                        
+                        <p id="login-text"></p>
+
+                        <button class="navbar-item btn-login-property" onclick=login()><b>login</b></button>
+                        <p>Don't have an account? <a asp-controller="Auth" asp-action="Register"  class="signup-link"><u> sign up </u></a></p>
                     </div>
                     
                     <p id="errorMessage" style="color: red;"></p>
