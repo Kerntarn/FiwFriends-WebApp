@@ -78,7 +78,6 @@ public class PostController : Controller
                     .Include(p => p.Tags).FirstOrDefaultAsync();
 
         if(post == null) return NotFound();
-        Console.Write("Hello kuyyy");
         return View(await _mapper.MapAsync<Post, DetailPost>(post));            //Return view with DetailPost
     }
 
@@ -89,11 +88,6 @@ public class PostController : Controller
         return View();
     }
 
-    [Authorize]
-    [HttpGet("Post/Detail")]
-    public IActionResult Detail(){                                              //Get Create page
-        return View();
-    }
 
     //POST Create
     [HttpPost("Post/Create")]

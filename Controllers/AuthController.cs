@@ -45,7 +45,7 @@ namespace FiwFriends.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Index", "Post");
             }
 
             foreach (var error in result.Errors)
@@ -91,7 +91,6 @@ namespace FiwFriends.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            Console.Write("Logout");
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
