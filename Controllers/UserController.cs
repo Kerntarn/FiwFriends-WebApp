@@ -106,8 +106,8 @@ namespace FiwFriends.Controllers
             return RedirectToAction("Profile");
         }
 
-        [HttpGet("user/posts/status")]
-        public async Task<IActionResult> UserPostStatus()
+        [HttpGet("user/posts/status/inbox")]
+        public async Task<IActionResult> UserInboxStatus()
         {
             var userId = await _currentUserService.GetCurrentUserId();
             System.Console.WriteLine(userId);
@@ -165,7 +165,7 @@ namespace FiwFriends.Controllers
             var allPosts = joinedPosts
                 .Concat(pendingPosts)
                 .Concat(rejectedPosts)
-                .ToList();
+                .ToList().OrderBy(s => s.AppointmentTime);
             System.Console.WriteLine("Hi");
 
             var model = new UserPostStatusViewModel
@@ -174,8 +174,50 @@ namespace FiwFriends.Controllers
             };
             
             return Ok(model);
-
         }
 
+        
+        [HttpGet("user/posts/status/pending")]
+        public async Task<IActionResult> UserPendingStatus()
+        {
+            var userId = await _currentUserService.GetCurrentUserId();
+            System.Console.WriteLine(userId);
+            if (userId == null)
+            {
+                return BadRequest(new {message = "There is no user"});
+            }
+
+            var userPost = await _db.Posts
+                .Where(f => f.OwnerId == userId)
+                .Select(f => f.PostId)
+                .ToListAsync();
+
+            if (userPost == null)
+            {
+                return BadRequest("You haven't owned any post");
+            }
+
+            var userPostForms = await _db.Forms
+                .Where(f => _db.Posts
+                    .Where(p => p.OwnerId == userId) // Find posts owned by the user
+                    .Select(p => p.PostId)
+                    .Contains(f.PostId) // Match with Form's PostId
+                )
+                .Where(f => f.Status == FormStatus.Pending) // Only pending forms
+                .Select(f => new UserPendingStatusDTO
+                {
+                    Activity = f.Post.Activity, // Activity of the post
+                    FormId = f.FormId.ToString(), // Form ID
+                    User = _db.Users
+                        .Where(u => u.Id == f.UserId)
+                        .Select(u => u.UserName)
+                        .FirstOrDefault() ?? "Unknown", // Get username of the form submitter
+                    Status = f.Status.ToString()
+                })
+                .OrderBy(f => f.FormId)
+                .ToListAsync();
+
+            return Ok(userPostForms);
+        }
     }
 }
