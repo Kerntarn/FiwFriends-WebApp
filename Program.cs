@@ -25,7 +25,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<CurrentUserService>();
-
+builder.Services.AddScoped<MapperService>();
 // Add memory cache
 builder.Services.AddMemoryCache();
 
