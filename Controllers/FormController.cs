@@ -17,16 +17,20 @@ public class FormController : Controller{
     }
 
     [HttpGet("Form/{PostId}")]
-    public IActionResult Index(int PostId){
+    async public Task<IActionResult> Index(int PostId){                             //Get all form of post and only for PostOwner
+        var user = await _currentUser.GetCurrentUser();  
+        var post = await _db.Posts.FindAsync(PostId);
+        if(post == null) return NotFound("Post not found");
+        if(post.OwnerId != user?.Id) return Unauthorized("You don't have permission");                
         IEnumerable<Form> forms = _db.Forms
                         .Where(f => f.PostId == PostId)
-                        .Include(f => f.Answers);
+                        .Include(f => f.Answers).ThenInclude(a => a.Question);
         return View(forms);
     }
 
     [HttpPost("Form/Submit")]
-    async public Task<IActionResult> Submit(FormDTO form){
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+    async public Task<IActionResult> Submit(FormDTO form){                          //Submit FormDTO
+        if (!ModelState.IsValid) return BadRequest(ModelState); 
         
         var user = await _currentUser.GetCurrentUser();
         if (user == null) return RedirectToAction("Login", "Auth");
@@ -44,7 +48,7 @@ public class FormController : Controller{
     }
 
     [HttpPost("Form/Approve/{PostId}/{UserId}")]
-    async public Task<IActionResult> Approve(int PostId, string UserId){
+    async public Task<IActionResult> Approve(int PostId, string UserId){                            //Approve post by PostId and UserId, only done by PostOwner
         var form = await _db.Forms.Where(f => f.PostId == PostId && f.UserId == UserId)
                                     .Include(f => f.Post)
                                     .FirstOrDefaultAsync();

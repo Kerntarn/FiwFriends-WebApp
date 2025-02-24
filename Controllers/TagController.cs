@@ -15,7 +15,7 @@ public class TagController : Controller
     {
         _db = db;
     }
-    async public Task<IActionResult> Index()
+    async public Task<IActionResult> Index()                                //Show all Tags
     {
         IEnumerable<Tag> tags = await _db.Tags.ToListAsync();
         return View(tags);
@@ -23,7 +23,7 @@ public class TagController : Controller
     
     [HttpPost("Tag")]
     [Authorize]
-    async public Task<IActionResult> Create([FromBody] TagDTO tag){
+    async public Task<IActionResult> Create([FromBody] TagDTO tag){         //Create Tag by DTO (may be this is done by AJAX?)
         var allTags = await _db.Tags.ToListAsync();
         if(allTags.Count == 0){
             await _db.Tags.AddAsync(new Tag{ Name = tag.Name});
