@@ -20,14 +20,14 @@ namespace FiwFriends.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View(new RegisterDto());
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return View(registerDto);
-            
+
             var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
             if (existingUser != null)
             {
@@ -59,7 +59,7 @@ namespace FiwFriends.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View(new LoginDto());
+            return View();
         }
 
         [HttpPost]

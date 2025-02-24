@@ -8,9 +8,11 @@ namespace FiwFriends.Models
         public int AnswerId { get; set; }
         [Required]
         public required string Content { get; set; }
-        public int QuestionId { get; set; }
-        public Question? Question { get; set; } = null!;
+        [Required]
+        public required int QuestionId { get; set; }
+        public Question Question { get; set; } = null!;
+        [Required]
         public int FormId { get; set; }
-        public Form? Form { get; set; } = null!;
+        public Form Form { get; set; } = null!;
     }
 }
