@@ -79,6 +79,7 @@ public class PostController : Controller
         return View(await _mapper.MapAsync<Post, DetailPost>(post));
     }
     //GET Create page
+    [Authorize]
     public IActionResult Create(){
         return View();
     }
@@ -97,6 +98,7 @@ public class PostController : Controller
 
     //DELETE Post
     [HttpDelete("Post/{id}")]
+    [Authorize]
     async public Task<IActionResult> Delete(int id){
         var post = _db.Posts.Find(id);
         if (post == null) return NotFound(); 
@@ -112,6 +114,7 @@ public class PostController : Controller
 
     //PUT Update Post
     [HttpPut("Post/{id}")]
+    [Authorize]
     async public Task<IActionResult> Edit(int id, PostDTO post){ //Delete [FromBody] if need to send request from View.
         if(!ModelState.IsValid) return BadRequest("Invalid DTO");
 
@@ -144,6 +147,7 @@ public class PostController : Controller
     }
 
     [HttpPost("Post/Close/{postId}")]
+    [Authorize]
     async public Task<IActionResult> Close(int postId){
         var post = await _db.Posts.FindAsync(postId);
         if(post == null) return NotFound("Post not found");
@@ -158,6 +162,7 @@ public class PostController : Controller
     }
 
     [HttpPost("Post/Join/{id}")]
+    [Authorize]
     async public Task<IActionResult> Join(int id){
         var user = await _currentUser.GetCurrentUser();   
         var post = await _db.Posts.FindAsync(id);
@@ -174,6 +179,7 @@ public class PostController : Controller
     }
 
     [HttpPost("Post/Favorite/{id}")]
+    [Authorize]
     async public Task<IActionResult> Favorite(int id){
         var user = await _currentUser.GetCurrentUser();   
         var post = await _db.Posts.FindAsync(id);
@@ -191,6 +197,7 @@ public class PostController : Controller
     }
     
     [HttpPost("Post/Favorite")]
+    [Authorize]
     async public Task<IActionResult> GetFavoritedPost(){
         var user = await _currentUser.GetCurrentUser();
         if(user == null) return RedirectToAction("Login", "Auth");

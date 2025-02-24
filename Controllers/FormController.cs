@@ -7,6 +7,7 @@ using FiwFriends.Services;
 using Microsoft.AspNetCore.Authorization;
 namespace FiwFriends.Controllers;
 
+[Authorize]
 public class FormController : Controller{
     private readonly ApplicationDBContext _db;
     private readonly CurrentUserService _currentUser;

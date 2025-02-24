@@ -53,7 +53,6 @@ public class MapperService{
 
     async private Task<IndexPost> Post2Index(Post post){
         var user = await _currentUser.GetCurrentUser();
-        if ( user == null ){ throw new Exception("Just for not warning in MapAsync<Post, IndexPost> #1"); }
 
         return new IndexPost{
             PostId = post.PostId,
@@ -61,16 +60,15 @@ public class MapperService{
             Description = post.Description,
             Location = post.Location,
             AppointmentTime = post.AppointmentTime,
-            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, IndexPost> #2"),
+            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, IndexPost>"),
             ParticipantsCount = post.Participants.Count(),
-            IsFav = post.FavoritedBy.Any(u => u.Id == user.Id),
+            IsFav = post.FavoritedBy.Any(u => u.Id == user?.Id),
             Tags = post.Tags
         };
     }
 
     async private Task<DetailPost> Post2Detail(Post post){
         var user = await _currentUser.GetCurrentUser();
-        if ( user == null ){ throw new Exception("Just for not warning in MapAsync<Post, DetailPost> #1"); }
         return new DetailPost{
             PostId = post.PostId,
             Activity = post.Activity,
@@ -78,9 +76,9 @@ public class MapperService{
             Location = post.Location,
             AppointmentTime = post.AppointmentTime,
             ExpiredTime = post.ExpiredTime,
-            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, DetailPost> #2"),
+            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, DetailPost>"),
             ParticipantsCount = post.Participants.Count(),
-            IsFav = post.FavoritedBy.Any(u => u.Id == user.Id),
+            IsFav = post.FavoritedBy.Any(u => u.Id == user?.Id),
             Tags = post.Tags,
             Participants = post.Participants.Select(j => j.User),
             Questions = post.Questions

@@ -26,7 +26,7 @@ namespace FiwFriends.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            if (!ModelState.IsValid) return Ok(registerDto);
+            if (!ModelState.IsValid) return View(registerDto);
 
             var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
             if (existingUser != null)

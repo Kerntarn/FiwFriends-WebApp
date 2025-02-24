@@ -9,6 +9,7 @@ using FiwFriends.DTOs;
 
 namespace FiwFriends.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly ApplicationDBContext _db;
