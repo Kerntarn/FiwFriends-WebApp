@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using FiwFriends.DTOs;
 using FiwFriends.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FiwFriends.Controllers;
 
@@ -47,6 +48,7 @@ public class PostController : Controller
     }
 
     //POST Create
+    [Authorize]
     [HttpPost("Post")]
     async public Task<IActionResult> Create(PostDTO post){ //Delete [FromBody] if need to send request from View.
         if (!ModelState.IsValid){
@@ -72,6 +74,7 @@ public class PostController : Controller
     }
 
     //DELETE Post
+    [Authorize]
     [HttpDelete("Post/{id}")]
     async public Task<IActionResult> Delete(int id){
         //todo: Check if post belong to current user
@@ -88,6 +91,7 @@ public class PostController : Controller
     }
 
     //PUT Update Post
+    [Authorize]
     [HttpPut("Post/{id}")]
     async public Task<IActionResult> Edit(int id, PostDTO post){ //Delete [FromBody] if need to send request from View.
         var tags = await _db.Tags
@@ -109,6 +113,7 @@ public class PostController : Controller
         return RedirectToAction("Detail", new { id });
     }
 
+    [Authorize]
     [HttpPost("Post/Join/{id}")]
     async public Task<IActionResult> Join(int id){
         var userId = await _currentUser.GetCurrentUserId();   
@@ -128,6 +133,7 @@ public class PostController : Controller
         return RedirectToAction("Detail", new { id });
     }
 
+    [Authorize]
     [HttpPost("Post/Favorite/{id}")]
     async public Task<IActionResult> Favorite(int id){
         var userId = await _currentUser.GetCurrentUserId();   

@@ -34,7 +34,10 @@ builder.Services.AddSession();
 
 // Configure cookie authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie();
+    .AddCookie(options =>{
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Set timeout to 30 minutes
+        options.SlidingExpiration = true; // Reset expiration on activity
+    });
 
 // Add CORS if needed (for APIs or different frontend origins)
 builder.Services.AddCors(options =>

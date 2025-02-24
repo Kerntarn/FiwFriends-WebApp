@@ -20,7 +20,8 @@ namespace FiwFriends.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View(new RegisterDto());
+            var response = new RegisterDto();
+            return View(response);
         }
 
         [HttpPost]
@@ -59,7 +60,8 @@ namespace FiwFriends.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View(new LoginDto());
+            var response = new LoginDto();
+            return View(response);
         }
 
         [HttpPost]
