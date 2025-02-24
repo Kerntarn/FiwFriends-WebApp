@@ -11,7 +11,7 @@ namespace FiwFriends.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-         public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -24,16 +24,15 @@ namespace FiwFriends.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-
             if (!ModelState.IsValid) return Ok(registerDto);
 
             var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
             if (existingUser != null)
             {
                 ModelState.AddModelError("Username", "Username already exists.");
-                return Ok(registerDto);
+                return View(registerDto);
             }
             
             var user = new User 

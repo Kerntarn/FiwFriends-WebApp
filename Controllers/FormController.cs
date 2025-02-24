@@ -4,6 +4,7 @@ using FiwFriends.Data;
 using Microsoft.EntityFrameworkCore;
 using FiwFriends.DTOs;
 using FiwFriends.Services;
+using Microsoft.AspNetCore.Authorization;
 namespace FiwFriends.Controllers;
 
 public class FormController : Controller{
@@ -23,14 +24,12 @@ public class FormController : Controller{
     }
 
     [HttpPost("Form/Submit")]
-    async public Task<IActionResult> Submit([FromBody] FormDTO form){
-        if (!ModelState.IsValid){
-            return BadRequest(ModelState);
-        }
+    async public Task<IActionResult> Submit(FormDTO form){
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
         var user = await _currentUser.GetCurrentUser();
-        if (user == null){
-            return RedirectToAction("Login", "Auth");
-        }
+        if (user == null) return RedirectToAction("Login", "Auth");
+        
         await _db.Forms.AddAsync(new Form{
             UserId = user.Id,         //get current user
             PostId = form.PostId,
@@ -48,21 +47,19 @@ public class FormController : Controller{
         var form = await _db.Forms.Where(f => f.PostId == PostId && f.UserId == UserId)
                                     .Include(f => f.Post)
                                     .FirstOrDefaultAsync();
-        if (form == null){
-            return NotFound();
-        }
+        if (form == null) return NotFound();
+
         var user = await _currentUser.GetCurrentUser();
-        if (user == null){
-            return RedirectToAction("Login", "Auth");
-        }
-        if (form.Post.OwnerId != user.Id){
-            return Unauthorized();
-        }
+        if (user == null) return RedirectToAction("Login", "Auth");
+        
+        if (form.Post.OwnerId != user.Id) return Unauthorized();
+
         form.IsApproved = true;
-        var join = new Join{
+        var join = new Join {
             UserId = form.UserId,
             PostId = form.PostId
         };
+
         await _db.Joins.AddAsync(join);
         await _db.SaveChangesAsync();
         return RedirectToAction("Index", new { id = form.PostId });

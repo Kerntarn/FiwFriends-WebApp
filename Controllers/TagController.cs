@@ -1,6 +1,7 @@
 using FiwFriends.Data;
 using FiwFriends.DTOs;
 using FiwFriends.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,10 +18,11 @@ public class TagController : Controller
     async public Task<IActionResult> Index()
     {
         IEnumerable<Tag> tags = await _db.Tags.ToListAsync();
-        return Ok(tags);
+        return View(tags);
     }
     
     [HttpPost("Tag")]
+    [Authorize]
     async public Task<IActionResult> Create([FromBody] TagDTO tag){
         var allTags = await _db.Tags.ToListAsync();
         if(allTags.Count == 0){
