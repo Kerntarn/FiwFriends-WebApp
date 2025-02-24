@@ -28,7 +28,7 @@
                     <h2>Create Account</h2>
 
                     <form asp-action="Register" id="form" class="field">
-                        <div asp-validation-summary="ModelOnly"></div>
+                        @* <div asp-validation-summary="ModelOnly"></div> *@
 
                         <div class="login-body blue mh-40 ">
 
@@ -50,12 +50,12 @@
                             
                             <div class="mh-40">
                                 <p class="algn-start login-p"><b>Password</b></p>
-                                <input class="inp" type="password"  asp-for="Password" >
+                                <input class="inp" type="password" asp-for="Password" id="password">
                             </div>
 
                             <div class="mh-40">
                                 <p class="algn-start login-p"><b>Confirm password</b></p>
-                                <input class="inp" type="password" >
+                                <input class="inp" type="password" id="confirm-password">
                             </div>
 
                             @if (!ViewData.ModelState.IsValid)
@@ -68,7 +68,9 @@
                                 </div>
                             }
 
-                            <button class="navbar-item btn-login-property" type="submit"><b>sign up</b></button>
+                            <div style="color: red;"><p id="error-text"></p></div>
+
+                            <button class="navbar-item btn-login-property" type="button" onclick="signup()"><b>sign up</b></button>
                             <p>Already have an account? <a asp-controller="Home" asp-action="Login" class="login-link"><u>login</u></a></p>
                         
                         </div>
