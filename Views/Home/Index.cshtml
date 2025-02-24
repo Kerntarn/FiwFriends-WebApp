@@ -7,7 +7,7 @@
 }
 
 <div class="main">
-
+    
         <div class="home-container">
 
             <div class="menu">
@@ -26,7 +26,10 @@
                     <div class="property-search">
                         search
                     </div>
-                    <button>Create New Post</button>
+                    <a asp-controller="Post" asp-action="Create" class="btn-create-post">
+                        <button>Create New Post</button>
+                    </a>
+
                 </div>
 
                 <div class="genre mv-10">
