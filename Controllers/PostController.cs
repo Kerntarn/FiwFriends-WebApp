@@ -68,7 +68,7 @@ public class PostController : Controller
         return View(posts);                                                     //return view with List<IndexPost>
     }
 
-    [HttpGet("Post/{id}")]
+    [HttpGet("Post/Detail/{id}")]
     async public Task<IActionResult> Detail(int id){                            //Detail of Single Post exluded Forms
         var post = await _db.Posts.Where(p => p.PostId == id)
                     .Include(p => p.Participants).ThenInclude(j => j.User)
@@ -78,17 +78,19 @@ public class PostController : Controller
                     .Include(p => p.Tags).FirstOrDefaultAsync();
 
         if(post == null) return NotFound();
-
         return View(await _mapper.MapAsync<Post, DetailPost>(post));            //Return view with DetailPost
     }
+
     //GET Create page
     [Authorize]
+    [HttpGet("Post/Create")]
     public IActionResult Create(){                                              //Get Create page
         return View();
     }
 
+
     //POST Create
-    [HttpPost("Post")]
+    [HttpPost("Post/Create")]
     [Authorize]
     async public Task<IActionResult> Create(PostDTO post){                      //Create Post by PostDTO
         if (!ModelState.IsValid) return BadRequest(ModelState);

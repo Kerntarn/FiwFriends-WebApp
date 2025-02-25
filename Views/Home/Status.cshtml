@@ -14,15 +14,20 @@
                 <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
                 <h2>DarthVader</h2>
                 <p>ThelordLnwza0072547</p>
-                <a href="https://www.google.com/" class="menu-home">Home</a>
-                <a class="menu-status">Status</a>
-                <a class="menu-like">like</a>
+                <a class="menu-home" asp-controller="Home" asp-action="Index">Home</a>
+                <a class="menu-status" asp-controller="Home" asp-action="Status">Status</a>
+                <a class="menu-like" asp-controller="Home" asp-action="Likes">like</a>
+                <a class="menu-my_post" asp-controller="Home" asp-action="My_post">My post</a>
             </div>
 
             <div class="home-body">
 
                 <div class="card">
-                        <h2>Status</h2>
+                        <div class="flex">
+                        <a><h2>Inbox</h2></a> 
+                        <a><h2>Pending</h2></a>
+                        
+                        </div>
                         <table>
                                 <tr>
                                         <th>Post name</th>
@@ -31,18 +36,42 @@
                                         <th>Status</th>
                                 </tr>
 
-                                <tr>
+                                <tr class="border-bottom">
                                         <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>
                                         <td>User101</td>
                                         <td>Mon,13 Jan 2025</td>
-                                        <td>Accepted</td>
+                                        <td><b class="accepted-status" >Accepted</b></td>
                                 </tr>
 
+                                <tr class="border-bottom">
+                                        <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>
+                                        <td>User101</td>
+                                        <td>Mon,13 Jan 2025</td>
+                                        <td><b class="rejected-status">Rejected</b></td>
+                                </tr>
+
+                                <tr class="border-bottom">
+                                        <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>
+                                        <td>User101</td>
+                                        <td>Mon,13 Jan 2025</td>
+                                        <td><b class="pending-status" >Pending</b></td>
+                                </tr>
+                                                                
                                 <tr>
                                         <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>
                                         <td>User101</td>
                                         <td>Mon,13 Jan 2025</td>
-                                        <td>Accepted</td>
+                                        <td><b class="pending-status" >Pending</b></td>
+                                        
+                                </tr>
+                                <tr class="border-bottom">
+                                        <td><div class="answer_detail">
+                                        ตี๋น้อย อิอิ
+                                        </div></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td> <button class="btn_accept">accept</button>
+                                        <button class="btn_reject" >reject</button> </td>
                                 </tr>
                         </table>
                     </div>

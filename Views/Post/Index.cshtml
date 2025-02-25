@@ -1,4 +1,65 @@
+@model IEnumerable<FiwFriends.Models.IndexPost>
 
-@{
-    ViewData["Title"] = "Post List";
+@{  //Razor view of home's index
+    ViewData["Title"] = "Home Page";
 }
+
+<div class="main">
+
+        <div class="home-container">
+
+            <div class="menu">
+                <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
+                <h2>DarthVader</h2>
+                <p>ThelordLnwza0072547</p>
+                <a href="https://www.google.com/" class="menu-home">Home</a>
+                <a class="menu-status">Status</a>
+                <a class="menu-like">like</a>
+            </div>
+
+            <div class="home-body">
+
+                <div class="property">
+                    <div class="property-search">
+                        search
+                    </div>
+                    <a class="navbar-item"  href="/Post/Create">Create New Post</a>
+                </div>
+
+                <div class="genre mv-10">
+                    <button class="genre-item">food</button>
+                    <button class="genre-item">drink beer</button>
+                    <button class="genre-item">gym</button>
+                </div>
+
+                <div class="category">
+                    @foreach (var post in Model)
+                    {
+                    <div class="card">
+                        <div class="card-header">@post.Activity</div>
+                        <div class="card-body">
+                            <div class="user-and-like">
+                                <div>@post.Owner</div>
+                                <div>like</div>
+                            </div>
+                            <div>@post.AppointmentTime</div>
+                            <div class="place-and-gruop">
+                                <div >@post.Location</div>
+                                <div >3 people</div>
+                            </div>
+                            <div class="detail">
+                                @post.Description
+                            </div>
+                            <a class="btn right" asp-controller="Post" asp-action="Detail" asp-route-id="@post.PostId">join</a>
+                        </div>
+                    </div>
+                    }
+
+                    
+                </div>
+
+            </div>
+
+        </div>
+
+</div>
