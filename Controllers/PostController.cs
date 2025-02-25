@@ -3,11 +3,7 @@ using FiwFriends.Data;
 using FiwFriends.Models;
 using FiwFriends.Services;
 using Microsoft.EntityFrameworkCore;
-using FiwFriends.Services;
-using NuGet.Protocol;
 using FiwFriends.DTOs;
-using AspNetCoreGeneratedDocument;
-using System.Threading.Tasks;
 using NuGet.Packaging;
 using Microsoft.AspNetCore.Authorization;
 
