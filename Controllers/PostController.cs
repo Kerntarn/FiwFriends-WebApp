@@ -4,7 +4,6 @@ using FiwFriends.Models;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using FiwFriends.DTOs;
-using FiwFriends.Services;
 using AspNetCoreGeneratedDocument;
 using System.Threading.Tasks;
 using NuGet.Packaging;
@@ -96,12 +95,14 @@ public class PostController : Controller
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var postModel = await _mapper.MapAsync<PostDTO, Post>(post);
+        
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();
         return RedirectToAction("Detail", postModel.PostId);                //Redirect to Detail of this post
     }
 
     //DELETE Post
+    [Authorize]
     [HttpDelete("Post/{id}")]
     [Authorize]
     async public Task<IActionResult> Delete(int id){                        //Delete Post by just PostId
@@ -118,6 +119,7 @@ public class PostController : Controller
     }
 
     //PUT Update Post
+    [Authorize]
     [HttpPut("Post/{id}")]
     [Authorize]
     async public Task<IActionResult> Edit(int id, PostDTO post){            //Edit Post by define PostId to edit and update info based on PostDTO
@@ -166,6 +168,7 @@ public class PostController : Controller
         return View("Index");                                               //Return to another View (or may be jsut Ok()?)
     }
 
+    [Authorize]
     [HttpPost("Post/Join/{id}")]
     [Authorize]
     async public Task<IActionResult> Join(int id){                          //Join post by PostId with current User logged in
@@ -183,6 +186,7 @@ public class PostController : Controller
         return RedirectToAction("Detail", id);                              //Return detail of this post
     }
 
+    [Authorize]
     [HttpPost("Post/Favorite/{id}")]
     [Authorize]
     async public Task<IActionResult> Favorite(int id){                      //Just Favorite Post by PostId with current User logged in

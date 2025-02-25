@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using FiwFriends.Services;
 using FiwFriends.DTOs;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace FiwFriends.Controllers
 {
@@ -42,6 +43,15 @@ namespace FiwFriends.Controllers
             return View(user);
         }
         
+        public async Task<IActionResult> people(string id){
+            if (id is null) return RedirectToAction("Index", "Home");
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
 
         [Authorize]
         [HttpGet("user/profile/edit")]
