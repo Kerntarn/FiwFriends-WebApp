@@ -7,6 +7,9 @@ using FiwFriends.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Enable console logging for debugging
+builder.Logging.AddConsole();
+
 // Database connection
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
       options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -20,6 +23,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 8;
     options.Lockout.AllowedForNewUsers = true;
+    options.SignIn.RequireConfirmedEmail = false; // Change to true if email confirmation is needed
 })
 .AddEntityFrameworkStores<ApplicationDBContext>()
 .AddDefaultTokenProviders();
@@ -29,22 +33,41 @@ builder.Services.AddScoped<MapperService>();
 // Add memory cache
 builder.Services.AddMemoryCache();
 
-// Add session
-builder.Services.AddSession();
+// Add session with proper configuration
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(1440); // Set session timeout to 1440 minutes
+    options.Cookie.HttpOnly = true; // Prevents JavaScript access for security
+    options.Cookie.IsEssential = true; // Makes the cookie essential
+});
 
 // Configure cookie authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie();
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Set timeout to 30 minutes
+        options.SlidingExpiration = true; // Reset expiration on activity
+        options.LoginPath = "/Auth/Login"; // Redirect to login if not authenticated
+        options.LogoutPath = "/Auth/Logout";
+        options.AccessDeniedPath = "/Home/AccessDenied";
+    });
 
-// Add CORS if needed (for APIs or different frontend origins)
+// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
         builder.WithOrigins("https://yourfrontendurl.com")
                .AllowAnyHeader()
-               .AllowAnyMethod();
+               .AllowAnyMethod()
+               .AllowCredentials(); // Allows cookies for authentication
     });
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";  // Redirect to login page
+    options.AccessDeniedPath = "/Auth/Login";  // Redirect if no permission
 });
 
 // Add controllers with views
@@ -68,16 +91,16 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Use CORS if necessary
+
 app.UseCors();
 
-app.UseSession(); // Add session middleware
+app.UseSession(); 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Post}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.Run();

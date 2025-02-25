@@ -23,7 +23,7 @@ namespace FiwFriends.Controllers
             return View();
         }
 
-        [HttpPost("/register")]
+        [HttpPost("/Register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return View(registerDto);
@@ -63,7 +63,7 @@ namespace FiwFriends.Controllers
             return View();
         }
 
-        [HttpPost("/login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl = null)
         {
             if (!ModelState.IsValid) 
@@ -88,11 +88,11 @@ namespace FiwFriends.Controllers
             return View(loginDto);
         }
 
-        [HttpPost("/logout")]
+        [HttpPost("/Logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html {
+    font-size: 14px;
+    background-color: #FFF9F0;
+    font-family: 'Inter';
+
+}
+
+.accepted-status {
+        color: #19A143;
+    }
+
+.rejected-status {
+        color: #FF0000;
+    }
+
+.pending-status {
+        color: #F4B942;
+    }
+
+table {
+        font-family: 'Inter';
+        border-collapse: collapse;
+        width: 100%;
+        text-align: center;
+}
+
+td, th {
+        text-align: left;
+        padding: 12px;
+
+}
+
+th {
+        background-color: #B2DFDC;
+        /* border-radius: 5px; */
+}
+
+tr.border-bottom {
+        border-bottom: 1px solid #D9D9D9;
+}
+
+.flex {
+        display: flex;
+}
+
+.answer_detail{
+        display: block;
+        background-color: #FFE0B2;
+        padding: 10px 10px;
+        border-radius: 5px;
+}
+
+.detail {
+        background-color: #FEFEFE;
+        height: 100px;
+        padding: 10px 10px;
+        border-radius: 5px;
+      }
+
+
+.btn_accept, .btn_reject {
+
+        margin-top: 5px;
+        border: 0 solid #242424;
+        border-radius: 5px;
+        padding: 5px 12px;
+        box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.btn_accept{
+        background-color: #78FF80;
+}
+
+
+.btn_reject{
+        background-color: #FF8A80;
+}
+
+
