@@ -1,4 +1,68 @@
+@model FiwFriends.Models.DetailPost
+
+@inject Microsoft.AspNetCore.Identity.UserManager<FiwFriends.Models.User> UserManager
 
 @{
-    ViewData["Title"] = "Post's Detail";
+    var user = await UserManager.GetUserAsync(User);
 }
+
+@{  //Razor view of home's index
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="main">
+
+        <div class="home-container">
+
+            <div class="menu">
+                <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
+                <h2>@user?.UserName</h2>
+
+                <p>@user?.FirstName @user?.LastName</p>
+                
+                <a href="https://www.google.com/" class="menu-home">Home</a>
+                <a class="menu-status">Status</a>
+                <a class="menu-like">like</a>
+            </div>
+
+            <div class="home-body">
+
+                <div class="card">
+                        <div class="card-header">@Model.Activity</div>
+                        <div class="card-body">
+                            <div class="user-and-like">
+                                <div>@Model.Owner</div>
+                                <div>like</div>
+                            </div>
+                            <div>@Model.AppointmentTime</div>
+                            <div class="place-and-gruop">
+                                <div >@Model.Location</div>
+                                <div >@Model.ParticipantsCount</div>
+                            </div>
+                            <button class="genre-item">food</button>
+                            <div class="detail">@Model.Description</div>
+                            <div class="question">
+                                <div class="question-container" id="1">
+                                        <p>Question : กินเนื้อได้ไหม</p>
+                                        <input class="" type="text">
+                                </div>
+                            </div>
+
+                            <div class="people">
+                                <p>People who have already joined</p>
+                                <div class="people-container">
+                                        <div>user101</div>
+                                        <div>user102</div>
+                                        <div>user103</div>
+                                </div>
+                            </div>
+                            <a class="btn" asp-action="">back</a>
+                            <button class="btn right">join</button>
+                        </div>
+                    </div>
+
+            </div>
+
+        </div>
+
+</div>

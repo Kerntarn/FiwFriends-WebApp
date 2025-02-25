@@ -45,7 +45,7 @@ namespace FiwFriends.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Post");
             }
 
             foreach (var error in result.Errors)

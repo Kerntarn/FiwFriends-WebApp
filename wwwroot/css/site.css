@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 html {
   font-size: 14px;
   background-color: #FFF9F0;
+  font-family: 'Inter', sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -70,6 +73,9 @@ a {
   margin: 0px 10px;
   padding: 7px 30px;
   border-radius: 5px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
   margin-right: 0px;
 }
 

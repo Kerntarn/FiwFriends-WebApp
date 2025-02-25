@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using FiwFriends.Data;
 using FiwFriends.Models;
+using FiwFriends.Services;
 using Microsoft.EntityFrameworkCore;
+using FiwFriends.Services;
 using NuGet.Protocol;
 using FiwFriends.DTOs;
-using FiwFriends.Services;
 using AspNetCoreGeneratedDocument;
 using System.Threading.Tasks;
 using NuGet.Packaging;
@@ -68,7 +69,7 @@ public class PostController : Controller
         return View(posts);                                                     //return view with List<IndexPost>
     }
 
-    [HttpGet("Post/{id}")]
+    [HttpGet("Post/Detail/{id}")]
     async public Task<IActionResult> Detail(int id){                            //Detail of Single Post exluded Forms
         var post = await _db.Posts.Where(p => p.PostId == id)
                     .Include(p => p.Participants).ThenInclude(j => j.User)
@@ -78,28 +79,32 @@ public class PostController : Controller
                     .Include(p => p.Tags).FirstOrDefaultAsync();
 
         if(post == null) return NotFound();
-
         return View(await _mapper.MapAsync<Post, DetailPost>(post));            //Return view with DetailPost
     }
+
     //GET Create page
     [Authorize]
+    [HttpGet("Post/Create")]
     public IActionResult Create(){                                              //Get Create page
         return View();
     }
 
+
     //POST Create
-    [HttpPost("Post")]
+    [HttpPost("Post/Create")]
     [Authorize]
     async public Task<IActionResult> Create(PostDTO post){                      //Create Post by PostDTO
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var postModel = await _mapper.MapAsync<PostDTO, Post>(post);
+        
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();
         return RedirectToAction("Detail", postModel.PostId);                //Redirect to Detail of this post
     }
 
     //DELETE Post
+    [Authorize]
     [HttpDelete("Post/{id}")]
     [Authorize]
     async public Task<IActionResult> Delete(int id){                        //Delete Post by just PostId
@@ -116,6 +121,7 @@ public class PostController : Controller
     }
 
     //PUT Update Post
+    [Authorize]
     [HttpPut("Post/{id}")]
     [Authorize]
     async public Task<IActionResult> Edit(int id, PostDTO post){            //Edit Post by define PostId to edit and update info based on PostDTO
@@ -164,6 +170,7 @@ public class PostController : Controller
         return View("Index");                                               //Return to another View (or may be jsut Ok()?)
     }
 
+    [Authorize]
     [HttpPost("Post/Join/{id}")]
     [Authorize]
     async public Task<IActionResult> Join(int id){                          //Join post by PostId with current User logged in
@@ -181,6 +188,7 @@ public class PostController : Controller
         return RedirectToAction("Detail", id);                              //Return detail of this post
     }
 
+    [Authorize]
     [HttpPost("Post/Favorite/{id}")]
     [Authorize]
     async public Task<IActionResult> Favorite(int id){                      //Just Favorite Post by PostId with current User logged in
