@@ -23,7 +23,7 @@ public class TagController : Controller
     
     [HttpPost("Tag")]
     [Authorize]
-    async public Task<IActionResult> Create([FromBody] TagDTO tag){         //Create Tag by DTO (may be this is done by AJAX?)
+    async public Task<IActionResult> Create(TagDTO tag){         //Create Tag by DTO (may be this is done by AJAX?)
         var allTags = await _db.Tags.ToListAsync();
         if(allTags.Count == 0){
             await _db.Tags.AddAsync(new Tag{ Name = tag.Name});

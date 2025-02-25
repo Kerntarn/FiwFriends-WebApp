@@ -38,11 +38,14 @@ public class FormController : Controller{
         await _db.Forms.AddAsync(new Form{
             UserId = user.Id,         //get current user
             PostId = form.PostId,
-            Answers = form.Answers.Select(a => new Answer{
+            Status = FormStatus.Pending, // Default to Pending
+            Answers = form.Answers.Select(a => new Answer
+            {
                 Content = a.Content,
                 QuestionId = a.QuestionId
             }).ToList()
         });
+
         await _db.SaveChangesAsync();
         return RedirectToAction("Detail", "Post", new { id = form.PostId });
     }
@@ -59,7 +62,7 @@ public class FormController : Controller{
         
         if (form.Post.OwnerId != user.Id) return Unauthorized();
 
-        form.IsApproved = true;
+        form.Status = FormStatus.Approved;
         var join = new Join {
             UserId = form.UserId,
             PostId = form.PostId
@@ -67,6 +70,29 @@ public class FormController : Controller{
 
         await _db.Joins.AddAsync(join);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Index", new { id = form.PostId });
+
+        return Ok(new { message = "Form approved"});
+    }
+
+    [HttpPost("/Form/Reject/{FormId}")]
+    async public Task<IActionResult> Reject(int FormId)
+    {
+        System.Console.WriteLine(FormId);
+        var form = await _db.Forms.Where(f => f.FormId == FormId)
+                                    .Include(f => f.Post)
+                                    .FirstOrDefaultAsync();
+        if (form == null)
+        {
+            return NotFound("Form not found");
+        }
+        if (form.Post.Owner != await _currentUser.GetCurrentUser())
+        {
+            return Unauthorized("Not authorized");
+        }
+
+        form.Status = FormStatus.Rejected;
+        await _db.SaveChangesAsync();
+
+        return Ok(new { message = "Form rejected", formId = FormId });
     }
 }

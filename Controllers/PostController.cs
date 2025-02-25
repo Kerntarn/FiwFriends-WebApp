@@ -96,7 +96,7 @@ public class PostController : Controller
         
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Detail", postModel.PostId);                //Redirect to Detail of this post
+        return RedirectToAction("Detail", postModel.PostId);              //Redirect to Detail of this post
     }
 
     //DELETE Post
@@ -179,12 +179,12 @@ public class PostController : Controller
             UserId = user.Id,  
             PostId = id
         };
+
         await _db.Joins.AddAsync(join);
         await _db.SaveChangesAsync();
         return RedirectToAction("Detail", id);                              //Return detail of this post
     }
 
-    [Authorize]
     [HttpPost("Post/Favorite/{id}")]
     [Authorize]
     async public Task<IActionResult> Favorite(int id){                      //Just Favorite Post by PostId with current User logged in
@@ -194,14 +194,14 @@ public class PostController : Controller
         if (user == null) return RedirectToAction("Login", "Auth");
 
         if (post.FavoritedBy.Any(u => u.Id == user.Id)){
-            post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
-        } else {
-            post.FavoritedBy.Add(user);
-        }
-        await _db.SaveChangesAsync();
+             post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
+         } else {
+             post.FavoritedBy.Add(user);
+         }
+         await _db.SaveChangesAsync();
 
-        return Ok();                                                        //Done
-    }
+         return Ok();                                                        //Done
+     }
     
     [HttpPost("Post/Favorite")]
     [Authorize]
