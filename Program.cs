@@ -29,7 +29,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<CurrentUserService>();
-
+builder.Services.AddScoped<MapperService>();
 // Add memory cache
 builder.Services.AddMemoryCache();
 
@@ -62,6 +62,12 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod()
                .AllowCredentials(); // Allows cookies for authentication
     });
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";  // Redirect to login page
+    options.AccessDeniedPath = "/Auth/Login";  // Redirect if no permission
 });
 
 // Add controllers with views

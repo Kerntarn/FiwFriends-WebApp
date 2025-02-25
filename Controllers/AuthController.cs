@@ -20,15 +20,14 @@ namespace FiwFriends.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            var response = new RegisterDto();
-            return View(response);
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return View(registerDto);
-            
+
             var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
             if (existingUser != null)
             {
@@ -46,7 +45,7 @@ namespace FiwFriends.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Post");
             }
 
             foreach (var error in result.Errors)
@@ -58,14 +57,14 @@ namespace FiwFriends.Controllers
         }
         
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
-            var response = new LoginDto();
-            return View(response);
+            ViewData["ReturnUrl"] = returnUrl ?? Url.Content("~/");
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl = null)
         {
             if (!ModelState.IsValid) 
                 return View(loginDto);
@@ -81,7 +80,8 @@ namespace FiwFriends.Controllers
             
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                if(Url.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
+                return RedirectToAction("Index", "Post");
             }
 
             ModelState.AddModelError("Password", "Incorrect password.");

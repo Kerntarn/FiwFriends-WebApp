@@ -10,24 +10,27 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace FiwFriends.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly ApplicationDBContext _db;
         private readonly UserManager<User> _userManager;
         private readonly CurrentUserService _currentUserService;
+        private readonly MapperService _mapper;
 
-        public UserController(ApplicationDBContext db, UserManager<User> userManager, CurrentUserService currentUserService)
+        public UserController(ApplicationDBContext db, UserManager<User> userManager, CurrentUserService currentUserService, MapperService mapperService)
         {
             _db = db;
             _userManager = userManager;
             _currentUserService = currentUserService;
+            _mapper = mapperService;
         }
 
         private async Task<User?> GetCurrentUserAsync()
         {
-            var userId = await _currentUserService.GetCurrentUserId();
-            if (userId is null) return null;
-            return await _db.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString());
+            var user = await _currentUserService.GetCurrentUser();
+            if (user is null) return null;
+            return await _db.Users.FirstOrDefaultAsync(u => u.Id == user.Id.ToString());
         }
 
         [Authorize]
@@ -60,14 +63,13 @@ namespace FiwFriends.Controllers
 
             var userDto = new UpdateUserDto
             {
-                Username = user.UserName,
+                Username = user.UserName ?? "",
                 FirstName = user.FirstName,
                 LastName = user.LastName
             };
 
             return View(userDto);
         }
-
 
         [Authorize]
         [HttpPost("user/profile/edit")]
@@ -115,6 +117,24 @@ namespace FiwFriends.Controllers
 
             TempData["Success"] = "Profile updated successfully";
             return RedirectToAction("Profile");
+        }
+
+        [HttpGet("/MyPosts")]
+        public async Task<IActionResult> MyPost(){
+            User? user = await _currentUserService.GetCurrentUser();
+            if( user == null ) return RedirectToAction("Login", "Auth");
+            var posts = await _db.Users.Where(u => u.Id == user.Id).Include(u => u.OwnPosts)
+                                        .SelectMany(u => u.OwnPosts)
+                                        .Include(p => p.Owner)
+                                        .Include(p => p.Participants).ThenInclude(j => j.User)
+                                        .Include(p => p.Tags)
+                                        .Include(p => p.FavoritedBy).ToListAsync();
+            List<IndexPost> own_post = new List<IndexPost>();
+
+            foreach (var post in posts){
+                own_post.Add(await _mapper.MapAsync<Post, IndexPost>(post));
+            }
+            return View(own_post);
         }
     }
 }

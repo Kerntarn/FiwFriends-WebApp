@@ -1,0 +1,81 @@
+﻿@model FiwFriends.DTOs.Auth.RegisterDto
+
+@{
+    ViewData["Title"] = "Sign-up Page";
+}
+
+@section Styles {
+        <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
+}
+
+@section Scripts {
+  <script src="~/js/auth/register/profile_image.js"></script>
+  <script src="~/js/auth/register/register_form_animate.js"></script>
+}
+
+@if (TempData["error"] != null)
+{
+  <div class="error-text">
+    @TempData["error"]
+  </div>
+}
+
+<div class="main main-login-property">
+        
+        <div class="card">
+            
+            <div class="login-body algn-center">
+                    <h2>Create Account</h2>
+
+                    <form asp-action="Register" id="form" class="field">
+                        @* <div asp-validation-summary="ModelOnly"></div> *@
+
+                        <div class="login-body blue mh-40 ">
+
+                            <div class="mh-40">
+                                <p class="algn-start login-p" ><b>First name</b></p>
+                                <input class="inp" type="text" asp-for="FirstName" >
+                                
+                            </div>
+
+                            <div class="mh-40">
+                                <p class="algn-start login-p" ><b>Last name</b></p>
+                                <input class="inp" type="text" asp-for="LastName" >
+                            </div>
+                            
+                            <div class="mh-40">
+                                <p class="algn-start login-p" ><b>Username</b></p>
+                                <input class="inp" type="text" asp-for="Username" >
+                            </div>
+                            
+                            <div class="mh-40">
+                                <p class="algn-start login-p"><b>Password</b></p>
+                                <input class="inp" type="password" asp-for="Password" id="password">
+                            </div>
+
+                            <div class="mh-40">
+                                <p class="algn-start login-p"><b>Confirm password</b></p>
+                                <input class="inp" type="password" id="confirm-password">
+                            </div>
+
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div style="color: red;">
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <p>@error.ErrorMessage</p>
+                                    }
+                                </div>
+                            }
+
+                            <div style="color: red;"><p id="error-text"></p></div>
+
+                            <button class="navbar-item btn-login-property" type="button" onclick="signup()"><b>sign up</b></button>
+                            <p>Already have an account? <a asp-controller="Home" asp-action="Login" class="login-link"><u>login</u></a></p>
+                        
+                        </div>
+                    </form>
+            </div>
+        </div>
+
+</div>

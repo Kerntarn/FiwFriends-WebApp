@@ -12,3 +12,8 @@ public class Question{
     public Post? Post { get; set; } = null!;
     public ICollection<Answer> Answers { get; set; } = new List<Answer>();
 }
+
+public class ViewQuestion{
+    public required int QuestionId { get; set; }
+    public required string Content { get; set; }
+}
