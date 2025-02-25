@@ -23,15 +23,16 @@ namespace FiwFriends.Controllers
             return View();
         }
 
-        [HttpPost("/auth/register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+        [HttpPost("/register")]
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return View(registerDto);
 
             var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
             if (existingUser != null)
             {
-                return BadRequest(new { error = "Username already exists." });
+                 ModelState.AddModelError("Username", "Username already exists.");
+                return View(registerDto);
             }
 
             var user = new User 
@@ -42,47 +43,56 @@ namespace FiwFriends.Controllers
             };
             
             var result = await _userManager.CreateAsync(user, registerDto.Password);
-            if (!result.Succeeded)
             {
-                return BadRequest(result.Errors);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Post");    
             }
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            return Ok(new { message = "User registered successfully!" });
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return View(registerDto);
         }
         
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl ?? Url.Content("~/");
             return View();
         }
 
-        [HttpPost("/auth/login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        [HttpPost("/login")]
+        public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl = null)
         {
             if (!ModelState.IsValid) 
-                return BadRequest(ModelState);
+                return View(loginDto);
 
             var existingUser = await _userManager.FindByNameAsync(loginDto.Username);
             if (existingUser == null)
             {
-                return BadRequest(new { error = "Username not found." });
+                ModelState.AddModelError("Username", "Username not found.");
+                return View(loginDto);
             }
 
             var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, false, false);
-            if (!result.Succeeded)
+            
+            if (result.Succeeded)
             {
-                return BadRequest(new { error = "Incorrect username or password." });
+                if(Url.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
+                return RedirectToAction("Index", "Post");
             }
 
-            return Ok(new { message = "Login successful!" });
+            ModelState.AddModelError("Password", "Incorrect password.");
+            return View(loginDto);
         }
 
-        [HttpPost("/auth/logout")]
+        [HttpPost("/logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return Ok(new { message = "Logged out successfully!" });
+            return RedirectToAction("Index", "Home");
         }
     }
 }

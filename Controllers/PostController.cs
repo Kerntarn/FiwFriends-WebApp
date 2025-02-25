@@ -38,8 +38,7 @@ public class PostController : Controller
 
     [HttpGet("Search/{search}")]
     async public Task<IActionResult> Search(string search){                     //Search by check activity and description string
-        var posts = await _db.Posts.Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || p.Description.ToLower().Contains(search.ToLower())) && p.ExpiredTime < DateTimeOffset.UtcNow )
-                                    .Include(p => p.Owner)
+        var posts = await _db.Posts.Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || p.Description.ToLower().Contains(search.ToLower())) && (p.ExpiredTime < DateTimeOffset.UtcNow))
                                     .Include(p => p.Participants).ThenInclude(j => j.User)
                                     .Include(p => p.Tags)
                                     .Include(p => p.FavoritedBy).ToListAsync();
@@ -88,15 +87,15 @@ public class PostController : Controller
     }
 
     //POST Create
-    [HttpPost("Post")]
+    [HttpPost("Post/Create")]
     [Authorize]
-    async public Task<IActionResult> Create(PostDTO post){                      //Create Post by PostDTO
+    async public Task<IActionResult> Create([FromBody] PostDTO post){                      //Create Post by PostDTO
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var postModel = await _mapper.MapAsync<PostDTO, Post>(post);
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Detail", postModel.PostId);                //Redirect to Detail of this post
+        return Ok(new {message = "Created Post Successfully"});                //Redirect to Detail of this post
     }
 
     //DELETE Post
@@ -183,25 +182,23 @@ public class PostController : Controller
     }
 
 
-    [HttpPost("Post/Favorite/{id}")]
-    [Authorize]
-    async public Task<IActionResult> Favorite(int id){                      //Just Favorite Post by PostId with current User logged in
-        var user = await _currentUser.GetCurrentUser();   
-        var post = await _db.Posts.FindAsync(id);
-        if (post == null) return NotFound("Post is not found.");
-        if (user == null) return RedirectToAction("Login", "Auth");
+    // [HttpPost("Post/Favorite/{id}")]
+    // [Authorize]
+    // async public Task<IActionResult> Favorite(int id){                      //Just Favorite Post by PostId with current User logged in
+    //     var user = await _currentUser.GetCurrentUser();   
+    //     var post = await _db.Posts.FindAsync(id);
+    //     if (post == null) return NotFound("Post is not found.");
+    //     if (user == null) return RedirectToAction("Login", "Auth");
 
-        if (post.FavoritedBy.Any(u => u.Id == user.Id)){
-            post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
-        } else {
-            post.FavoritedBy.Add(user);
-            await _db.SaveChangesAsync();
-            return Ok();
-        }
-        await _db.SaveChangesAsync();
+    //     if (post.FavoritedBy.Any(u => u.Id == user.Id)){
+    //         post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
+    //     } else {
+    //         post.FavoritedBy.Add(user);
+    //     }
+    //     await _db.SaveChangesAsync();
 
-        return Ok();                                                        //Done
-    }
+    //     return Ok();                                                        //Done
+    // }
     
     [HttpPost("Post/Favorite")]
     [Authorize]

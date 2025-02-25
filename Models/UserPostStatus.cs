@@ -5,6 +5,9 @@ namespace FiwFriends.DTOs
 {
     public class UserPostStatusViewModel
     {
-        public IOrderedEnumerable<UserPostStatusDTO> Posts { get; set; }
+        public required string Activity { get; set; }
+        public required string Owner { get; set; }
+        public required DateTimeOffset AppointmentTime { get; set; }
+        public string Status {get; set;}
     }
 }

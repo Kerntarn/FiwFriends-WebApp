@@ -107,116 +107,114 @@ namespace FiwFriends.Controllers
             return RedirectToAction("Profile");
         }
 
-        [HttpGet("user/posts/status/inbox")]
+        [HttpGet("user/inbox")]
         public async Task<IActionResult> UserInboxStatus()
         {
-            var userId = await _currentUserService.GetCurrentUserId();
-            System.Console.WriteLine(userId);
-            if (userId == null)
+            var user = await _currentUserService.GetCurrentUser();
+            if (user == null)
             {
                 return NoContent();
             }
 
             var joinedPosts = await _db.Joins
-                .Where(f => f.UserId == userId)
-                .Select(f => new UserPostStatusDTO
+                .Where(f => f.User == user)
+                .Select(f => new UserPostStatusViewModel
                 {
                     Activity = f.Post.Activity,
-                    Owner = _db.Users.Where(j => j.Id == f.Post.OwnerId).Select(k => k.UserName).FirstOrDefault(),
-                    AppointmentTime = f.Post.AppointmentTime,
-                    Status = "Joined" // Explicitly setting status
-                })
-                .ToListAsync();
+                    Owner = _db.Users
+                        .Where(j => j.Id == f.Post.OwnerId)
+                        .Select(k => k.UserName)
+                        .FirstOrDefault() ?? "Unknown",
+                        AppointmentTime = f.Post.AppointmentTime,
+                        Status = "Joined"
+                    })
+                    .ToListAsync();
 
-            var userForms = await _db.Forms
-                .Where(f => f.UserId == userId)
-                .Include(f => f.Post)
-                .ThenInclude(p => p.Tags)
-                .Include(f => f.Post.Questions)
-                .ToListAsync();
+                var userForms = await _db.Forms
+                    .Where(f => f.User == user)
+                    .Include(f => f.Post)
+                    .ThenInclude(p => p.Tags)
+                    .Include(f => f.Post.Questions)
+                    .ToListAsync();
 
-            var pendingPosts = userForms
-                .Where(f => f.Status == FormStatus.Pending && f.Post != null)
-                .Select(f => new UserPostStatusDTO
-                {
-                    Activity = f.Post.Activity,
-                    Owner = _db.Users.Where(j => j.Id == f.Post.OwnerId).Select(k => k.UserName).FirstOrDefault(),
-                    AppointmentTime = f.Post.AppointmentTime,
-                    Status = "Pending" // Setting status dynamically
-                })
-                .ToList();
+                var pendingPosts = userForms
+                    .Where(f => f.Status == FormStatus.Pending && f.Post != null)
+                    .Select(f => new UserPostStatusViewModel
+                    {
+                        Activity = f.Post.Activity,
+                        Owner = _db.Users
+                            .Where(j => j.Id == f.Post.OwnerId)
+                            .Select(k => k.UserName)
+                            .FirstOrDefault() ?? "Unknown",
+                        AppointmentTime = f.Post.AppointmentTime,
+                        Status = "Pending"
+                    })
+                    .ToList();
 
-            var rejectedPosts = userForms
-                .Where(f => f.Status == FormStatus.Rejected && f.Post != null)
-                .Select(f => new UserPostStatusDTO
-                {
-                    Activity = f.Post.Activity,
-                    Owner = _db.Users.Where(j => j.Id == f.Post.OwnerId).Select(k => k.UserName).FirstOrDefault(),
-                    AppointmentTime = f.Post.AppointmentTime,
-                    Status = "Rejected" // Setting status dynamically
-                })
-                .ToList();
+                var rejectedPosts = userForms
+                    .Where(f => f.Status == FormStatus.Rejected && f.Post != null)
+                    .Select(f => new UserPostStatusViewModel
+                    {
+                        Activity = f.Post.Activity,
+                        Owner = _db.Users
+                            .Where(j => j.Id == f.Post.OwnerId)
+                            .Select(k => k.UserName)
+                            .FirstOrDefault() ?? "Unknown",
+                        AppointmentTime = f.Post.AppointmentTime,
+                        Status = "Rejected"
+                    })
+                    .ToList();
 
-            // Ensure all lists contain the same type (List<UserPostStatusDTO>)
-            var uniqueJoinedPosts = joinedPosts
-                .Except(pendingPosts)
-                .Except(rejectedPosts)
-                .ToList();
+                var allPosts = joinedPosts
+                    .Concat(pendingPosts)
+                    .Concat(rejectedPosts)
+                    .OrderBy(s => s.AppointmentTime)
+                    .ToList();
 
-            var allPosts = joinedPosts
-                .Concat(pendingPosts)
-                .Concat(rejectedPosts)
-                .ToList().OrderBy(s => s.AppointmentTime);
-            System.Console.WriteLine("Hi");
-
-            var model = new UserPostStatusViewModel
-            {
-                Posts = allPosts
-            };
-            
-            return Ok(model);
-        }
-
-        
-        [HttpGet("user/posts/status/pending")]
-        public async Task<IActionResult> UserPendingStatus()
-        {
-            var userId = await _currentUserService.GetCurrentUserId();
-            System.Console.WriteLine(userId);
-            if (userId == null)
-            {
-                return BadRequest(new {message = "There is no user"});
+                return Ok(new { Posts = allPosts });
             }
 
-            var userPost = await _db.Posts
-                .Where(f => f.OwnerId == userId)
+        [HttpGet("user/pending")]
+        public async Task<IActionResult> UserPendingStatus()
+        {
+            var user = await _currentUserService.GetCurrentUser();
+            if (user == null)
+            {
+                return BadRequest(new { message = "There is no user" });
+            }
+
+            var userPostIds = await _db.Posts
+                .Where(f => f.Owner == user)
                 .Select(f => f.PostId)
                 .ToListAsync();
 
-            if (userPost == null)
+            if (!userPostIds.Any())
             {
                 return BadRequest("You haven't owned any post");
             }
 
             var userPostForms = await _db.Forms
-                .Where(f => _db.Posts
-                    .Where(p => p.OwnerId == userId) // Find posts owned by the user
-                    .Select(p => p.PostId)
-                    .Contains(f.PostId) // Match with Form's PostId
-                )
-                .Where(f => f.Status == FormStatus.Pending) // Only pending forms
-                .Select(f => new UserPendingStatusDTO
+                .Where(f => userPostIds.Contains(f.PostId) && f.Status == FormStatus.Pending)
+                .Select(f => new UserPendingStatusViewModel
                 {
-                    Activity = f.Post.Activity, // Activity of the post
-                    FormId = f.FormId.ToString(), // Form ID
+                    Activity = f.Post.Activity,
+                    FormId = f.FormId.ToString(),
                     User = _db.Users
                         .Where(u => u.Id == f.UserId)
                         .Select(u => u.UserName)
-                        .FirstOrDefault() ?? "Unknown", // Get username of the form submitter
-                    Status = f.Status.ToString()
+                        .FirstOrDefault() ?? "Unknown",
+                    Status = f.Status.ToString(),
+                    QnAs = f.Answers
+                        .Select(a => new QnA
+                        {
+                            Question = a.Question.Content, // Get the question content
+                            Answer = a.Content // Get the answer content
+                        })
+                        .ToList()
                 })
                 .OrderBy(f => f.FormId)
                 .ToListAsync();
+
 
             return Ok(userPostForms);
         }
