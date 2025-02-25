@@ -1,7 +1,7 @@
 using FiwFriends.Models;
 using System.Collections.Generic;
 
-namespace FiwFriends.DTOs
+namespace FiwFriends.Models
 {
     public class UserPendingStatusViewModel
     {

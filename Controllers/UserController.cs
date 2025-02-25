@@ -76,7 +76,7 @@ namespace FiwFriends.Controllers
         public async Task<IActionResult> Edit(UpdateUserDto userEditor)
         {
             if (!ModelState.IsValid)
-                return BadRequest("wtf");
+                return View(userEditor);
 
             var user = await GetCurrentUserAsync();
             if (user == null)
@@ -230,22 +230,23 @@ namespace FiwFriends.Controllers
 
             return Ok(userPostForms);
 
-        [HttpGet("/MyPosts")]
-        public async Task<IActionResult> MyPost(){
-            User? user = await _currentUserService.GetCurrentUser();
-            if( user == null ) return RedirectToAction("Login", "Auth");
-            var posts = await _db.Users.Where(u => u.Id == user.Id).Include(u => u.OwnPosts)
-                                        .SelectMany(u => u.OwnPosts)
-                                        .Include(p => p.Owner)
-                                        .Include(p => p.Participants).ThenInclude(j => j.User)
-                                        .Include(p => p.Tags)
-                                        .Include(p => p.FavoritedBy).ToListAsync();
-            List<IndexPost> own_post = new List<IndexPost>();
+            [HttpGet("/MyPosts")]
+            public async Task<IActionResult> MyPost(){
+                User? user = await _currentUserService.GetCurrentUser();
+                if( user == null ) return RedirectToAction("Login", "Auth");
+                var posts = await _db.Users.Where(u => u.Id == user.Id).Include(u => u.OwnPosts)
+                                            .SelectMany(u => u.OwnPosts)
+                                            .Include(p => p.Owner)
+                                            .Include(p => p.Participants).ThenInclude(j => j.User)
+                                            .Include(p => p.Tags)
+                                            .Include(p => p.FavoritedBy).ToListAsync();
+                List<IndexPost> own_post = new List<IndexPost>();
 
-            foreach (var post in posts){
-                own_post.Add(await _mapper.MapAsync<Post, IndexPost>(post));
+                foreach (var post in posts){
+                    own_post.Add(await _mapper.MapAsync<Post, IndexPost>(post));
+                }
+                return View(own_post);
             }
-            return View(own_post);
         }
     }
 }

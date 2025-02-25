@@ -89,14 +89,14 @@ public class PostController : Controller
     //POST Create
     [HttpPost("Post/Create")]
     [Authorize]
-    async public Task<IActionResult> Create([FromBody] PostDTO post){                      //Create Post by PostDTO
+    async public Task<IActionResult> Create(PostDTO post){                      //Create Post by PostDTO
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var postModel = await _mapper.MapAsync<PostDTO, Post>(post);
         
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();
-        return Ok(new {message = "Created Post Successfully"});                //Redirect to Detail of this post
+        return RedirectToAction("Detail", postModel.PostId);              //Redirect to Detail of this post
     }
 
     //DELETE Post
