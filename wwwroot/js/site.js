@@ -26,3 +26,7 @@ function signup() {
 
 }
 
+document.getElementById("id_tag").addEventListener("change", function() {
+        child.style.backgroundColor = "#FF8A80";
+    });
+

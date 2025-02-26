@@ -1,24 +1,16 @@
 @{  //Razor view of home's index
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "MyPosts Page";
 }
 
 @section Styles {
-        <link rel="stylesheet" href="~/css/likes.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
 }
 
 <div class="main">
 
         <div class="home-container">
 
-            <div class="menu">
-                <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
-                <h2>DarthVader</h2>
-                <p>ThelordLnwza0072547</p>
-                <a class="menu-home" asp-controller="Home" asp-action="Index">Home</a>
-                <a class="menu-status" asp-controller="Home" asp-action="Status">Status</a>
-                <a class="menu-like" asp-controller="Home" asp-action="Likes">like</a>
-                <a class="menu-my_post" asp-controller="Home" asp-action="My_post">My post</a>
-            </div>
+            @await Html.PartialAsync("_Menu")
 
             <div class="home-body">
 
@@ -38,7 +30,8 @@
                             <div class="detail">
                                 ตี๋น้อย อิอิ
                             </div>
-                            <button class="btn right">join</button>
+                            <button class="btn right">Delete</button>
+                            <button class="btn right">END</button>
                         </div>
                     </div>
 

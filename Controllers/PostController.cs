@@ -201,7 +201,7 @@ public class PostController : Controller
         return Ok();                                                        //Done
     }
     
-    [HttpPost("Post/Favorite")]
+    [HttpGet("Post/Favorite")]
     [Authorize]
     async public Task<IActionResult> GetFavoritedPost(){                    //Get current User's Favorited Post (or maybe this should be in UserController?)
         var user = await _currentUser.GetCurrentUser();

@@ -1,21 +1,14 @@
 @model FiwFriends.DTOs.PostDTO
 
 @{  //Razor view of home's index
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Create Page";
 }
 
 <div class="main">
 
         <div class="home-container">
 
-            <div class="menu">
-                <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
-                <h2>DarthVader</h2>
-                <p>ThelordLnwza0072547</p>
-                <a href="https://www.google.com/" class="menu-home">Home</a>
-                <a class="menu-status">Status</a>
-                <a class="menu-like">like</a>
-            </div>
+            @await Html.PartialAsync("_Menu")
 
             <div class="home-body">
 

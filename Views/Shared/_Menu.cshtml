@@ -1,0 +1,19 @@
+
+@inject Microsoft.AspNetCore.Identity.UserManager<FiwFriends.Models.User> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+
+
+<div class="menu">
+        <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
+        <h2>@user?.UserName</h2>
+
+        <p>@user?.FirstName @user?.LastName</p>
+        
+        <a class="menu-home" asp-controller="Post" asp-action="Index">Home</a>
+        <a class="menu-status" asp-controller="Home" asp-action="Status">Status</a>
+        <a class="menu-like" asp-controller="Post" asp-action="GetFavoritedPost">Likes</a>
+        <a class="menu-my_post" asp-controller="User" asp-action="MyPost">My post</a>
+</div>

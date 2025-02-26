@@ -4,18 +4,15 @@
     ViewData["Title"] = "Home Page";
 }
 
+@section Styles {
+        <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
+}
+
 <div class="main">
 
         <div class="home-container">
 
-            <div class="menu">
-                <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
-                <h2>DarthVader</h2>
-                <p>ThelordLnwza0072547</p>
-                <a href="https://www.google.com/" class="menu-home">Home</a>
-                <a class="menu-status">Status</a>
-                <a class="menu-like">like</a>
-            </div>
+            @await Html.PartialAsync("_Menu")
 
             <div class="home-body">
 
@@ -26,11 +23,11 @@
                     <a class="navbar-item"  href="/Post/Create">Create New Post</a>
                 </div>
 
-                <div class="genre mv-10">
-                    <button class="genre-item">food</button>
-                    <button class="genre-item">drink beer</button>
-                    <button class="genre-item">gym</button>
-                </div>
+                <select class="tag" name="tag" id="id_tag" multiple>
+                    <option value="1">Drink beer</option>
+                    <option value="2">Gym</option>
+                    <option value="3">Buffet</option>
+                </select>
 
                 <div class="category">
                     @foreach (var post in Model)
