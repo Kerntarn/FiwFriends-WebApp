@@ -12,10 +12,11 @@
 
         <p>@user?.FirstName @user?.LastName</p>
         
-        <a class="menu-home" asp-controller="Post" asp-action="Index">Home</a>
-        <a class="menu-status" asp-controller="Home" asp-action="Status">Status</a>
-        <a class="menu-like" asp-controller="Post" asp-action="GetFavoritedPost">Likes</a>
-        <a class="menu-my_post" asp-controller="User" asp-action="MyPost">My post</a>
+        <a class="menu-home" asp-controller="Post" asp-action="Index"><b>Home</b></a>
+        <a class="menu-status" asp-controller="Home" asp-action="Status"><b>Status</b></a>
+        <a class="menu-like" asp-controller="Post" asp-action="GetFavoritedPost"><b>Likes</b></a>
+        <a class="menu-my_post" asp-controller="User" asp-action="MyPost"><b>My post</b></a>
+        <br>
         <form method="post" asp-controller="Auth" asp-action="Logout">
                 <button type="submit" class="logout-btn">Logout</button>
         </form>
