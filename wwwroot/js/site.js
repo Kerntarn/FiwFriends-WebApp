@@ -26,15 +26,39 @@ function signup() {
 
 }
 
-document.getElementById("id_tag").addEventListener("change", function() {
-        let options = this.options;
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].selected) {
-                options[i].style.backgroundColor = "#FF8A80";
-                options[i].style.color = "white"; // เปลี่ยนสีตัวอักษรเพื่อให้อ่านง่าย
-            } else {
-                options[i].style.backgroundColor = ""; // คืนค่าเริ่มต้น
-                options[i].style.color = "#242424";
-            }
-        }
+document.querySelectorAll(".tag").forEach(button => {
+    button.addEventListener("click", function () {
+        document.querySelectorAll(".tag").forEach(btn => btn.classList.remove("selected"));
+
+        this.classList.add("selected");
+
+        document.getElementById("tagInput").value = this.getAttribute("data-tag");
     });
+});
+
+function addQuestion(button) {
+    // ลบปุ่มเก่าออก
+    button.remove();
+
+    // สร้างกล่อง input ใหม่
+    const container = document.createElement("div");
+    container.classList.add("question-container");
+    container.style.marginTop = "20px"
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.classList.add("question-input");
+    input.name = "questions[]"; // ส่งเป็น array ไป backend
+
+    const newButton = document.createElement("button");
+    newButton.classList.add("question-more");
+    newButton.innerText = "+";
+    newButton.onclick = function () { addQuestion(newButton); };
+
+    container.appendChild(input);
+    container.appendChild(newButton);
+
+    // เพิ่มกล่องใหม่ลงใน wrapper
+    document.getElementById("question-wrapper").appendChild(container);
+    console.log("done")
+}

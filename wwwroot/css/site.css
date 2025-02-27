@@ -202,7 +202,7 @@ a {
 .btn {
   font-weight: bold;
   margin-top: 5px;
-  border: 0 solid #242424;
+  border: 2px solid #242424;
   background-color: #FF8A80;
   border-radius: 5px;
   padding: 5px 15px;
@@ -227,14 +227,14 @@ a {
 }
 
 .login-p {
-  margin-left: 10px;
+  margin-left: 7px;
   margin-bottom: 7px;
+  font-weight: bold;
 }
 
 .inp {
   position: inherit;
-  width: 90%;
-  height: 100%;
+  width: 95%;
   border: none;
   border-radius: 5px;
   font-size: 16px;
@@ -292,9 +292,6 @@ a {
   transform: translate(-60%, -0%);
 }
 
-/* .main-login-property {
-  width: 40%;
-} */
 
 .profile-img {
   border-radius: 50%;

@@ -34,7 +34,7 @@
                     <div asp-validation-summary="ModelOnly" class="error-text"></div>
 
                     <div class="mh-40">
-                        <p class="algn-start login-p" ><b>username</b></p>
+                        <p class="algn-start login-p" >username</p>
                         <input name="Username" class="inp" type="text">
                         @if (ViewData.ModelState["UserName"]?.Errors.Count > 0)
                         {
@@ -43,7 +43,7 @@
                     </div>
                     
                     <div class="mh-40">
-                        <p class="algn-start login-p"><b>password</b></p>
+                        <p class="algn-start login-p">password</p>
                         <input name="Password" class="inp" type="password">
                         @if (ViewData.ModelState["Password"]?.Errors.Count > 0)
                         {
@@ -52,7 +52,7 @@
 
                     <p id="errorMessage" style="color: red;"></p>
                     <input type="hidden" name="ReturnUrl" value="@returnUrl" />
-                    <button class="navbar-item btn-login-property" type="submit"><b>login</b></button>
+                    <button class="navbar-item btn-login-property" type="submit"><b></b>login</b></button>
                     <p>Don't have an account? <a asp-controller="Auth" asp-action="Register" class="signup-link"><u> sign up </u></a></p>
 
                 </form>
