@@ -37,7 +37,7 @@ public class MapperService{
         var user = await _currentUser.GetCurrentUser();
         if ( user == null ){ throw new Exception("Just for not warning in MapAsync<PostDTO, Post>"); }
         return new Post {
-            Activity = post.Activity,
+            Activity = post.Activity,   
             Description = post.Description,
             Location = post.Location,
             ExpiredTime = post.ExpiredTime.ToUniversalTime(),
@@ -63,7 +63,8 @@ public class MapperService{
             Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, IndexPost>"),
             ParticipantsCount = post.Participants.Count(),
             IsFav = post.FavoritedBy.Any(u => u.Id == user?.Id),
-            Tags = post.Tags
+            Tags = post.Tags,
+            Limit = post.Limit
         };
     }
 
@@ -81,7 +82,8 @@ public class MapperService{
             IsFav = post.FavoritedBy.Any(u => u.Id == user?.Id),
             Tags = post.Tags,
             Participants = post.Participants.Select(j => j.User),
-            Questions = post.Questions
+            Questions = post.Questions,
+            Limit = post.Limit
         };
     }
 
