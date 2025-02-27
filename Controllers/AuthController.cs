@@ -23,7 +23,7 @@ namespace FiwFriends.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("/Register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return View(registerDto);
@@ -31,21 +31,21 @@ namespace FiwFriends.Controllers
             var existingUser = await _userManager.FindByNameAsync(registerDto.Username);
             if (existingUser != null)
             {
-                ModelState.AddModelError("Username", "Username already exists.");
+                 ModelState.AddModelError("Username", "Username already exists.");
                 return View(registerDto);
             }
-            
+
             var user = new User 
             {
-                 UserName = registerDto.Username, 
-                 FirstName = registerDto.FirstName, 
-                 LastName = registerDto.LastName
-                 };
+                UserName = registerDto.Username, 
+                FirstName = registerDto.FirstName, 
+                LastName = registerDto.LastName
+            };
+            
             var result = await _userManager.CreateAsync(user, registerDto.Password);
-            if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Post");
+                return RedirectToAction("Index", "Post");    
             }
 
             foreach (var error in result.Errors)
@@ -63,7 +63,7 @@ namespace FiwFriends.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl = null)
         {
             if (!ModelState.IsValid) 
@@ -88,11 +88,11 @@ namespace FiwFriends.Controllers
             return View(loginDto);
         }
 
-        [HttpPost]
+        [HttpPost("/Logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

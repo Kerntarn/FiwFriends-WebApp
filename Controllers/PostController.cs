@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using FiwFriends.Data;
 using FiwFriends.Models;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
-using FiwFriends.DTOs;
 using FiwFriends.Services;
-using AspNetCoreGeneratedDocument;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using FiwFriends.DTOs;
 using NuGet.Packaging;
 using Microsoft.AspNetCore.Authorization;
 
@@ -101,12 +98,14 @@ public class PostController : Controller
         }
 
         var postModel = await _mapper.MapAsync<PostDTO, Post>(post);
+        
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Detail", postModel.PostId);                //Redirect to Detail of this post
+        return RedirectToAction("Detail", postModel.PostId);              //Redirect to Detail of this post
     }
 
     //DELETE Post
+    [Authorize]
     [HttpDelete("Post/{id}")]
     [Authorize]
     async public Task<IActionResult> Delete(int id){                        //Delete Post by just PostId
@@ -123,6 +122,7 @@ public class PostController : Controller
     }
 
     //PUT Update Post
+    [Authorize]
     [HttpPut("Post/{id}")]
     [Authorize]
     async public Task<IActionResult> Edit(int id, PostDTO post){            //Edit Post by define PostId to edit and update info based on PostDTO
@@ -171,6 +171,7 @@ public class PostController : Controller
         return View("Index");                                               //Return to another View (or may be jsut Ok()?)
     }
 
+    [Authorize]
     [HttpPost("Post/Join/{id}")]
     [Authorize]
     async public Task<IActionResult> Join(int id){                          //Join post by PostId with current User logged in
@@ -183,6 +184,7 @@ public class PostController : Controller
             UserId = user.Id,  
             PostId = id
         };
+
         await _db.Joins.AddAsync(join);
         await _db.SaveChangesAsync();
         return RedirectToAction("Detail", id);                              //Return detail of this post
@@ -197,14 +199,14 @@ public class PostController : Controller
         if (user == null) return RedirectToAction("Login", "Auth");
 
         if (post.FavoritedBy.Any(u => u.Id == user.Id)){
-            post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
-        } else {
-            post.FavoritedBy.Add(user);
-        }
-        await _db.SaveChangesAsync();
+             post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
+         } else {
+             post.FavoritedBy.Add(user);
+         }
+         await _db.SaveChangesAsync();
 
-        return Ok();                                                        //Done
-    }
+         return Ok();                                                        //Done
+     }
     
     [HttpGet("Post/Favorite")]
     [Authorize]

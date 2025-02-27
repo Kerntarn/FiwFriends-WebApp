@@ -1,11 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 namespace FiwFriends.Models;
 
-public class Form : BaseModel{
+public enum FormStatus
+{
+    Pending,
+    Approved,
+    Rejected
+}
+
+public class Form
+{
     [Key]
     public int FormId { get; set; }
-    [Required]
-    public bool IsApproved { get; set; } = false;
+    public FormStatus Status { get; set; } = FormStatus.Pending;  // Default status is pending
     [Required]
     public required int PostId { get; set; } 
     public Post Post { get; set; } = null!;
