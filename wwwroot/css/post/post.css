@@ -49,11 +49,20 @@ html {
 }
 
 .tag {
+    display: flex;
     font-weight: bold;
     background-color: #FEFEFE;
     border-radius: 5px;
     padding: 5px 10px;
     width: fit-content;
+    align-items: center;
+    gap: 5px;
+}
+
+.tag svg {
+    width: 18px;
+    height: 18px;
+    fill: #000;
 }
 
 .add-border {

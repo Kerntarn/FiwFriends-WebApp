@@ -11,7 +11,9 @@
         <h2>@user?.UserName</h2>
 
         <p>@user?.FirstName @user?.LastName</p>
-        
+        <br>
+        <a class="menu-edit_profile" asp-controller="Post" asp-action="Index"><button type="submit" class="edit-btn">Edit profile</button></a>
+
         <a class="menu-home" asp-controller="Post" asp-action="Index"><b>Home</b></a>
         <a class="menu-status" asp-controller="Home" asp-action="Status"><b>Status</b></a>
         <a class="menu-like" asp-controller="Post" asp-action="GetFavoritedPost"><b>Likes</b></a>
