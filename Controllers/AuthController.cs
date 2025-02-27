@@ -17,7 +17,7 @@ namespace FiwFriends.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpGet]
+        [HttpGet("/Register")]
         public IActionResult Register()
         {
             return View();
@@ -43,6 +43,7 @@ namespace FiwFriends.Controllers
             };
             
             var result = await _userManager.CreateAsync(user, registerDto.Password);
+            if(result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Post");    
@@ -56,7 +57,7 @@ namespace FiwFriends.Controllers
             return View(registerDto);
         }
         
-        [HttpGet]
+        [HttpGet("Login")]
         public IActionResult Login(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl ?? Url.Content("~/");

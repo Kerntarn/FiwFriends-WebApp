@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace FiwFriends.Controllers;
 
+[Authorize]
 public class PostController : Controller
 {
     private readonly ApplicationDBContext _db;
@@ -79,7 +80,6 @@ public class PostController : Controller
     }
 
     //GET Create page
-    [Authorize]
     [HttpGet("Post/Create")]
     public IActionResult Create(){                                              //Get Create page
         return View();
@@ -88,7 +88,6 @@ public class PostController : Controller
 
     //POST Create
     [HttpPost("Post/Create")]
-    [Authorize]
     async public Task<IActionResult> Create(PostDTO post){                      //Create Post by PostDTO
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -96,13 +95,11 @@ public class PostController : Controller
         
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Detail", postModel.PostId);              //Redirect to Detail of this post
+        return RedirectToAction("Detail", new { id = postModel.PostId });              //Redirect to Detail of this post
     }
 
     //DELETE Post
-    [Authorize]
     [HttpDelete("Post/{id}")]
-    [Authorize]
     async public Task<IActionResult> Delete(int id){                        //Delete Post by just PostId
         var post = _db.Posts.Find(id);
         if (post == null) return NotFound(); 
@@ -117,9 +114,7 @@ public class PostController : Controller
     }
 
     //PUT Update Post
-    [Authorize]
     [HttpPut("Post/{id}")]
-    [Authorize]
     async public Task<IActionResult> Edit(int id, PostDTO post){            //Edit Post by define PostId to edit and update info based on PostDTO
         if(!ModelState.IsValid) return BadRequest("Invalid DTO");
 
@@ -152,7 +147,6 @@ public class PostController : Controller
     }
 
     [HttpPost("Post/Close/{postId}")]
-    [Authorize]
     async public Task<IActionResult> Close(int postId){                     //Just close post by PostId
         var post = await _db.Posts.FindAsync(postId);
         if(post == null) return NotFound("Post not found");
@@ -166,9 +160,7 @@ public class PostController : Controller
         return View("Index");                                               //Return to another View (or may be jsut Ok()?)
     }
 
-    [Authorize]
     [HttpPost("Post/Join/{id}")]
-    [Authorize]
     async public Task<IActionResult> Join(int id){                          //Join post by PostId with current User logged in
         var user = await _currentUser.GetCurrentUser();   
         var post = await _db.Posts.FindAsync(id);
@@ -186,7 +178,6 @@ public class PostController : Controller
     }
 
     [HttpPost("Post/Favorite/{id}")]
-    [Authorize]
     async public Task<IActionResult> Favorite(int id){                      //Just Favorite Post by PostId with current User logged in
         var user = await _currentUser.GetCurrentUser();   
         var post = await _db.Posts.FindAsync(id);
@@ -204,7 +195,6 @@ public class PostController : Controller
      }
     
     [HttpPost("Post/Favorite")]
-    [Authorize]
     async public Task<IActionResult> GetFavoritedPost(){                    //Get current User's Favorited Post (or maybe this should be in UserController?)
         var user = await _currentUser.GetCurrentUser();
         if(user == null) return RedirectToAction("Login", "Auth");
