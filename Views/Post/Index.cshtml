@@ -17,19 +17,27 @@
             <div class="home-body">
 
                 <div class="property">
-                    <div class="property-search">
-                        search
+                    <div class="search-container">
+                        <input name="" id="" class="search-text"></input>
+                        <a href="">search</a>
                     </div>
-                    <a class="navbar-item"  href="/Post/Create">Create New Post</a>
+                    <a class="new-post"  href="/Post/Create">Create New Post</a>
                 </div>
 
-                <select class="tag" name="tag" id="id_tag" multiple>
-                    <option value="1">Drink beer</option>
-                    <option value="2">Gym</option>
-                    <option value="3">Buffet</option>
-                </select>
+                <div class="tag-container">
+                
+                    <button class="tag">Food</button>
+                    <button class="tag">Drink beer</button>
+                    <button class="tag">Gym</button>
+                    <button class="tag">Sport</button>
+
+                </div>
+
+
 
                 <div class="category">
+
+                    
                     @foreach (var post in Model)
                     {
                     <div class="card">
@@ -42,7 +50,14 @@
                             <div>@post.AppointmentTime</div>
                             <div class="place-and-gruop">
                                 <div >@post.Location</div>
-                                <div >3 people</div>
+                                <div >@post.ParticipantsCount people</div>
+                            </div>
+                            <div>
+                                <div>@foreach (var tag in post.Tags)
+                                    {
+                                        <div class="tag add-border">@tag.Name</div>
+                                    }
+                                </div>
                             </div>
                             <div class="detail">
                                 @post.Description

@@ -95,6 +95,11 @@ public class PostController : Controller
     async public Task<IActionResult> Create(PostDTO post){                      //Create Post by PostDTO
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
+        foreach (var tag in post.Tags)
+        {
+            Console.WriteLine($"Tag: {tag.Name}");
+        }
+
         var postModel = await _mapper.MapAsync<PostDTO, Post>(post);
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();

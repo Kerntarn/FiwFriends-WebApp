@@ -27,6 +27,14 @@ function signup() {
 }
 
 document.getElementById("id_tag").addEventListener("change", function() {
-        child.style.backgroundColor = "#FF8A80";
+        let options = this.options;
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+                options[i].style.backgroundColor = "#FF8A80";
+                options[i].style.color = "white"; // เปลี่ยนสีตัวอักษรเพื่อให้อ่านง่าย
+            } else {
+                options[i].style.backgroundColor = ""; // คืนค่าเริ่มต้น
+                options[i].style.color = "#242424";
+            }
+        }
     });
-

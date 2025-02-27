@@ -7,7 +7,7 @@
 
 
 <div class="menu">
-        <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
+        <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;" class="profile-img">
         <h2>@user?.UserName</h2>
 
         <p>@user?.FirstName @user?.LastName</p>
@@ -16,4 +16,7 @@
         <a class="menu-status" asp-controller="Home" asp-action="Status">Status</a>
         <a class="menu-like" asp-controller="Post" asp-action="GetFavoritedPost">Likes</a>
         <a class="menu-my_post" asp-controller="User" asp-action="MyPost">My post</a>
+        <form method="post" asp-controller="Auth" asp-action="Logout">
+                <button type="submit" class="logout-btn">Logout</button>
+        </form>
 </div>

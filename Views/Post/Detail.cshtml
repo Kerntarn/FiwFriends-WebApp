@@ -6,6 +6,10 @@
     var user = await UserManager.GetUserAsync(User);
 }
 
+@section Styles {
+        <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
+}
+
 @{  //Razor view of home's index
     ViewData["Title"] = "Detail Page";
 }
@@ -30,7 +34,11 @@
                                 <div >@Model.Location</div>
                                 <div >@Model.ParticipantsCount</div>
                             </div>
-                            <button class="genre-item">food</button>
+                            <div>@foreach (var tag in Model.Tags)
+                                {
+                                    <div class="tag add-border">@tag.Name</div>
+                                }
+                            </div>
                             <div class="detail">@Model.Description</div>
                             <div class="question">
                                 <div class="question-container" id="1">

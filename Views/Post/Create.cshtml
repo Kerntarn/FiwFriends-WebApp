@@ -4,6 +4,10 @@
     ViewData["Title"] = "Create Page";
 }
 
+@section Styles {
+        <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
+}
+
 <div class="main">
 
         <div class="home-container">
@@ -49,6 +53,12 @@
                                     <p class="algn-start login-p">Location</p>
                                     <span asp-validation-for="Location" class="error-text"></span>
                                     <input class="inp" type="text"  asp-for="Location" >
+                                </div>
+
+                                <div class="mh-40">
+                                    <p class="algn-start login-p">Tag</p>
+                                    <span asp-validation-for="Tags" class="error-text"></span>
+                                    <input class="inp" type="text"  asp-for="Tags[0].Name" >
                                 </div>
 
                                 <button class="navbar-item btn-login-property" type="submit">Create Post</button>
