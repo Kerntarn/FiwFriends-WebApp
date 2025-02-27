@@ -23,7 +23,7 @@ namespace FiwFriends.Controllers
             return View();
         }
 
-        [HttpPost("/Register")]
+        [HttpPost("Auth/Register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return View(registerDto);
@@ -63,7 +63,7 @@ namespace FiwFriends.Controllers
             return View();
         }
 
-        [HttpPost("Login")]
+        [HttpPost("Auth/Login")]
         public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl = null)
         {
             if (!ModelState.IsValid) 
