@@ -231,7 +231,7 @@ namespace FiwFriends.Controllers
                 .OrderBy(f => f.FormId)
                 .ToListAsync();
 
-            return Ok(userPostForms);
+            return View(userPostForms);
         }
 
         [HttpGet("/MyPosts")]
