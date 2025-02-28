@@ -189,5 +189,10 @@ html {
 }
 
 .pb-20 {
-    padding-bottom: 20px;
+    padding-bottom: 15px;
+}
+
+.flex-right {
+    padding-top: 10px;
+    justify-content: end;
 }
