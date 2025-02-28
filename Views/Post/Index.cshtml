@@ -40,31 +40,31 @@
                     
                     @foreach (var post in Model)
                     {
-                    <div class="card">
-                        <div class="card-header">@post.Activity</div>
-                        <div class="card-body">
-                            <div class="user-and-like">
-                                <div>@post.Owner</div>
-                                <div>like</div>
-                            </div>
-                            <div>@post.AppointmentTime</div>
-                            <div class="place-and-gruop">
-                                <div >@post.Location</div>
-                                <div >@post.ParticipantsCount people</div>
-                            </div>
-                            <div>
-                                <div>@foreach (var tag in post.Tags)
-                                    {
-                                        <div class="tag add-border">@tag.Name</div>
-                                    }
+                        <div class="card">
+                            <div class="card-header">@post.Activity</div>
+                            <div class="card-body">
+                                <div class="user-and-like">
+                                    <div>@post.Owner</div>
+                                    <div>like</div>
                                 </div>
+                                <div>@post.AppointmentTime</div>
+                                <div class="place-and-gruop">
+                                    <div >@post.Location</div>
+                                    <div >@post.ParticipantsCount people</div>
+                                </div>
+                                <div>
+                                    <div>@foreach (var tag in post.Tags)
+                                        {
+                                            <div class="tag add-border">@tag.Name</div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="detail">
+                                    @post.Description
+                                </div>
+                                <a class="btn right" asp-controller="Post" asp-action="Detail" asp-route-id="@post.PostId">join</a>
                             </div>
-                            <div class="detail">
-                                @post.Description
-                            </div>
-                            <a class="btn right" asp-controller="Post" asp-action="Detail" asp-route-id="@post.PostId">join</a>
                         </div>
-                    </div>
                     }
 
                     

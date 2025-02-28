@@ -1,11 +1,5 @@
 @model FiwFriends.Models.DetailPost
 
-@inject Microsoft.AspNetCore.Identity.UserManager<FiwFriends.Models.User> UserManager
-
-@{
-    var user = await UserManager.GetUserAsync(User);
-}
-
 @section Styles {
         <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
 }
@@ -32,7 +26,7 @@
                             <div>@Model.AppointmentTime</div>
                             <div class="place-and-gruop">
                                 <div >@Model.Location</div>
-                                <div >@Model.ParticipantsCount</div>
+                                <div >@Model.ParticipantsCount people</div>
                             </div>
                             <div>@foreach (var tag in Model.Tags)
                                 {
@@ -41,22 +35,35 @@
                             </div>
                             <div class="detail">@Model.Description</div>
                             <div class="question">
-                                <div class="question-container" id="1">
-                                        <p>Question : กินเนื้อได้ไหม</p>
-                                        <input class="" type="text">
-                                </div>
+                                @foreach (var question in Model.Questions)
+                                {
+                                    <p class="algn-start login-p">Question : @question.Content</p>
+                                    <div class="question-container">
+                                           <input class="question-input" type="text">
+                                    </div>
+                                }
+                                
                             </div>
 
-                            <div class="people">
+                            <div class="people-container">
                                 <p>People who have already joined</p>
-                                <div class="people-container">
-                                        <div>user101</div>
-                                        <div>user102</div>
-                                        <div>user103</div>
+                                <div class="people">
+                                        @if (Model.Participants.Any())
+                                        {
+                                            @foreach (var user in Model.Participants)
+                                            {
+                                                <div class="user">@user.UserName</div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>No people join yet!</p>
+                                        }
+                                        
                                 </div>
                             </div>
                             <a class="btn" asp-action="">back</a>
-                            <button class="btn right">join</button>
+                            <a class="btn">join</a>
                         </div>
                     </div>
 

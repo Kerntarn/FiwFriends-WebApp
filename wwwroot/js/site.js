@@ -32,33 +32,48 @@ document.querySelectorAll(".tag").forEach(button => {
 
         this.classList.add("selected");
 
+        document.getElementById("tagInput").name = "Tags[0].Name"
         document.getElementById("tagInput").value = this.getAttribute("data-tag");
     });
 });
 
 function addQuestion(button) {
-    // ลบปุ่มเก่าออก
-    button.remove();
+    let wrapper = document.getElementById("question-wrapper");
+    let count = wrapper.getElementsByClassName("question-container").length; // นับจำนวนคำถามที่มีอยู่
+
+    // เปลี่ยนปุ่ม + เป็นปุ่ม -
+    button.innerText = "-";
+    button.setAttribute('onclick', 'removeQuestion(this)');
 
     // สร้างกล่อง input ใหม่
     const container = document.createElement("div");
     container.classList.add("question-container");
-    container.style.marginTop = "20px"
 
     const input = document.createElement("input");
     input.type = "text";
     input.classList.add("question-input");
-    input.name = "questions[]"; // ส่งเป็น array ไป backend
+    input.name = `Questions[${count}].Content`; // ตั้งค่า name ตาม index
+    input.required = true;
 
     const newButton = document.createElement("button");
     newButton.classList.add("question-more");
     newButton.innerText = "+";
-    newButton.onclick = function () { addQuestion(newButton); };
+    newButton.type = "button";
+    newButton.setAttribute('onclick', 'addQuestion(this)');
 
     container.appendChild(input);
     container.appendChild(newButton);
 
     // เพิ่มกล่องใหม่ลงใน wrapper
-    document.getElementById("question-wrapper").appendChild(container);
-    console.log("done")
+    wrapper.appendChild(container);
+}
+
+function removeQuestion(button) {
+    button.parentElement.remove(); // ลบ element ที่เป็น parent ของปุ่มออก
+
+    // อัปเดต name ของ input ใหม่หลังจากลบ
+    let inputs = document.querySelectorAll("#question-wrapper .question-input");
+    inputs.forEach((input, index) => {
+        input.name = `Questions[${index}].Content`;
+    });
 }

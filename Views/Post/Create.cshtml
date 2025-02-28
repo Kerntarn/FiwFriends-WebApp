@@ -52,7 +52,7 @@
                                         <button type="button" class="tag" data-tag="Tag4">Tag4</button>
                                     </div>
 
-                                    <input type="hidden" id="tagInput" asp-for="Tags" />
+                                    <input type="hidden" id="tagInput" />
                                 </div>
 
                                 <div class="mh-40">
@@ -78,10 +78,10 @@
 
                                 <div class="mh-40">
                                     <p class="algn-start login-p">Question</p>
-                                    <span asp-validation-for="ExpiredTime" class="error-text"></span>
+                                    <span asp-validation-for="Questions" class="error-text"></span>
                                     <div id="question-wrapper">
                                         <div class="question-container">
-                                            <input class="question-input" type="text"  asp-for="ExpiredTime" >
+                                            <input class="question-input" type="text" name="Questions[0].Content">
                                             <button class="question-more" type="button" onclick="addQuestion(this)">+</button>
                                         </div>
                                     </div>
