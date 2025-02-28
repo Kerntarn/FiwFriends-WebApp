@@ -18,7 +18,7 @@
 
                 <div class="card">
                         <div class="card-header">@Model.Activity</div>
-                        <div class="card-body">
+                        <div class="card-body pb-20">
                             <div class="user-and-like">
                                 <div>@Model.Owner</div>
                                 <div>like</div>
@@ -35,35 +35,44 @@
                             </div>
                             <div class="detail">@Model.Description</div>
                             <div class="question">
+                                @{ int index = 0; }
                                 @foreach (var question in Model.Questions)
                                 {
                                     <p class="algn-start login-p">Question : @question.Content</p>
                                     <div class="question-container">
-                                           <input class="question-input" type="text">
+                                           <input class="question-input" type="text" name="Questions[@index].Content">
                                     </div>
+                                    index++;
                                 }
                                 
                             </div>
 
                             <div class="people-container">
-                                <p>People who have already joined</p>
-                                <div class="people">
-                                        @if (Model.Participants.Any())
+                                @if (Model.Participants.Any())
+                                {
+                                    <p>People who have already joined</p>
+                                    <div class="people">
+                                        @foreach (var user in Model.Participants)
                                         {
-                                            @foreach (var user in Model.Participants)
-                                            {
-                                                <div class="user">@user.UserName</div>
-                                            }
+                                            <div class="user">@user.UserName</div>
                                         }
-                                        else
-                                        {
-                                            <p>No people join yet!</p>
-                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>No people join yet!</p>
+                                }
                                         
-                                </div>
+                                
                             </div>
-                            <a class="btn" asp-action="">back</a>
-                            <a class="btn">join</a>
+
+                            <div class="button-container">
+                                <a class="btn" asp-action="">back</a>
+                                <form asp-action="Join" asp-controller="Post" asp-route-id="@Model.PostId" method="post">
+                                    <button type="submit" class="btn">Join</button>
+                                </form>
+                            </div>
+                            
                         </div>
                     </div>
 

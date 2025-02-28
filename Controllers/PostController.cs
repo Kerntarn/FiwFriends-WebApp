@@ -187,7 +187,7 @@ public class PostController : Controller
 
         await _db.Joins.AddAsync(join);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Detail", id);                              //Return detail of this post
+        return RedirectToAction("Index");                              //Return detail of this post
     }
 
     [HttpPost("Post/Favorite/{id}")]
