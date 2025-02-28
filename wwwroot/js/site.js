@@ -26,9 +26,9 @@ function signup() {
 
 }
 
-document.querySelectorAll(".tag").forEach(button => {
+document.querySelectorAll(".tag-select").forEach(button => {
     button.addEventListener("click", function () {
-        document.querySelectorAll(".tag").forEach(btn => btn.classList.remove("selected"));
+        document.querySelectorAll(".tag-select").forEach(btn => btn.classList.remove("selected"));
 
         this.classList.add("selected");
 
