@@ -187,7 +187,7 @@ namespace FiwFriends.Controllers
                     .OrderBy(s => s.AppointmentTime)
                     .ToList();
 
-                return Ok(new { Posts = allPosts });
+                return View(new { Posts = allPosts });
             }
 
         [HttpGet("Pending")]

@@ -17,7 +17,7 @@ namespace FiwFriends.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpGet("/Register")]
+        [HttpGet("Auth/Register")]
         public IActionResult Register()
         {
             return View();
@@ -57,7 +57,7 @@ namespace FiwFriends.Controllers
             return View(registerDto);
         }
         
-        [HttpGet("Login")]
+        [HttpGet("Auth/Login")]
         public IActionResult Login(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl ?? Url.Content("~/");

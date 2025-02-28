@@ -17,6 +17,9 @@
 
             <div class="home-body">
 
+                @if (Model.Any())
+                {
+
                 <div class="category">
 
                     @foreach (var post in Model)
@@ -53,6 +56,11 @@
                     }
 
                 </div>
+                }
+                else
+                {
+                    <h1 style="text-align: center; color: rgba(24, 24, 24, 0.75)">You don't have any posts yet.</h1>
+                }
 
             </div>
 
