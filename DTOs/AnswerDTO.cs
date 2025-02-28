@@ -4,7 +4,7 @@ namespace FiwFriends.DTOs
 {
     public class AnswerDTO
     {
-        [Required]
+        [Required(ErrorMessage = "Content is required")]
         public required string Content { get; set; }
         [Required]
         public int QuestionId { get; set; }
