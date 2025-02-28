@@ -104,7 +104,7 @@ public class PostController : Controller
     }
 
     //DELETE Post
-    [HttpDelete("Post/{id}")]
+    [HttpPost("Post/Delete/{id}")]
     async public Task<IActionResult> Delete(int id){                        //Delete Post by just PostId
         var post = _db.Posts.Find(id);
         if (post == null) return NotFound(); 
@@ -115,7 +115,7 @@ public class PostController : Controller
 
         _db.Posts.Remove(post);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Index");                                   //Rediret to Index
+        return RedirectToAction("Index", "Post");                                   //Rediret to Index
     }
 
     //PUT Update Post
@@ -162,7 +162,7 @@ public class PostController : Controller
 
         post.ExpiredTime = DateTimeOffset.UtcNow;
         await _db.SaveChangesAsync();
-        return View("Index");                                               //Return to another View (or may be jsut Ok()?)
+        return RedirectToAction("Index", "Post");                                               //Return to another View (or may be jsut Ok()?)
     }
 
     [HttpPost("Post/Join/{id}")]

@@ -8,6 +8,11 @@
     ViewData["Title"] = "Detail Page";
 }
 
+@{
+    @* int yearAD = Model.AppointmentTime.year - 543; *@
+    @* DateTime convertedDate = new DateTime(yearAD, Model.Month, Model.Day, Model.Hour, Model.Minute, Model.Second); *@
+}
+
 <div class="main">
 
         <div class="home-container">
@@ -23,7 +28,8 @@
                                 <div>@Model.Owner</div>
                                 <div>like</div>
                             </div>
-                            <div>@Model.AppointmentTime</div>
+                            <div>Appointment : @Model.AppointmentTime.DayOfWeek, @Model.AppointmentTime.LocalDateTime</div>
+                            <div>Due : @Model.ExpiredTime.DayOfWeek, @Model.ExpiredTime.LocalDateTime</div>
                             <div class="place-and-gruop">
                                 <div >@Model.Location</div>
                                 <div >@Model.ParticipantsCount people</div>
