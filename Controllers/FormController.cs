@@ -29,14 +29,31 @@ public class FormController : Controller{
     }
 
     [HttpPost("Form/Submit")]
-    async public Task<IActionResult> Submit(FormDTO form){                          //Submit FormDTO
-        if (!ModelState.IsValid) return BadRequest(ModelState); 
-        
+    public async Task<IActionResult> Submit(FormDTO form)
+    {
+
+        Console.WriteLine($"Received PostId: {form.PostId}");
+        Console.WriteLine($"Received Answers Count: {form.Answers?.Count ?? 0}");
+
+        if (form.Answers == null || form.Answers.Count == 0)
+        {
+            Console.WriteLine("❌ ERROR: Answers is NULL or EMPTY");
+        }
+
+        foreach (var answer in form.Answers ?? new List<AnswerDTO>())
+        {
+            Console.WriteLine($"Answer: QuestionId={answer.QuestionId}, Content={answer.Content}");
+        }
+
+
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var user = await _currentUser.GetCurrentUser();
         if (user == null) return RedirectToAction("Login", "Auth");
-        
-        await _db.Forms.AddAsync(new Form{
-            UserId = user.Id,         //get current user
+
+        var newForm = new Form
+        {
+            UserId = user.Id,
             PostId = form.PostId,
             Status = FormStatus.Pending, // Default to Pending
             Answers = form.Answers.Select(a => new Answer
@@ -44,9 +61,13 @@ public class FormController : Controller{
                 Content = a.Content,
                 QuestionId = a.QuestionId
             }).ToList()
-        });
+        };
 
+        
+
+        await _db.Forms.AddAsync(newForm);
         await _db.SaveChangesAsync();
+
         return RedirectToAction("Detail", "Post", new { id = form.PostId });
     }
 

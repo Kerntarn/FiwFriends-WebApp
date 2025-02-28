@@ -211,10 +211,15 @@ namespace FiwFriends.Controllers
                 {
                     Activity = f.Post.Activity,
                     FormId = f.FormId.ToString(),
-                    User = _db.Users
+                    UserId = _db.Users
+                        .Where(u => u.Id == f.UserId)
+                        .Select(u => u.Id)
+                        .FirstOrDefault() ?? "Unknown",
+                    Username = _db.Users
                         .Where(u => u.Id == f.UserId)
                         .Select(u => u.UserName)
                         .FirstOrDefault() ?? "Unknown",
+                    PostId = f.PostId.ToString(),
                     Status = f.Status.ToString(),
                     QnAs = f.Answers
                         .Select(a => new QnA
