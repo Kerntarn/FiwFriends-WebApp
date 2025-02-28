@@ -11,5 +11,7 @@ namespace FiwFriends.DTOs
         [Required]
         public required string LastName { get; set; }
         public string? Password { get; set; }
+        public string? Bio {get; set;}
+        public string? Contact {get; set;}
     }
 }

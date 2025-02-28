@@ -38,7 +38,7 @@ public class IndexPost{
         public required int ParticipantsCount { get; set; }
         public required bool IsFav { get; set; }
         public required IEnumerable<Tag> Tags { get; set; }
-
+        public required int Limit { get; set; }
 }
 
 public class DetailPost : IndexPost {
