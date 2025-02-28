@@ -13,7 +13,7 @@
         <p>@user?.FirstName @user?.LastName</p>
         
         <a class="menu-home" asp-controller="Post" asp-action="Index">Home</a>
-        <a class="menu-status" asp-controller="Home" asp-action="Status">Status</a>
+        <a class="menu-status" asp-controller="User" asp-action="UserInboxStatus">Status</a>
         <a class="menu-like" asp-controller="Post" asp-action="GetFavoritedPost">Likes</a>
         <a class="menu-my_post" asp-controller="User" asp-action="MyPost">My post</a>
         <form method="post" asp-controller="Auth" asp-action="Logout">
