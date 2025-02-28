@@ -1,35 +1,24 @@
 @model FiwFriends.Models.DetailPost
 
-@inject Microsoft.AspNetCore.Identity.UserManager<FiwFriends.Models.User> UserManager
-
-@{
-    var user = await UserManager.GetUserAsync(User);
+@section Styles {
+        <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
 }
 
 @{  //Razor view of home's index
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Detail Page";
 }
 
 <div class="main">
 
         <div class="home-container">
 
-            <div class="menu">
-                <img src="https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg" style="max-width: 10rem;">
-                <h2>@user?.UserName</h2>
-
-                <p>@user?.FirstName @user?.LastName</p>
-                
-                <a href="https://www.google.com/" class="menu-home">Home</a>
-                <a class="menu-status">Status</a>
-                <a class="menu-like">like</a>
-            </div>
+            @await Html.PartialAsync("_Menu")
 
             <div class="home-body">
 
                 <div class="card">
                         <div class="card-header">@Model.Activity</div>
-                        <div class="card-body">
+                        <div class="card-body pb-20">
                             <div class="user-and-like">
                                 <div>@Model.Owner</div>
                                 <div>like</div>
@@ -37,27 +26,53 @@
                             <div>@Model.AppointmentTime</div>
                             <div class="place-and-gruop">
                                 <div >@Model.Location</div>
-                                <div >@Model.ParticipantsCount</div>
+                                <div >@Model.ParticipantsCount people</div>
                             </div>
-                            <button class="genre-item">food</button>
+                            <div>@foreach (var tag in Model.Tags)
+                                {
+                                    <div class="tag add-border">@tag.Name</div>
+                                }
+                            </div>
                             <div class="detail">@Model.Description</div>
                             <div class="question">
-                                <div class="question-container" id="1">
-                                        <p>Question : กินเนื้อได้ไหม</p>
-                                        <input class="" type="text">
-                                </div>
+                                @{ int index = 0; }
+                                @foreach (var question in Model.Questions)
+                                {
+                                    <p class="algn-start login-p">Question : @question.Content</p>
+                                    <div class="question-container">
+                                           <input class="question-input" type="text" name="Questions[@index].Content">
+                                    </div>
+                                    index++;
+                                }
+                                
                             </div>
 
-                            <div class="people">
-                                <p>People who have already joined</p>
-                                <div class="people-container">
-                                        <div>user101</div>
-                                        <div>user102</div>
-                                        <div>user103</div>
-                                </div>
+                            <div class="people-container">
+                                @if (Model.Participants.Any())
+                                {
+                                    <p>People who have already joined</p>
+                                    <div class="people">
+                                        @foreach (var user in Model.Participants)
+                                        {
+                                            <div class="user">@user.UserName</div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>No people join yet!</p>
+                                }
+                                        
+                                
                             </div>
-                            <a class="btn" asp-action="">back</a>
-                            <button class="btn right">join</button>
+
+                            <div class="button-container">
+                                <a class="btn" asp-action="">back</a>
+                                <form asp-action="Join" asp-controller="Post" asp-route-id="@Model.PostId" method="post">
+                                    <button type="submit" class="btn">Join</button>
+                                </form>
+                            </div>
+                            
                         </div>
                     </div>
 

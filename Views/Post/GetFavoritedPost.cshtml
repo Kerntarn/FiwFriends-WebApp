@@ -1,0 +1,69 @@
+@model IEnumerable<FiwFriends.Models.IndexPost>
+
+@{  //Razor view of home's index
+    ViewData["Title"] = "MyPosts Page";
+}
+
+@section Styles {
+        <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
+}
+
+<div class="main">
+
+        <div class="home-container">
+
+            @await Html.PartialAsync("_Menu")
+
+            <div class="home-body">
+
+                @if (Model.Any())
+                {
+
+                <div class="category">
+
+                    @foreach (var post in Model)
+                    {
+                        <div class="card">
+                            <div class="card-header">@post.Activity</div>
+                            <div class="card-body pb-20">
+                                <div class="user-and-like">
+                                    <div>@post.Owner</div>
+                                    <div>like</div>
+                                </div>
+                                <div>@post.AppointmentTime</div>
+                                <div class="place-and-gruop">
+                                    <div >@post.Location</div>
+                                    <div >@post.ParticipantsCount people</div>
+                                </div>
+                                <div>
+                                    <div>@foreach (var tag in post.Tags)
+                                        {
+                                            <div class="tag add-border">@tag.Name</div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="detail">
+                                    @post.Description
+                                </div>
+                                <div class="button-container flex-right">
+                                    <a class="btn right">Delete</a>
+                                    <a class="btn right">END</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    }
+
+                </div>
+                }
+                else
+                {
+                    <h1 style="text-align: center; color: rgba(24, 24, 24, 0.75)">You don't have any posts you like yet.</h1>
+                }
+
+            </div>
+
+        </div>
+
+</div>

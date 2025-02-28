@@ -91,6 +91,11 @@ public class PostController : Controller
     async public Task<IActionResult> Create(PostDTO post){                      //Create Post by PostDTO
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
+        foreach (var tag in post.Tags)
+        {
+            Console.WriteLine($"Tag: {tag.Name}");
+        }
+
         var postModel = await _mapper.MapAsync<PostDTO, Post>(post);
         
         await _db.Posts.AddAsync(postModel);
@@ -174,7 +179,7 @@ public class PostController : Controller
 
         await _db.Joins.AddAsync(join);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Detail", id);                              //Return detail of this post
+        return RedirectToAction("Index");                              //Return detail of this post
     }
 
     [HttpPost("Post/Favorite/{id}")]
@@ -194,7 +199,7 @@ public class PostController : Controller
          return Ok();                                                        //Done
      }
     
-    [HttpPost("Post/Favorite")]
+    [HttpGet("Post/Favorite")]
     async public Task<IActionResult> GetFavoritedPost(){                    //Get current User's Favorited Post (or maybe this should be in UserController?)
         var user = await _currentUser.GetCurrentUser();
         if(user == null) return RedirectToAction("Login", "Auth");

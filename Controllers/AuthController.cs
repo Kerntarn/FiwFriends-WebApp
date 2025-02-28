@@ -17,13 +17,13 @@ namespace FiwFriends.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpGet("/Register")]
+        [HttpGet("Auth/Register")]
         public IActionResult Register()
         {
             return View();
         }
 
-        [HttpPost("/Register")]
+        [HttpPost("Auth/Register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return View(registerDto);
@@ -57,14 +57,14 @@ namespace FiwFriends.Controllers
             return View(registerDto);
         }
         
-        [HttpGet("Login")]
+        [HttpGet("Auth/Login")]
         public IActionResult Login(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl ?? Url.Content("~/");
             return View();
         }
 
-        [HttpPost("Login")]
+        [HttpPost("Auth/Login")]
         public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl = null)
         {
             if (!ModelState.IsValid) 
