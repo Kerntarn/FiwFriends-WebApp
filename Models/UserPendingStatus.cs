@@ -8,7 +8,7 @@ namespace FiwFriends.Models
         public required string Activity { get; set; }
         public required string User { get; set; }
         public required string FormId { get; set; }
-        public string Status {get; set;}
+        public required string Status {get; set;}
         public required List<QnA> QnAs { get; set; }
     }
 }

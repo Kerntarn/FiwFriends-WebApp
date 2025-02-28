@@ -1,3 +1,5 @@
+@model IEnumerable<FiwFriends.Models.UserPendingStatusViewModel>
+
 @{  //Razor view of home's index
     ViewData["Title"] = "Status Page";
 }
@@ -27,12 +29,28 @@
                                         <th>Status</th>
                                 </tr>
 
-                                <tr class="border-bottom">
-                                        <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>
-                                        <td>User101</td>
-                                        <td>Mon,13 Jan 2025</td>
-                                        <td><b class="accepted-status" >Accepted</b></td>
-                                </tr>
+                                @foreach (var info in Model)
+                                {
+                                        <tr class="border-bottom">
+                                                <td>@info.Activity</td>
+                                                <td>@info.User</td>
+                                                <td>Mon,13 Jan 2025</td>
+                                                <td><b class="accepted-status" >@info.Status</b></td>
+                                        </tr>
+
+                                        foreach (var question in info.QnAs)
+                                        {
+                                                <tr class="border-bottom">
+                                                        <td>
+                                                                <div class="answer_detail">@question.Answer</div>
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                </tr>
+                                        }
+                                        <td> <button class="btn_accept">accept</button>
+                                        <button class="btn_reject" >reject</button> </td>
+                                }
 
                                 <tr class="border-bottom">
                                         <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>

@@ -1,3 +1,5 @@
+@model IEnumerable<FiwFriends.Models.UserPostStatusViewModel>
+
 @{  //Razor view of home's index
     ViewData["Title"] = "Status Page";
 }
@@ -27,43 +29,16 @@
                                         <th>Status</th>
                                 </tr>
 
-                                <tr class="border-bottom">
-                                        <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>
-                                        <td>User101</td>
-                                        <td>Mon,13 Jan 2025</td>
-                                        <td><b class="accepted-status" >Accepted</b></td>
-                                </tr>
-
-                                <tr class="border-bottom">
-                                        <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>
-                                        <td>User101</td>
-                                        <td>Mon,13 Jan 2025</td>
-                                        <td><b class="rejected-status">Rejected</b></td>
-                                </tr>
-
-                                <tr class="border-bottom">
-                                        <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>
-                                        <td>User101</td>
-                                        <td>Mon,13 Jan 2025</td>
-                                        <td><b class="pending-status" >Pending</b></td>
-                                </tr>
-                                                                
-                                <tr>
-                                        <td>หาเพื่อนกินบุฟเฟ่ตี๋น้อย</td>
-                                        <td>User101</td>
-                                        <td>Mon,13 Jan 2025</td>
-                                        <td><b class="pending-status" >Pending</b></td>
-                                        
-                                </tr>
-                                <tr class="border-bottom">
-                                        <td><div class="answer_detail">
-                                        ตี๋น้อย อิอิ
-                                        </div></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td> <button class="btn_accept">accept</button>
-                                        <button class="btn_reject" >reject</button> </td>
-                                </tr>
+                                @foreach (var post in Model)
+                                {
+                                        <tr class="border-bottom">
+                                                <td>@post.Activity</td>
+                                                <td>@post.Owner</td>
+                                                <td>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</td>
+                                                <td><b class="accepted-status" >@post.Status</b></td>
+                                        </tr>
+                                }
+                                
                         </table>
                     </div>
 

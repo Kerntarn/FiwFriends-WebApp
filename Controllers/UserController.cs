@@ -187,7 +187,7 @@ namespace FiwFriends.Controllers
                     .OrderBy(s => s.AppointmentTime)
                     .ToList();
 
-                return View(new { Posts = allPosts });
+                return View(allPosts);
             }
 
         [HttpGet("Pending")]
@@ -204,10 +204,6 @@ namespace FiwFriends.Controllers
                 .Select(f => f.PostId)
                 .ToListAsync();
 
-            if (!userPostIds.Any())
-            {
-                return BadRequest("You haven't owned any post");
-            }
 
             var userPostForms = await _db.Forms
                 .Where(f => userPostIds.Contains(f.PostId) && f.Status == FormStatus.Pending)
@@ -230,6 +226,11 @@ namespace FiwFriends.Controllers
                 })
                 .OrderBy(f => f.FormId)
                 .ToListAsync();
+
+            if (userPostIds.Any() != true)
+            {
+                return View(userPostForms);
+            }
 
             return View(userPostForms);
         }
