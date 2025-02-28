@@ -65,7 +65,9 @@ namespace FiwFriends.Controllers
             {
                 Username = user.UserName ?? "",
                 FirstName = user.FirstName,
-                LastName = user.LastName
+                LastName = user.LastName,
+                Bio = user.Bio,
+                Contact = user.Contact
             };
 
             return View(userDto);
@@ -94,6 +96,8 @@ namespace FiwFriends.Controllers
             user.UserName = userEditor.Username;
             user.FirstName = userEditor.FirstName;
             user.LastName = userEditor.LastName;
+            user.Bio = userEditor.Bio;
+            user.Contact = userEditor.Contact;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
