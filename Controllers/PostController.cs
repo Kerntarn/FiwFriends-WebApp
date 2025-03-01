@@ -36,7 +36,9 @@ public class PostController : Controller
 
     [HttpGet("Search/{search}")]
     async public Task<IActionResult> Search(string search){                     //Search by check activity and description string
-        var posts = await _db.Posts.Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || p.Description.ToLower().Contains(search.ToLower())) && p.ExpiredTime > DateTimeOffset.UtcNow )
+        var posts = await _db.Posts.Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || 
+                                                p.Description.ToLower().Contains(search.ToLower())) && 
+                                                p.ExpiredTime > DateTimeOffset.UtcNow )
                                     .Include(p => p.Owner)
                                     .Include(p => p.Participants).ThenInclude(j => j.User)
                                     .Include(p => p.Tags)

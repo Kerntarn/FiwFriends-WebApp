@@ -19,6 +19,7 @@ namespace FiwFriends.DTOs
         [Required(ErrorMessage = "Appointment time is required.")]
         [DataType(DataType.DateTime)]
         [FutureDate(ErrorMessage = "Appointment time must be in the future.")]
+        [DateLater(nameof(ExpiredTime))]
         public required DateTimeOffset AppointmentTime { get; set; }
 
         [Required(ErrorMessage = "Limit is required.")]
@@ -43,6 +44,28 @@ namespace FiwFriends.DTOs
             {
                 return new ValidationResult(ErrorMessage ?? "The date must be in the future.");
             }
+            return ValidationResult.Success;
+        }
+    }
+
+    public class DateLaterAttribute : ValidationAttribute{
+        private readonly string _comparisonProperty;
+        public DateLaterAttribute(string comparisonProperty)
+        {
+            _comparisonProperty = comparisonProperty;
+        }
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            var currentValue = value as DateTimeOffset?;
+
+            var comparisonPropertyInfo = validationContext.ObjectType.GetProperty(_comparisonProperty);
+            if (comparisonPropertyInfo == null) 
+                return new ValidationResult($"Property '{_comparisonProperty}' not found.");
+            
+            var comparisonValue = comparisonPropertyInfo.GetValue(validationContext.ObjectInstance) as DateTimeOffset?;
+            if (currentValue.HasValue && comparisonValue.HasValue && currentValue < comparisonValue) 
+                return new ValidationResult($"{validationContext.DisplayName} must be later {_comparisonProperty}.");
+            
             return ValidationResult.Success;
         }
     }
