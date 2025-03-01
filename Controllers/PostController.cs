@@ -101,11 +101,12 @@ public class PostController : Controller
         
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();
+        TempData["Message"] = "Post created successfully!";
         return RedirectToAction("Detail", new { id = postModel.PostId });              //Redirect to Detail of this post
     }
 
     //DELETE Post
-    [HttpDelete("Post/{id}")]
+    [HttpPost("Post/Delete/{id}")]
     async public Task<IActionResult> Delete(int id){                        //Delete Post by just PostId
         var post = _db.Posts.Find(id);
         if (post == null) return NotFound(); 
@@ -116,7 +117,8 @@ public class PostController : Controller
 
         _db.Posts.Remove(post);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Index");                                   //Rediret to Index
+        TempData["Message"] = "Post successfully deleted!";
+        return RedirectToAction("MyPost", "User");                               //Rediret to Mypost
     }
 
     //PUT Update Post
@@ -163,7 +165,8 @@ public class PostController : Controller
 
         post.ExpiredTime = DateTimeOffset.UtcNow;
         await _db.SaveChangesAsync();
-        return RedirectToAction("Index");                                               //Return to another View (or may be jsut Ok()?)
+        TempData["Message"] = "Post closed successfully!";
+        return RedirectToAction("Index", "Post");                                               //Return to another View (or may be jsut Ok()?)
     }
 
     [HttpPost("Post/Join/{id}")]

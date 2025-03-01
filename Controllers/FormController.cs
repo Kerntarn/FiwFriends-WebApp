@@ -29,14 +29,31 @@ public class FormController : Controller{
     }
 
     [HttpPost("Form/Submit")]
-    async public Task<IActionResult> Submit(FormDTO form){                          //Submit FormDTO
-        if (!ModelState.IsValid) return BadRequest(ModelState); 
-        
+    public async Task<IActionResult> Submit(FormDTO form)
+    {
+
+        Console.WriteLine($"Received PostId: {form.PostId}");
+        Console.WriteLine($"Received Answers Count: {form.Answers?.Count ?? 0}");
+
+        if (form.Answers == null || form.Answers.Count == 0)
+        {
+            Console.WriteLine("❌ ERROR: Answers is NULL or EMPTY");
+        }
+
+        foreach (var answer in form.Answers ?? new List<AnswerDTO>())
+        {
+            Console.WriteLine($"Answer: QuestionId={answer.QuestionId}, Content={answer.Content}");
+        }
+
+
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var user = await _currentUser.GetCurrentUser();
         if (user == null) return RedirectToAction("Login", "Auth");
-        
-        await _db.Forms.AddAsync(new Form{
-            UserId = user.Id,         //get current user
+
+        var newForm = new Form
+        {
+            UserId = user.Id,
             PostId = form.PostId,
             Status = FormStatus.Pending, // Default to Pending
             Answers = form.Answers.Select(a => new Answer
@@ -44,15 +61,20 @@ public class FormController : Controller{
                 Content = a.Content,
                 QuestionId = a.QuestionId
             }).ToList()
-        });
+        };
 
+        
+
+        await _db.Forms.AddAsync(newForm);
         await _db.SaveChangesAsync();
-        return RedirectToAction("Detail", "Post", new { id = form.PostId });
+
+        TempData["Message"] = "Form has been submit successfully!";
+        return RedirectToAction("Index", "Post");
     }
 
     [HttpPost("Form/Approve/{PostId}/{UserId}")]
     async public Task<IActionResult> Approve(int PostId, string UserId){                            //Approve post by PostId and UserId, only done by PostOwner
-        var form = await _db.Forms.Where(f => f.PostId == PostId && f.UserId == UserId)
+        var form = await _db.Forms.Where(f => f.PostId == PostId && f.UserId == UserId && f.Status == FormStatus.Pending)
                                     .Include(f => f.Post)
                                     .FirstOrDefaultAsync();
         if (form == null) return NotFound();
@@ -71,7 +93,8 @@ public class FormController : Controller{
         await _db.Joins.AddAsync(join);
         await _db.SaveChangesAsync();
 
-        return Ok(new { message = "Form approved"});
+        TempData["Message"] = "Form has been approved successfully!";
+        return RedirectToAction("UserPendingStatus", "User");
     }
 
     [HttpPost("/Form/Reject/{FormId}")]
@@ -85,14 +108,11 @@ public class FormController : Controller{
         {
             return NotFound("Form not found");
         }
-        if (form.Post.Owner != await _currentUser.GetCurrentUser())
-        {
-            return Unauthorized("Not authorized");
-        }
 
         form.Status = FormStatus.Rejected;
         await _db.SaveChangesAsync();
 
-        return Ok(new { message = "Form rejected", formId = FormId });
+        TempData["Message"] = "Form has been rejected successfully!";
+        return RedirectToAction("UserPendingStatus", "User");
     }
 }

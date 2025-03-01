@@ -31,10 +31,10 @@
                                     <div>@post.Owner</div>
                                     <div>like</div>
                                 </div>
-                                <div>@post.AppointmentTime</div>
+                                <div>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime @post</div>
                                 <div class="place-and-gruop">
                                     <div >@post.Location</div>
-                                    <div >@post.ParticipantsCount people</div>
+                                    <div >@post.ParticipantsCount / @post.Limit people</div>
                                 </div>
                                 <div>
                                     <div>@foreach (var tag in post.Tags)
@@ -47,8 +47,12 @@
                                     @post.Description
                                 </div>
                                 <div class="button-container flex-right">
-                                    <a class="btn white">Delete</a>
-                                    <a class="btn">END</a>
+                                    <form asp-action="Delete" asp-controller="Post" asp-route-id="@post.PostId" method="post">
+                                        <button type="submit" class="btn white">Delete</button>
+                                    </form>
+                                    <form asp-action="Close" asp-controller="Post" asp-route-id="@post.PostId" method="post">
+                                        <button type="submit" class="btn">END</button>
+                                    </form>
                                 </div>
                                 
                             </div>
