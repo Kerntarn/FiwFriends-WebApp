@@ -100,6 +100,7 @@ public class PostController : Controller
         
         await _db.Posts.AddAsync(postModel);
         await _db.SaveChangesAsync();
+        TempData["Message"] = "Post created successfully!";
         return RedirectToAction("Detail", new { id = postModel.PostId });              //Redirect to Detail of this post
     }
 
@@ -115,6 +116,7 @@ public class PostController : Controller
 
         _db.Posts.Remove(post);
         await _db.SaveChangesAsync();
+        TempData["Message"] = "Post successfully deleted!";
         return RedirectToAction("Index", "Post");                                   //Rediret to Index
     }
 
@@ -162,6 +164,7 @@ public class PostController : Controller
 
         post.ExpiredTime = DateTimeOffset.UtcNow;
         await _db.SaveChangesAsync();
+        TempData["Message"] = "Post closed successfully!";
         return RedirectToAction("Index", "Post");                                               //Return to another View (or may be jsut Ok()?)
     }
 

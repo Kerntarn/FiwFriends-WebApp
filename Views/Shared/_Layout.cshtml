@@ -32,13 +32,16 @@
     </header>
     <div class="container">
         <main role="main">
+            <div id="toast" class="toast-container hide" data-message="@TempData["Message"]">
+                <p id="toast-message"></p>
+            </div>
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2568 - FiwFriends - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2568 - FiwFriends
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
