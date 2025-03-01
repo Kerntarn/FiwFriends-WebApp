@@ -120,15 +120,15 @@ public class PostController : Controller
     }
 
     //PUT Update Post
-    [HttpPut("Post/{id}")]
-    async public Task<IActionResult> Edit(int id, PostDTO post){            //Edit Post by define PostId to edit and update info based on PostDTO
+    [HttpPut("Post/{postId}")]
+    async public Task<IActionResult> Edit(int postId, PostDTO post){            //Edit Post by define PostId to edit and update info based on PostDTO
         if(!ModelState.IsValid) return BadRequest("Invalid DTO");
 
         var user = await _currentUser.GetCurrentUser();
         if(user == null) return RedirectToAction("Login", "Auth");
 
         int row_affected = await _db.Posts
-                            .Where(p => p.PostId == id && p.OwnerId == user.Id)
+                            .Where(p => p.PostId == postId && p.OwnerId == user.Id)
                             .ExecuteUpdateAsync(setters => setters
                                 .SetProperty(p => p.Activity, post.Activity)
                                 .SetProperty(p => p.Description, post.Description)
@@ -140,7 +140,7 @@ public class PostController : Controller
                                 //Question??
         if (row_affected == 0) return NotFound("Post is not found to delete.");
         
-        var existingPost = await _db.Posts.Where(p => p.PostId == id && p.OwnerId == user.Id).Include(p => p.Tags).FirstOrDefaultAsync();
+        var existingPost = await _db.Posts.Where(p => p.PostId == postId && p.OwnerId == user.Id).Include(p => p.Tags).FirstOrDefaultAsync();
         if( existingPost == null ) return NotFound("Post not found");
 
         var tags = await _db.Tags.Where(t => post.Tags.Select(dto => dto.Name).Contains(t.Name))
@@ -149,7 +149,7 @@ public class PostController : Controller
         existingPost.Tags.AddRange(tags);
 
         await _db.SaveChangesAsync();
-        return RedirectToAction("Detail", id);                              //return view with Detail of this post
+        return RedirectToAction("Detail", new { id = postId });                              //return view with Detail of this post
     }
 
     [HttpPost("Post/Close/{postId}")]
@@ -163,18 +163,22 @@ public class PostController : Controller
 
         post.ExpiredTime = DateTimeOffset.UtcNow;
         await _db.SaveChangesAsync();
-        return View("Index");                                               //Return to another View (or may be jsut Ok()?)
+        return RedirectToAction("Index");                                               //Return to another View (or may be jsut Ok()?)
     }
 
     [HttpPost("Post/Join/{id}")]
     async public Task<IActionResult> Join(int id){                          //Join post by PostId with current User logged in
         var user = await _currentUser.GetCurrentUser();   
-        var post = await _db.Posts.FindAsync(id);
+        var post = await _db.Posts.Where(p => p.PostId == id).Include(p => p.Participants).FirstOrDefaultAsync();
         if (post == null) return NotFound("Post is not found.");
         if (user == null) return RedirectToAction("Login", "Auth");
         
-        var joined = await _db.Joins.AnyAsync(j => (j.UserId == user.Id  && j.PostId == post.PostId) || post.OwnerId == user.Id );        //Already Join
+        var joined = post.Participants.Any(j => (j.UserId == user.Id  && j.PostId == post.PostId) || post.OwnerId == user.Id );        //Already Join
         if ( joined ) return RedirectToAction("Detail", new { id = post.PostId});
+
+        if (post.Participants.Count + 1 >= post.Limit){
+            
+        }
 
         await _db.Joins.AddAsync(new Join {
             UserId = user.Id,
