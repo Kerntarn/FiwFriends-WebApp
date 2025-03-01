@@ -60,6 +60,7 @@ public class MapperService{
             Description = post.Description,
             Location = post.Location,
             AppointmentTime = post.AppointmentTime.ToLocalTime(),
+            ExpiredTime = post.ExpiredTime.ToLocalTime(),
             Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, IndexPost>"),
             ParticipantsCount = post.Participants.Count(),
             IsFav = post.FavoritedBy.Any(u => u.Id == user?.Id),
@@ -83,7 +84,8 @@ public class MapperService{
             Tags = post.Tags,
             Participants = post.Participants.Select(j => j.User),
             Questions = post.Questions,
-            Limit = post.Limit
+            Limit = post.Limit,
+            IsJoined = post.Participants.Any(j => j.UserId == user?.Id)
         };
     }
 
