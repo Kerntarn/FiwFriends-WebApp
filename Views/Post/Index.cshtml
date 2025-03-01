@@ -11,7 +11,7 @@
 <div class="main">
 
         <div class="home-container">
-
+            
             @await Html.PartialAsync("_Menu")
 
             <div class="home-body">
@@ -84,7 +84,7 @@
                                     </a>
 
                                 </div>
-                                <div>@post.AppointmentTime</div>
+                                <div>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</div>
                                 <div class="place-and-gruop">
                                     <div >@post.Location</div>
                                     <div >@post.ParticipantsCount / @post.Limit people</div>

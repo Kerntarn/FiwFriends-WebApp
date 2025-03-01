@@ -187,7 +187,7 @@ namespace FiwFriends.Controllers
                     .OrderBy(s => s.AppointmentTime)
                     .ToList();
 
-                return View(new { Posts = allPosts });
+                return View(allPosts);
             }
 
         [HttpGet("Pending")]
@@ -204,10 +204,6 @@ namespace FiwFriends.Controllers
                 .Select(f => f.PostId)
                 .ToListAsync();
 
-            if (!userPostIds.Any())
-            {
-                return BadRequest("You haven't owned any post");
-            }
 
             var userPostForms = await _db.Forms
                 .Where(f => userPostIds.Contains(f.PostId) && f.Status == FormStatus.Pending)
@@ -215,10 +211,15 @@ namespace FiwFriends.Controllers
                 {
                     Activity = f.Post.Activity,
                     FormId = f.FormId.ToString(),
-                    User = _db.Users
+                    UserId = _db.Users
+                        .Where(u => u.Id == f.UserId)
+                        .Select(u => u.Id)
+                        .FirstOrDefault() ?? "Unknown",
+                    Username = _db.Users
                         .Where(u => u.Id == f.UserId)
                         .Select(u => u.UserName)
                         .FirstOrDefault() ?? "Unknown",
+                    PostId = f.PostId.ToString(),
                     Status = f.Status.ToString(),
                     QnAs = f.Answers
                         .Select(a => new QnA
@@ -231,7 +232,12 @@ namespace FiwFriends.Controllers
                 .OrderBy(f => f.FormId)
                 .ToListAsync();
 
-            return Ok(userPostForms);
+            if (userPostIds.Any() != true)
+            {
+                return View(userPostForms);
+            }
+
+            return View(userPostForms);
         }
 
         [HttpGet("/MyPosts")]

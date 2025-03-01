@@ -8,6 +8,6 @@ namespace FiwFriends.Models
         public required string Activity { get; set; }
         public required string Owner { get; set; }
         public required DateTimeOffset AppointmentTime { get; set; }
-        public string Status {get; set;}
+        public required string Status {get; set;}
     }
 }

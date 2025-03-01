@@ -33,44 +33,61 @@
                         <div class="login-body blue mh-40 ">
 
                             <div class="mh-40">
-                                <p class="algn-start login-p" ><b>First name</b></p>
-                                <input class="inp" type="text" asp-for="FirstName" >
-                                
-                            </div>
-
-                            <div class="mh-40">
-                                <p class="algn-start login-p" ><b>Last name</b></p>
-                                <input class="inp" type="text" asp-for="LastName" >
-                            </div>
-                            
-                            <div class="mh-40">
                                 <p class="algn-start login-p" >Username</p>
                                 <input class="inp" type="text" asp-for="Username" >
-                            </div>
                             
-                            <div class="mh-40">
-                                <p class="algn-start login-p">Password</p>
-                                <input class="inp" type="password" asp-for="Password" id="password">
-                            </div>
 
-                            <div class="mh-40">
-                                <p class="algn-start login-p">Confirm password</p>
-                                <input class="inp" type="password" id="confirm-password">
-                            </div>
+                                <div class="flex-row">
+
+                                    <div>
+                                        <p class="algn-start login-p " ><b>First name</b></p>
+                                        <input class="inp w-auto" type="text" asp-for="FirstName" >
+                                    </div>
+                                    
+                                    <div>
+                                        <p class="algn-start login-p " ><b>Last name</b></p>
+                                        <input class="inp w-auto" type="text" asp-for="LastName" >
+                                    </div>
+
+                                </div>
+
+                            
+                            
+                            
+                            
+
+                                    <p class="algn-start login-p">Password</p>
+                                    <input class="inp" type="password" asp-for="Password" id="password">
+
+
+
+                                    <p class="algn-start login-p">Confirm password</p>
+                                    <input class="inp" type="password" id="confirm-password">
+                            
 
                             @if (!ViewData.ModelState.IsValid)
                             {
-                                <div style="color: red;">
+                                <div>
                                     @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                                     {
-                                        <p>@error.ErrorMessage</p>
+                                        <p class="text-danger">@error.ErrorMessage</p>
                                     }
                                 </div>
                             }
+                            else
+                            {
+                                <p>* Password must be 8-50 characters. *</p>
+                                <p>* Must include at least one special character. *</p>
+                                <p>* Must contain both uppercase and lowercase letters. *</p>
+                            }
 
-                            <div style="color: red;"><p id="error-text"></p></div>
+                            </div>
 
-                            <button class="navbar-item btn-login-property" type="button" onclick="signup()"><b>sign up</b></button>
+                            
+
+                            <div><p class="text-danger" id="error-text"></p></div>
+
+                            <button class="navbar-item btn-register-property" type="button" onclick="signup()"><b>sign up</b></button>
                             <p>Already have an account? <a asp-controller="Auth" asp-action="Login" class="login-link"><u>login</u></a></p>
                         
                         </div>

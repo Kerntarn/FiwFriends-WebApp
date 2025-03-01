@@ -39,6 +39,7 @@ public class IndexPost{
         public required bool IsFav { get; set; }
         public required IEnumerable<Tag> Tags { get; set; }
         public required int Limit { get; set; }
+        // public required DateTimeOffset ExpiredTime { get; set; }
 }
 
 public class DetailPost : IndexPost {
