@@ -8,10 +8,7 @@
     ViewData["Title"] = "Detail Page";
 }
 
-@{
-    @* int yearAD = Model.AppointmentTime.year - 543; *@
-    @* DateTime convertedDate = new DateTime(yearAD, Model.Month, Model.Day, Model.Hour, Model.Minute, Model.Second); *@
-}
+
 
 <div class="main">
 
@@ -32,7 +29,7 @@
                             <div>Due : @Model.ExpiredTime.DayOfWeek, @Model.ExpiredTime.LocalDateTime</div>
                             <div class="place-and-gruop">
                                 <div >@Model.Location</div>
-                                <div >@Model.ParticipantsCount people</div>
+                                <div >@Model.ParticipantsCount / @Model.Limit people</div>
                             </div>
                             <div>@foreach (var tag in Model.Tags)
                                 {
@@ -76,7 +73,7 @@
                                     
                                 </div>
 
-                                <div class="button-container">
+                                <div class="button-container ml-0">
                                     <a class="btn" asp-action="">back</a>
                                     <button type="submit" class="btn">Join</button>
                                 </div>

@@ -68,7 +68,8 @@ public class FormController : Controller{
         await _db.Forms.AddAsync(newForm);
         await _db.SaveChangesAsync();
 
-        return RedirectToAction("Detail", "Post", new { id = form.PostId });
+        TempData["Message"] = "Form has been submit successfully!";
+        return RedirectToAction("Index", "Post");
     }
 
     [HttpPost("Form/Approve/{PostId}/{UserId}")]
@@ -92,7 +93,8 @@ public class FormController : Controller{
         await _db.Joins.AddAsync(join);
         await _db.SaveChangesAsync();
 
-        return Ok(new { message = "Form approved"});
+        TempData["Message"] = "Form has been approved successfully!";
+        return Redirect("https://localhost:7258/Pending");
     }
 
     [HttpPost("/Form/Reject/{FormId}")]
@@ -106,14 +108,11 @@ public class FormController : Controller{
         {
             return NotFound("Form not found");
         }
-        if (form.Post.Owner != await _currentUser.GetCurrentUser())
-        {
-            return Unauthorized("Not authorized");
-        }
 
         form.Status = FormStatus.Rejected;
         await _db.SaveChangesAsync();
 
-        return Ok(new { message = "Form rejected", formId = FormId });
+        TempData["Message"] = "Form has been rejected successfully!";
+        return Redirect("https://localhost:7258/Pending");
     }
 }

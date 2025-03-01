@@ -6,6 +6,14 @@
 
 @section Styles {
         <link rel="stylesheet" href="~/css/status.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
+}
+
+@if (TempData["Message"] != null)
+{
+    <script>
+        alert("@TempData["Message"]");
+    </script>
 }
 
 <div class="main">
@@ -42,18 +50,22 @@
                                         {
                                                 <tr class="border-bottom">
                                                         <td>
-                                                                <div class="answer_detail">eiei @question.Answer</div>
+                                                                <div class="answer_detail">@question.Answer</div>
                                                         </td>
                                                         <td></td>
                                                         <td></td>
                                                 </tr>
                                         }
                                         <td>
-                                                <button class="btn_reject" >reject</button>
-                                                <form asp-action="Approve" asp-controller="Form" asp-route-postid="@info.PostId" asp-route-userid="@info.UserId" method="post">
-                                                        <button type="submit" class="btn">Approve</button>
-                                                </form>
-                                                <button class="btn_accept">accept</button>
+                                                <div class="button-container ml-0">
+                                                        <form asp-action="Reject" asp-controller="Form" asp-route-formid="@info.FormId" method="post">
+                                                        <button type="submit" class="btn_reject">reject</button>
+                                                        </form>
+                                                        <form asp-action="Approve" asp-controller="Form" asp-route-postid="@info.PostId" asp-route-userid="@info.UserId" method="post">
+                                                                <button type="submit" class="btn_accept">accept</button>
+                                                        </form>
+                                                </div>
+                                                
                                         </td>
                                 }
 

@@ -429,3 +429,27 @@ a {
   font-weight: bold;
   box-shadow: 0px 4px 4px rgba(24,24,24,.25);
 }
+
+.toast-container {
+  position: fixed;
+  top: 50px;
+  right: 20px;
+  background: rgba(168, 234, 168, 0.9); /* สีเขียว */
+  color: #242424;
+  padding: 5px 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.toast-container.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-container.hide {
+  opacity: 0;
+  transform: translateY(-20px);
+}

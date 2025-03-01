@@ -77,3 +77,26 @@ function removeQuestion(button) {
         input.name = `Questions[${index}].Content`;
     });
 }
+
+function showToast(message) {
+    var toast = document.getElementById("toast");
+    var toastMessage = document.getElementById("toast-message");
+
+    toastMessage.textContent = message; // ใส่ข้อความ
+    toast.classList.remove("hide");
+    toast.classList.add("show");
+
+    // ซ่อน Toast หลังจาก 3 วินาที
+    setTimeout(function () {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+    }, 3000);
+}
+
+// เรียกใช้งานเมื่อ DOM โหลดเสร็จ
+document.addEventListener("DOMContentLoaded", function () {
+    var toastElement = document.getElementById("toast");
+    if (toastElement && toastElement.dataset.message) {
+        showToast(toastElement.dataset.message);
+    }
+});

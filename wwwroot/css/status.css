@@ -67,6 +67,7 @@ tr.border-bottom {
         border-radius: 5px;
         padding: 5px 12px;
         box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+        cursor: pointer;
 }
 
 .btn_accept{

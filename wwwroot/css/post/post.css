@@ -129,6 +129,7 @@ html {
   }
 
 .search-text {
+    background-color: transparent;
     resize: none;
     white-space: nowrap;
     overflow: hidden;
@@ -217,4 +218,8 @@ html {
 .flex-right {
     padding-top: 10px;
     justify-content: end;
+}
+
+.ml-0 {
+    margin-left: 0px;
 }
