@@ -44,8 +44,8 @@ public class MapperService{
             AppointmentTime = post.AppointmentTime.ToUniversalTime(),
             OwnerId = user.Id,
             Tags = _db.Tags.Where(t => post.Tags.Select( dto => dto.Name.ToLower() ).Contains(t.Name.ToLower())).ToList(),   //Attach Tags
-            Questions = post.Questions.Select(q => new Question{
-                Content = q.Content
+            Questions = post.Questions.Where( q => q.Content != null).Select(q => new Question{
+                Content = q.Content ?? throw new Exception("Strange Content in Question, Look for mapper")
             }).ToList(),
             Limit = post.Limit
         };
