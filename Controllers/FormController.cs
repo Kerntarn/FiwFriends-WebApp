@@ -74,7 +74,7 @@ public class FormController : Controller{
 
     [HttpPost("Form/Approve/{PostId}/{UserId}")]
     async public Task<IActionResult> Approve(int PostId, string UserId){                            //Approve post by PostId and UserId, only done by PostOwner
-        var form = await _db.Forms.Where(f => f.PostId == PostId && f.UserId == UserId)
+        var form = await _db.Forms.Where(f => f.PostId == PostId && f.UserId == UserId && f.Status == FormStatus.Pending)
                                     .Include(f => f.Post)
                                     .FirstOrDefaultAsync();
         if (form == null) return NotFound();
