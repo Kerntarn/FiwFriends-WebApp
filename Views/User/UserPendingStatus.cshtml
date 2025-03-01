@@ -37,42 +37,49 @@
                                 <tr class="head">
                                         <th class="table-head">Post Details</th>
                                 </tr>
-
-                                @foreach (var info in Model)
+                                @if (Model.Any())
                                 {
-                                        <tr class="border-bottom">
-                                                <td class="table-head spacing">
-                                                        <div class="user-and-like">
-                                                                <div>@info.Activity</div>
-                                                                <div class="@info.Status">@info.Status</div>
-                                                        </div>
 
-                                                        <div>@info.Username</div>
+                                        @foreach (var info in Model)
+                                        {
+                                                <tr class="border-bottom">
+                                                        <td class="table-head spacing">
+                                                                <div class="user-and-like">
+                                                                        <div>@info.Activity</div>
+                                                                        <div class="@info.Status">@info.Status</div>
+                                                                </div>
+
+                                                                <div>@info.Username</div>
+                                                                
+                                                                @foreach (var question in info.QnAs)
+                                                                {
+                                                                        <div>Question : @question.Question</div>
+                                                                        <div class="answer_detail">@question.Answer</div>
+                                                                }
+                                                                <div class="button-container ml-0 mt-0">
+                                                                        <form asp-action="Reject" asp-controller="Form" asp-route-formid="@info.FormId" method="post">
+                                                                        <button type="submit" class="btn_reject">reject</button>
+                                                                        </form>
+                                                                        <form asp-action="Approve" asp-controller="Form" asp-route-postid="@info.PostId" asp-route-userid="@info.UserId" method="post">
+                                                                                <button type="submit" class="btn_accept">accept</button>
+                                                                        </form>
+                                                                </div>
+                                                        </td>
+                                                </tr>
+
+                                                
+                                                <td>
                                                         
-                                                        @foreach (var question in info.QnAs)
-                                                        {
-                                                                <div>Question : @question.Question</div>
-                                                                <div class="answer_detail">@question.Answer</div>
-                                                        }
-                                                        <div class="button-container ml-0 mt-0">
-                                                                <form asp-action="Reject" asp-controller="Form" asp-route-formid="@info.FormId" method="post">
-                                                                <button type="submit" class="btn_reject">reject</button>
-                                                                </form>
-                                                                <form asp-action="Approve" asp-controller="Form" asp-route-postid="@info.PostId" asp-route-userid="@info.UserId" method="post">
-                                                                        <button type="submit" class="btn_accept">accept</button>
-                                                                </form>
-                                                        </div>
+                                                        
                                                 </td>
-                                        </tr>
-
-                                        
-                                        <td>
-                                                
-                                                
-                                        </td>
+                                        }
                                 }
 
                         </table>
+                        @if (Model.Any() == false)
+                        {
+                                <h1 style="text-align: center; color: rgba(24, 24, 24, 0.75)">There is no history of responding to posts.</h1>
+                        }
                     </div>
 
             </div>

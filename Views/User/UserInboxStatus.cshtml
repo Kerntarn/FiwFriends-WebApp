@@ -40,17 +40,24 @@
                                         <th>Status</th>
                                 </tr>
 
-                                @foreach (var post in Model)
+                                @if (Model.Any())
                                 {
-                                        <tr class="border-bottom">
-                                                <td class="p-50">@post.Activity</td>
-                                                <td>@post.Owner</td>
-                                                <td>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</td>
-                                                <td><b class="@post.Status" >@post.Status</b></td>
-                                        </tr>
+                                        @foreach (var post in Model)
+                                        {
+                                                <tr class="border-bottom">
+                                                        <td class="p-50">@post.Activity</td>
+                                                        <td>@post.Owner</td>
+                                                        <td>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</td>
+                                                        <td><b class="@post.Status" >@post.Status</b></td>
+                                                </tr>
+                                        }
                                 }
-
+                                
                         </table>
+                        @if (Model.Any() == false)
+                        {
+                                <h1 style="text-align: center; color: rgba(24, 24, 24, 0.75)">You have no history of participating in posts.</h1>
+                        }
                     </div>
 
             </div>

@@ -117,7 +117,7 @@ public class PostController : Controller
         _db.Posts.Remove(post);
         await _db.SaveChangesAsync();
         TempData["Message"] = "Post successfully deleted!";
-        return RedirectToAction("Index", "Post");                                   //Rediret to Index
+        return Redirect("https://localhost:7258/MyPosts");                               //Rediret to Mypost
     }
 
     //PUT Update Post
