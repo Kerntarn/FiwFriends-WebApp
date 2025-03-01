@@ -20,6 +20,7 @@ html {
 
 .search-text {
     resize: none;
+    font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     word-wrap: break-word;
@@ -28,6 +29,18 @@ html {
     outline: 0;
     height: auto;
     width: 100%;
+}
+
+.search-input {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.search-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 .new-post {

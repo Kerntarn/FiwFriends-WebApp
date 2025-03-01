@@ -34,38 +34,50 @@ public class PostController : Controller
         return View(indexPosts);                                                //return view with List<IndexPost>
     }
 
-    [HttpGet("Search/{search}")]
-    async public Task<IActionResult> Search(string search){                     //Search by check activity and description string
-        var posts = await _db.Posts.Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || 
-                                                p.Description.ToLower().Contains(search.ToLower())) && 
-                                                p.ExpiredTime > DateTimeOffset.UtcNow )
-                                    .Include(p => p.Owner)
-                                    .Include(p => p.Participants).ThenInclude(j => j.User)
-                                    .Include(p => p.Tags)
-                                    .Include(p => p.FavoritedBy).ToListAsync();
-        List<IndexPost> indexPosts = new List<IndexPost>();
+    [HttpGet("Search")]
+    public async Task<IActionResult> Search(string search)
+    {
+        if (string.IsNullOrWhiteSpace(search)) return RedirectToAction("Index");
 
-        foreach (var post in posts){
-            indexPosts.Add(await _mapper.MapAsync<Post, IndexPost>(post));
+        var posts = await _db.Posts
+            .Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || 
+                        p.Description.ToLower().Contains(search.ToLower())) && 
+                        p.ExpiredTime > DateTimeOffset.UtcNow)
+            .Include(p => p.Owner)
+            .Include(p => p.Participants).ThenInclude(j => j.User)
+            .Include(p => p.Tags)
+            .Include(p => p.FavoritedBy)
+            .ToListAsync();
+
+        // 🛠 แก้ไขจุดที่มีปัญหา โดย Map ทีละรายการ
+        var indexPosts = new List<IndexPost>();
+        foreach (var post in posts)
+        {
+            var mappedPost = await _mapper.MapAsync<Post, IndexPost>(post);
+            indexPosts.Add(mappedPost);
         }
-        return View(indexPosts);                                                //return view with List<IndexPost>
+
+        return View("Index", indexPosts);
     }
 
     [HttpPost("Filter")]
-    async public Task<IActionResult> Filter(IEnumerable<TagDTO> tags){          //Filter by Tags
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+    public async Task<IActionResult> Filter(string tag)
+    {
+        if (string.IsNullOrEmpty(tag)) return RedirectToAction("Index");
 
-        var posts = await _db.Posts.Where(p => p.ExpiredTime > DateTimeOffset.UtcNow && tags.Select(t => t.Name.ToLower()).All(t => p.Tags.Select(t => t.Name.ToLower()).Contains(t)))
-                        .Include(p => p.Owner)
-                        .Include(p => p.Participants).ThenInclude(j => j.User)
-                        .Include(p => p.Tags)
-                        .Include(p => p.FavoritedBy).ToListAsync();
+        var posts = await _db.Posts
+            .Where(p => p.ExpiredTime > DateTimeOffset.UtcNow &&
+                        p.Tags.Any(t => t.Name.ToLower() == tag.ToLower()))
+            .Include(p => p.Owner)
+            .Include(p => p.Participants).ThenInclude(j => j.User)
+            .Include(p => p.Tags)
+            .Include(p => p.FavoritedBy)
+            .ToListAsync();
 
-        List<IndexPost> indexPosts = new List<IndexPost>();
-        foreach (var post in posts){
-            indexPosts.Add(await _mapper.MapAsync<Post, IndexPost>(post));
-        }                
-        return View(posts);                                                     //return view with List<IndexPost>
+        Console.WriteLine($"Total posts found: {posts.Count}");
+        var indexPosts = await Task.WhenAll(posts.Select(async post => await _mapper.MapAsync<Post, IndexPost>(post)));
+        ViewBag.SelectedTag = tag;
+        return View("Index", indexPosts.ToList());
     }
 
     [HttpGet("Post/Detail/{id}")]
