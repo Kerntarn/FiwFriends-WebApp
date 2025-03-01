@@ -60,7 +60,7 @@
                                                                         <form asp-action="Reject" asp-controller="Form" asp-route-formid="@info.FormId" method="post">
                                                                         <button type="submit" class="btn_reject">reject</button>
                                                                         </form>
-                                                                        <form asp-action="Approve" asp-controller="Form" asp-route-postid="@info.PostId" asp-route-userid="@info.UserId" method="post">
+                                                                        <form asp-action="Approve" asp-controller="Form" asp-route-postid="@info.FormId" method="post">
                                                                                 <button type="submit" class="btn_accept">accept</button>
                                                                         </form>
                                                                 </div>

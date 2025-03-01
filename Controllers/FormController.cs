@@ -16,54 +16,39 @@ public class FormController : Controller{
         _currentUser = currentUser;
     }
 
-    [HttpGet("Form/{PostId}")]
-    async public Task<IActionResult> Index(int PostId){                             //Get all form of post and only for PostOwner
-        var user = await _currentUser.GetCurrentUser();  
-        var post = await _db.Posts.FindAsync(PostId);
-        if(post == null) return NotFound("Post not found");
-        if(post.OwnerId != user?.Id) return Unauthorized("You don't have permission");                
-        IEnumerable<Form> forms = _db.Forms
-                        .Where(f => f.PostId == PostId)
-                        .Include(f => f.Answers).ThenInclude(a => a.Question);
-        return View(forms);
-    }
-
     [HttpPost("Form/Submit")]
     public async Task<IActionResult> Submit(FormDTO form)
     {
-
         Console.WriteLine($"Received PostId: {form.PostId}");
-        Console.WriteLine($"Received Answers Count: {form.Answers?.Count ?? 0}");
-
-        if (form.Answers == null || form.Answers.Count == 0)
-        {
-            Console.WriteLine("❌ ERROR: Answers is NULL or EMPTY");
-        }
+        Console.WriteLine($"Received Answers Count: {form.Answers?.Count ?? -1}");
 
         foreach (var answer in form.Answers ?? new List<AnswerDTO>())
         {
             Console.WriteLine($"Answer: QuestionId={answer.QuestionId}, Content={answer.Content}");
         }
 
-
         if (!ModelState.IsValid) return BadRequest(ModelState);
-
         var user = await _currentUser.GetCurrentUser();
-        if (user == null) return RedirectToAction("Login", "Auth");
+        var post = await _db.Posts.Where(p => p.PostId == form.PostId).Include(p => p.Questions).FirstOrDefaultAsync();
+        if(post == null) return NotFound("Post not found");
 
+        var IsExisted = await _db.Forms.AnyAsync(f => f.UserId == user.Id && f.PostId == form.PostId);
+        var IsOwned = user.Id == post.OwnerId;
+        if (IsExisted || IsOwned) return BadRequest("You can not submit this post");
+
+        if ( post.Questions.Count == 0 ) return RedirectToAction("Join", "Post");   
+              //if there's no question on post, just join
         var newForm = new Form
         {
             UserId = user.Id,
             PostId = form.PostId,
             Status = FormStatus.Pending, // Default to Pending
-            Answers = form.Answers.Select(a => new Answer
+            Answers = (form.Answers ?? new List<AnswerDTO>()).Select(a => new Answer        //warning preventing
             {
                 Content = a.Content,
-                QuestionId = a.QuestionId
+                QuestionId = a.QuestionId                   //if question doesn't exist?
             }).ToList()
         };
-
-        
 
         await _db.Forms.AddAsync(newForm);
         await _db.SaveChangesAsync();
@@ -72,16 +57,14 @@ public class FormController : Controller{
         return RedirectToAction("Index", "Post");
     }
 
-    [HttpPost("Form/Approve/{PostId}/{UserId}")]
-    async public Task<IActionResult> Approve(int PostId, string UserId){                            //Approve post by PostId and UserId, only done by PostOwner
-        var form = await _db.Forms.Where(f => f.PostId == PostId && f.UserId == UserId && f.Status == FormStatus.Pending)
+    [HttpPost("Form/Approve/{FormId}")]
+    async public Task<IActionResult> Approve(int FormId){                            //Approve post by PostId and UserId, only done by PostOwner
+        var form = await _db.Forms.Where(f => f.FormId == FormId && f.Status == FormStatus.Pending)
                                     .Include(f => f.Post)
                                     .FirstOrDefaultAsync();
         if (form == null) return NotFound();
 
         var user = await _currentUser.GetCurrentUser();
-        if (user == null) return RedirectToAction("Login", "Auth");
-        
         if (form.Post.OwnerId != user.Id) return Unauthorized();
 
         form.Status = FormStatus.Approved;
@@ -100,14 +83,13 @@ public class FormController : Controller{
     [HttpPost("/Form/Reject/{FormId}")]
     async public Task<IActionResult> Reject(int FormId)
     {
-        System.Console.WriteLine(FormId);
-        var form = await _db.Forms.Where(f => f.FormId == FormId)
+        var form = await _db.Forms.Where(f => f.FormId == FormId && f.Status == FormStatus.Pending)
                                     .Include(f => f.Post)
                                     .FirstOrDefaultAsync();
-        if (form == null)
-        {
-            return NotFound("Form not found");
-        }
+        if (form == null) return NotFound("Form not found");
+
+        var user = await _currentUser.GetCurrentUser();
+        if (form.Post.OwnerId != user.Id) return Unauthorized();
 
         form.Status = FormStatus.Rejected;
         await _db.SaveChangesAsync();

@@ -12,7 +12,8 @@ public class Form
 {
     [Key]
     public int FormId { get; set; }
-    public FormStatus Status { get; set; } = FormStatus.Pending;  // Default status is pending
+    [Required]
+    public required FormStatus Status { get; set; } = FormStatus.Pending;  // Default status is pending
     [Required]
     public required int PostId { get; set; } 
     public Post Post { get; set; } = null!;
