@@ -21,13 +21,29 @@ public class FormController : Controller{
     {
         Console.WriteLine($"Received PostId: {form.PostId}");
         Console.WriteLine($"Received Answers Count: {form.Answers?.Count ?? -1}");
-
         foreach (var answer in form.Answers ?? new List<AnswerDTO>())
         {
             Console.WriteLine($"Answer: QuestionId={answer.QuestionId}, Content={answer.Content}");
         }
 
         if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var validQuestionIds = await _db.Questions.Select(q => q.QuestionId).ToHashSetAsync();
+        var validAnswers = (form.Answers ?? new List<AnswerDTO>())
+            .Where(a => validQuestionIds.Contains(a.QuestionId))  // Ensure QuestionId exists
+            .Select(a => new Answer
+            {
+                Content = a.Content,
+                QuestionId = a.QuestionId
+            })
+            .ToList();
+
+        if (validAnswers.Count != form.Answers?.Count)
+        {
+            ModelState.AddModelError("Answers", "One or more Question IDs are invalid.");
+            return BadRequest(ModelState);
+        }
+
         var user = await _currentUser.GetCurrentUser();
         var post = await _db.Posts.Where(p => p.PostId == form.PostId).Include(p => p.Questions).FirstOrDefaultAsync();
         if(post == null) return NotFound("Post not found");
@@ -36,18 +52,14 @@ public class FormController : Controller{
         var IsOwned = user.Id == post.OwnerId;
         if (IsExisted || IsOwned) return BadRequest("You can not submit this post");
 
-        if ( post.Questions.Count == 0 ) return RedirectToAction("Join", "Post");   
-              //if there's no question on post, just join
+        if ( post.Questions.Count == 0 ) return RedirectToAction("Join", "Post");     //if there's no question on post, just join
+        
         var newForm = new Form
         {
             UserId = user.Id,
             PostId = form.PostId,
             Status = FormStatus.Pending, // Default to Pending
-            Answers = (form.Answers ?? new List<AnswerDTO>()).Select(a => new Answer        //warning preventing
-            {
-                Content = a.Content,
-                QuestionId = a.QuestionId                   //if question doesn't exist?
-            }).ToList()
+            Answers = validAnswers
         };
 
         await _db.Forms.AddAsync(newForm);
