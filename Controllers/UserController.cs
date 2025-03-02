@@ -74,54 +74,48 @@ namespace FiwFriends.Controllers
         }
 
         [Authorize]
-        [HttpPost("user/edit")]
-        public async Task<IActionResult> Edit(UpdateUserDto userEditor)
+    [HttpPost("user/edit")]
+    public async Task<IActionResult> Edit([FromBody] UpdateUserDto userEditor)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new { error = "Invalid input data" });
+
+        var user = await GetCurrentUserAsync();
+        if (user == null)
+            return Unauthorized(new { error = "User not found" });
+
+        var existingUser = await _userManager.FindByNameAsync(userEditor.Username);
+        if (existingUser != null && existingUser.Id != user.Id)
         {
-            if (!ModelState.IsValid)
-                return View(userEditor);
-
-            var user = await GetCurrentUserAsync();
-            if (user == null)
-                return RedirectToAction("Login", "Auth");
-
-            // Check for username duplication
-            var existingUser = await _userManager.FindByNameAsync(userEditor.Username);
-            if (existingUser != null && existingUser.Id != user.Id)
-            {
-                TempData["Error"] = "Username already exists";
-                return View(userEditor);
-            }
-
-            // Update user fields
-            user.UserName = userEditor.Username;
-            user.FirstName = userEditor.FirstName;
-            user.LastName = userEditor.LastName;
-            user.Bio = userEditor.Bio;
-            user.Contact = userEditor.Contact;
-
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-                TempData["Error"] = "Failed to update user information";
-                return View(userEditor);
-            }
-
-            // Update password if provided
-            if (!string.IsNullOrEmpty(userEditor.Password))
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var resetResult = await _userManager.ResetPasswordAsync(user, token, userEditor.Password);
-
-                if (!resetResult.Succeeded)
-                {
-                    TempData["Error"] = "Password reset failed";
-                    return View(userEditor);
-                }
-            }
-
-            TempData["Success"] = "Profile updated successfully";
-            return RedirectToAction("Profile");
+            return BadRequest(new { error = "Username already exists" });
         }
+
+        user.UserName = userEditor.Username;
+        user.FirstName = userEditor.FirstName;
+        user.LastName = userEditor.LastName;
+        user.Bio = userEditor.Bio;
+        user.Contact = userEditor.Contact;
+
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            return BadRequest(new { error = "Failed to update user information" });
+        }
+
+        if (!string.IsNullOrEmpty(userEditor.Password))
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetResult = await _userManager.ResetPasswordAsync(user, token, userEditor.Password);
+
+            if (!resetResult.Succeeded)
+            {
+                return BadRequest(new { error = "Password reset failed" });
+            }
+        }
+
+        return Ok(new { message = "Profile updated successfully" });
+    }
+
 
         [HttpGet("Inbox")]
         public async Task<IActionResult> UserInboxStatus()

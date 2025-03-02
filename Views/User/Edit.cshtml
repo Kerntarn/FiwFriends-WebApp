@@ -2,6 +2,10 @@
     ViewData["Title"] = "Edit Page";
 }
 
+@section Scripts {
+  <script src="~/js/editProfile.js"></script>
+}
+
 @section Styles {
         <link rel="stylesheet" href="~/css/status.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/css/edit.css" asp-append-version="true" />
@@ -20,50 +24,42 @@
                                 Edit
                         </div>
                         <div class="card-body pb-20">
-                            
                                 <div class="">
                                         <p class="algn-start login-p w-auto">Username</p>
-                                        <span  class="error-text"></span>
-                                        <input class="inp" type="text"  >
+                                        <span class="error-text"></span>
+                                        <input id="username" class="inp" type="text">
                                 </div>
 
                                 <div class="flex-row">
                                         <div class="full-div">
-                                                <p class="algn-start login-p w-auto">Name</p>
-                                                <span  class="error-text"></span>
-                                                <input class="full-inp" type="text"  >
+                                        <p class="algn-start login-p w-auto">Name</p>
+                                        <span class="error-text"></span>
+                                        <input id="firstName" class="full-inp" type="text">
                                         </div>
                                         <div class="full-div">
-                                                <p class="algn-start login-p w-auto">Last Name</p>
-                                                <span  class="error-text"></span>
-                                                <input class="full-inp" type="text"  >
+                                        <p class="algn-start login-p w-auto">Last Name</p>
+                                        <span class="error-text"></span>
+                                        <input id="lastName" class="full-inp" type="text">
                                         </div>
                                 </div>
-
 
                                 <div class="mh-40">
                                         <p class="algn-start login-p">Contact</p>
-                                        <span  class="error-text"></span>
-                                        <input class="inp" type="text"  >
+                                        <span class="error-text"></span>
+                                        <input id="contact" class="inp" type="text">
                                 </div>
 
                                 <div class="mh-40">
-                                        <p class="algn-start login-p">Profile Picture</p>
-                                        <span  class="error-text"></span>
-                                        <input class="inp" type="text"  >
+                                        <p class="algn-start login-p">Password</p>
+                                        <span class="error-text"></span>
+                                        <input id="password" class="inp" type="password">
                                 </div>
 
-                                
-
-                                <div>
-                                        <div class="save-container">
+                                <div class="save-container">
                                         <a class="btn" asp-action="">back</a>
-                                        <button type="submit" class="btn">save</button>
+                                        <button type="button" class="btn" onclick="updateUser()">save</button>
                                 </div>
                                 </div>
-                                
-
-                        </div>
                             
                     </div>
 
