@@ -33,17 +33,17 @@ public class IndexPost{
         public required string Activity { get; set; }
         public required string Description { get; set; }
         public required string Location { get; set; }
+        public required DateTimeOffset ExpiredTime { get; set; }
         public required DateTimeOffset AppointmentTime { get; set; }
         public required User Owner { get; set; }
         public required int ParticipantsCount { get; set; }
         public required bool IsFav { get; set; }
         public required IEnumerable<Tag> Tags { get; set; }
         public required int Limit { get; set; }
-        // public required DateTimeOffset ExpiredTime { get; set; }
 }
 
 public class DetailPost : IndexPost {
-        public required DateTimeOffset ExpiredTime { get; set; }
         public IEnumerable<User> Participants { get; set; }  = new List<User>();
         public IEnumerable<Question> Questions { get; set; } = new List<Question>();
+        public required bool IsJoined { get; set; }
 }
