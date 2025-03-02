@@ -102,6 +102,12 @@ html {
     cursor: pointer;
   }
 
+.fav-btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
 .selected {
     background-color: #FF8A80;
 }

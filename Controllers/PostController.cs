@@ -200,21 +200,48 @@ public class PostController : Controller
     }
 
     [HttpPost("Post/Favorite/{id}")]
-    async public Task<IActionResult> Favorite(int id){                      //Just Favorite Post by PostId with current User logged in
-        var user = await _currentUser.GetCurrentUser();   
-        var post = await _db.Posts.FindAsync(id);
-        if (post == null) return NotFound("Post is not found.");
-        if (user == null) return RedirectToAction("Login", "Auth");
+    public async Task<IActionResult> Favorite(int id)
+    {
+        var user = await _currentUser.GetCurrentUser();
+        var post = await _db.Posts.Include(p => p.FavoritedBy).FirstOrDefaultAsync(p => p.PostId == id);
 
-        if (post.FavoritedBy.Any(u => u.Id == user.Id)){
-             post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
-         } else {
-             post.FavoritedBy.Add(user);
-         }
-         await _db.SaveChangesAsync();
+        if (post == null)
+        {
+            Console.WriteLine($"[ERROR] Post ID {id} not found.");
+            return NotFound("Post not found.");
+        }
+        if (user == null)
+        {
+            Console.WriteLine("[ERROR] User not logged in.");
+            return RedirectToAction("Login", "Auth");
+        }
 
-         return Ok();                                                        //Done
-     }
+        // Debug: เช็กว่าผู้ใช้กด Favorite หรือไม่
+        bool isAlreadyFavorited = post.FavoritedBy.Any(u => u.Id == user.Id);
+        Console.WriteLine($"[DEBUG] Post ID: {id}, User ID: {user.Id}, IsFav: {isAlreadyFavorited}");
+
+        if (isAlreadyFavorited)
+        {
+            post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
+        }
+        else
+        {
+            post.FavoritedBy.Add(user);
+        }
+
+        int result = await _db.SaveChangesAsync();
+        Console.WriteLine($"[DEBUG] SaveChangesAsync Result: {result}");
+
+        if (result > 0)
+        {
+            return Ok(new { success = true, isFav = !isAlreadyFavorited });
+        }
+        else
+        {
+            return BadRequest("Failed to update favorite.");
+        }
+    }
+
     
     [HttpGet("Post/Favorite")]
     async public Task<IActionResult> GetFavoritedPost(){                    //Get current User's Favorited Post (or maybe this should be in UserController?)
