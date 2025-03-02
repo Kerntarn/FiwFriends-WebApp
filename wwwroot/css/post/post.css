@@ -121,14 +121,6 @@ html {
     gap: 50px;
 }
 
-.button-container {
-    margin-left: 40px;
-    margin-right: 40px;
-    margin-top: 25px;
-    display: flex;
-    gap: 20px;
-}
-
 .search-container {
     display: flex;
     align-items: center;
@@ -224,9 +216,6 @@ html {
     width: 30px;
 }
 
-.pb-20 {
-    padding-bottom: 15px;
-}
 
 .flex-right {
     padding-top: 10px;

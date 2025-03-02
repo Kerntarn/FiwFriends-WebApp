@@ -54,7 +54,7 @@ namespace FiwFriends.Controllers
         }
 
         [Authorize]
-        [HttpGet("user/profile/edit")]
+        [HttpGet("user/edit")]
         public async Task<IActionResult> Edit()
         {
             var user = await GetCurrentUserAsync();
@@ -70,11 +70,11 @@ namespace FiwFriends.Controllers
                 Contact = user.Contact
             };
 
-            return View(userDto);
+            return View();
         }
 
         [Authorize]
-        [HttpPost("user/profile/edit")]
+        [HttpPost("user/edit")]
         public async Task<IActionResult> Edit(UpdateUserDto userEditor)
         {
             if (!ModelState.IsValid)
