@@ -135,6 +135,9 @@ public class PostController : Controller
         if(user.Id != post.OwnerId) return Unauthorized("You don't have permission!");
 
         post.ExpiredTime = DateTimeOffset.UtcNow;
+        await _db.Forms
+                    .Where(f => f.PostId == postId && f.Status == FormStatus.Pending)
+                    .ExecuteDeleteAsync();
         await _db.SaveChangesAsync();
         TempData["Message"] = "Post closed successfully!";
         return RedirectToAction("MyPost", "User");                                               //Return to another View (or may be jsut Ok()?)
@@ -145,11 +148,17 @@ public class PostController : Controller
         var user = await _currentUser.GetCurrentUser();   
         var post = await _db.Posts.Where(p => p.PostId == id).Include(p => p.Participants).FirstOrDefaultAsync();
         if (post == null) return NotFound("Post is not found.");
+        if (post.ExpiredTime < DateTimeOffset.UtcNow) return BadRequest("It's already expired bro");
         
         var joined = post.Participants.Any(j => (j.UserId == user.Id  && j.PostId == post.PostId) || post.OwnerId == user.Id );        //Already Join
-        if ( joined ) return RedirectToAction("Detail", new { id = post.PostId});
+        if ( joined ) return BadRequest("You've already joined this post");
 
-        if (post.Participants.Count >= post.Limit) return BadRequest("The post has reached its participant limit.");
+        if (post.Participants.Count + 1 >= post.Limit){
+            post.ExpiredTime = DateTimeOffset.UtcNow;
+            await _db.Forms
+                    .Where(f => f.PostId == post.PostId && f.Status == FormStatus.Pending)
+                    .ExecuteDeleteAsync();
+        }
 
         await _db.Joins.AddAsync(new Join {
             UserId = user.Id,
