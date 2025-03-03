@@ -19,7 +19,6 @@ public class FormController : Controller{
     [HttpPost("Form/Submit")]
     public async Task<IActionResult> Submit(FormDTO form)
     {
-        Console.WriteLine($"Received PostId: {form.PostId}");
         Console.WriteLine($"Received Answers Count: {form.Answers?.Count ?? -1}");
         foreach (var answer in form.Answers ?? new List<AnswerDTO>())
         {
@@ -52,7 +51,7 @@ public class FormController : Controller{
         var IsOwned = user.Id == post.OwnerId;
         if (IsExisted || IsOwned) return BadRequest("You can not submit this post");
 
-        if ( post.Questions.Count == 0 ) return RedirectToAction("Join", "Post");     //if there's no question on post, just join
+        if ( post.Questions.Count == 0 ) return RedirectToAction("Join", "Post", new { id = post.PostId});     //if there's no question on post, just join
         
         var newForm = new Form
         {
@@ -101,7 +100,7 @@ public class FormController : Controller{
         if (form == null) return NotFound("Form not found");
 
         var user = await _currentUser.GetCurrentUser();
-        if (form.Post.OwnerId != user.Id) return Unauthorized();
+        if (form.Post.OwnerId != user?.Id) return Unauthorized();
 
         form.Status = FormStatus.Rejected;
         await _db.SaveChangesAsync();

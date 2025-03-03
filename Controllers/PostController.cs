@@ -33,7 +33,8 @@ public class PostController : Controller
         var user = await _currentUser.GetCurrentUser();                     //Get all post
         IEnumerable<Post> allPost = await BasePostQuery()
                                             .Where(p => p.ExpiredTime > DateTimeOffset.UtcNow && 
-                                                        p.Participants.Any(j => j.UserId == user.Id))
+                                                        !p.Participants.Any(j => j.UserId == user.Id) &&        //exclude for joined post
+                                                        p.OwnerId != user.Id)                                   //exclude for owner
                                             .ToListAsync();
         List<IndexPost> indexPosts = new List<IndexPost>();
         foreach (var post in allPost){
@@ -138,7 +139,7 @@ public class PostController : Controller
         return RedirectToAction("MyPost", "User");                                               //Return to another View (or may be jsut Ok()?)
     }
 
-    [HttpPost("Post/Join/{id}")]
+    [HttpGet("Post/Join/{id}")]
     async public Task<IActionResult> Join(int id){                          //Join post by PostId with current User logged in
         var user = await _currentUser.GetCurrentUser();   
         var post = await _db.Posts.Where(p => p.PostId == id).Include(p => p.Participants).FirstOrDefaultAsync();
@@ -147,9 +148,7 @@ public class PostController : Controller
         var joined = post.Participants.Any(j => (j.UserId == user.Id  && j.PostId == post.PostId) || post.OwnerId == user.Id );        //Already Join
         if ( joined ) return RedirectToAction("Detail", new { id = post.PostId});
 
-        if (post.Participants.Count + 1 >= post.Limit){
-            
-        }
+        if (post.Participants.Count >= post.Limit) return BadRequest("The post has reached its participant limit.");
 
         await _db.Joins.AddAsync(new Join {
             UserId = user.Id,
