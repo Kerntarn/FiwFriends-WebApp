@@ -34,7 +34,8 @@ public class PostController : Controller
         IEnumerable<Post> allPost = await BasePostQuery()
                                             .Where(p => p.ExpiredTime > DateTimeOffset.UtcNow && 
                                                         !p.Participants.Any(j => j.UserId == user.Id) &&        //exclude for joined post
-                                                        p.OwnerId != user.Id)                                   //exclude for owner
+                                                        p.OwnerId != user.Id &&                                 //exclude for owner
+                                                        !p.Forms.Select(f => f.UserId).Contains(user.Id))                     //exclude for submitted user
                                             .ToListAsync();
         List<IndexPost> indexPosts = new List<IndexPost>();
         foreach (var post in allPost){
