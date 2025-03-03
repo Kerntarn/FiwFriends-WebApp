@@ -36,10 +36,8 @@
                             </div>
                             <div>Appointment : @Model.AppointmentTime.DayOfWeek, @Model.AppointmentTime.LocalDateTime</div>
                             <div>Due : @Model.ExpiredTime.DayOfWeek, @Model.ExpiredTime.LocalDateTime</div>
-                            <div class="place-and-gruop">
-                                <div >@Model.Location</div>
-                                <div >@Model.ParticipantsCount / @Model.Limit people</div>
-                            </div>
+                            <div >@Model.Location</div>
+                            <div >@Model.ParticipantsCount / @Model.Limit people</div>
                             <div>@foreach (var tag in Model.Tags)
                                 {
                                     <div class="tag add-border">@tag.Name</div>

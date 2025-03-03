@@ -176,6 +176,37 @@ html {
     width: 100%;
 }
 
+.location-container {
+    display: flex;
+    gap: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
+.location-input {
+    font-weight: bold;
+    position: inherit;
+    width: 75%;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 7px 14px 7px 20px;
+    box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.location-btn {
+    background-color: #FEFEFE;
+    padding: 8px 24px;
+    border-radius: 5px;
+    border: 2px solid #242424;
+    text-decoration: none;
+    cursor: pointer;
+    margin-right: 0px;
+    font-weight: bold;
+    box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
 .question-container {
     display: flex;
     align-items: center;
@@ -226,6 +257,10 @@ html {
 .flex-right {
     padding-top: 10px;
     justify-content: end;
+}
+
+.place-picker-container {
+    padding: 20px;
 }
 
 .ml-0 {

@@ -8,6 +8,15 @@
         <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
 }
 
+
+@section Scripts {
+    @* <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfFYxmDMi6CwNLPr2R9mh3zvQ27GTiZqI&callback=initMap&loading=async"></script> *@
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBA3_T65xWsZPRLDPW5B2Fu5p-maeHqcxg&libraries=places&callback=initMap&loading=async"></script>
+    @* <script type="module" src="https://ajax.googleapis.com/ajax/libs/@("@")googlemaps/extended-component-library/0.6.11/index.min.js"></script> *@
+    <script src="~/js/location.js"></script>
+}
+
+
 <div class="main">
 
         <div class="home-container">
@@ -29,16 +38,6 @@
                                     <p class="algn-start login-p">Post detail</p>
                                     <span asp-validation-for="Description" class="error-text"></span>
                                     <input class="inp" type="text"  asp-for="Description" >
-                                </div>
-
-                                
-
-                                
-
-                                <div class="mh-40">
-                                    <p class="algn-start login-p">Location</p>
-                                    <span asp-validation-for="Location" class="error-text"></span>
-                                    <input class="inp" type="text"  asp-for="Location" >
                                 </div>
 
                                 <div class="mh-40">
@@ -74,6 +73,15 @@
                                         <input class="inp" type="datetime-local"  asp-for="ExpiredTime" >
                                     </div>
                                     
+                                </div>
+
+                                <div class="mh-40">
+                                    <p class="algn-start login-p">Location</p>
+                                    <div class="location-container">
+                                        <input class="location-input" id="locationInput" type="text" asp-for="Location" name="location" placeholder="เลือกสถานที่..." autocomplete="off">
+                                        <button type="button" class="location-btn" onclick="useCurrentLocation()">ที่อยู่ปัจจุบัน</button>
+                                    </div>
+                                    <div id="map" style="height: 300px; width: 100%;"></div>
                                 </div>
 
                                 <div class="mh-40">
