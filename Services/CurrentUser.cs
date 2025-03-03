@@ -14,9 +14,9 @@ public class CurrentUserService
         _userManager = userManager;
     }
 
-    public async Task<User?> GetCurrentUser()
+    public async Task<User> GetCurrentUser()
     {
         var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User!);
-        return currentUser;
+        return currentUser ?? throw new Exception("There should be some failed auth case");
     }
 }
