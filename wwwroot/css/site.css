@@ -154,8 +154,21 @@ a {
   font-size: 14px;
 }
 
+.username, .name, .contact {
+  font-weight: bold;
+}
+
 .username {
   margin-bottom: 0px;
+}
+
+.name {
+  color: rgba(24, 24, 24, 0.6);
+  margin: 0px 0px;
+}
+
+.contact {
+  margin: 15px 0px;
 }
 
 /* .menu-container > a {
@@ -362,7 +375,13 @@ a {
   background-size: cover;
 }
 
-
+.button-container {
+  margin-left: 40px;
+  margin-right: 40px;
+  margin-top: 25px;
+  display: flex;
+  gap: 20px;
+}
 
 .big-width {
   width: 600px;
@@ -478,4 +497,8 @@ a {
 
 .w-auto {
   width: auto;
+}
+
+.pb-20 {
+  padding-bottom: 15px;
 }

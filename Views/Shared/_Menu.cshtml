@@ -11,11 +11,12 @@
         <div class="profile-img" style="background-image: url(https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg);"></div>
         
         <h2 class="username">@user?.UserName</h2>
-        <p>@user?.FirstName @user?.LastName</p>
+        <p class="name">@user?.FirstName @user?.LastName</p>
+        <p class="contact">@user?.Contact</p>
         
         <div class="menu-container">
 
-                <a class="menu-edit_profile" asp-controller="Post" asp-action="Index"><button type="submit" class="edit-btn">Edit profile</button></a>
+                <a class="menu-edit_profile" href="https://localhost:7258/User/Edit" ><div class="edit-btn">Edit profile</div></a>
                 
                 <a class="menu-btn menu-home" class="menu-home" asp-controller="Post" asp-action="Index">
                         <svg viewBox="0 2 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="35px" height="35px">

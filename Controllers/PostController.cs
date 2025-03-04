@@ -44,36 +44,50 @@ public class PostController : Controller
         return View(indexPosts);                                                //return view with List<IndexPost>
     }
 
-    [HttpGet("Search/{search}")]
-    async public Task<IActionResult> Search(string search){                     //Search by check activity and description string
-        var posts = await BasePostQuery()
-                            .Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || 
-                                         p.Description.ToLower().Contains(search.ToLower())) && 
-                                         p.ExpiredTime > DateTimeOffset.UtcNow )
-                            .ToListAsync();
-        List<IndexPost> indexPosts = new List<IndexPost>();
+    [HttpGet("Search")]
+    public async Task<IActionResult> Search(string search)
+    {
+        if (string.IsNullOrWhiteSpace(search)) return RedirectToAction("Index");
 
-        foreach (var post in posts){
-            indexPosts.Add(await _mapper.MapAsync<Post, IndexPost>(post));
+        var posts = await _db.Posts
+            .Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || 
+                        p.Description.ToLower().Contains(search.ToLower())) && 
+                        p.ExpiredTime > DateTimeOffset.UtcNow)
+            .Include(p => p.Owner)
+            .Include(p => p.Participants).ThenInclude(j => j.User)
+            .Include(p => p.Tags)
+            .Include(p => p.FavoritedBy)
+            .ToListAsync();
+
+        // 🛠 แก้ไขจุดที่มีปัญหา โดย Map ทีละรายการ
+        var indexPosts = new List<IndexPost>();
+        foreach (var post in posts)
+        {
+            var mappedPost = await _mapper.MapAsync<Post, IndexPost>(post);
+            indexPosts.Add(mappedPost);
         }
-        return View(indexPosts);                                                //return view with List<IndexPost>
+
+        return View("Index", indexPosts);
     }
 
     [HttpPost("Filter")]
-    async public Task<IActionResult> Filter(IEnumerable<TagDTO> tags){          //Filter by Tags
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+    public async Task<IActionResult> Filter(string tag)
+    {
+        if (string.IsNullOrEmpty(tag)) return RedirectToAction("Index");
 
-        var posts = await BasePostQuery()
-                            .Where(p => p.ExpiredTime > DateTimeOffset.UtcNow && 
-                                        tags.Select(t => t.Name.ToLower())
-                                            .All(t => p.Tags.Select(t => t.Name.ToLower()).Contains(t)))
-                            .ToListAsync();
+        var posts = await _db.Posts
+            .Where(p => p.ExpiredTime > DateTimeOffset.UtcNow &&
+                        p.Tags.Any(t => t.Name.ToLower() == tag.ToLower()))
+            .Include(p => p.Owner)
+            .Include(p => p.Participants).ThenInclude(j => j.User)
+            .Include(p => p.Tags)
+            .Include(p => p.FavoritedBy)
+            .ToListAsync();
 
-        List<IndexPost> indexPosts = new List<IndexPost>();
-        foreach (var post in posts){
-            indexPosts.Add(await _mapper.MapAsync<Post, IndexPost>(post));
-        }                
-        return View(posts);                                                     //return view with List<IndexPost>
+        Console.WriteLine($"Total posts found: {posts.Count}");
+        var indexPosts = await Task.WhenAll(posts.Select(async post => await _mapper.MapAsync<Post, IndexPost>(post)));
+        ViewBag.SelectedTag = tag;
+        return View("Index", indexPosts.ToList());
     }
 
     [HttpGet("Post/Detail/{id}")]
@@ -169,20 +183,48 @@ public class PostController : Controller
     }
 
     [HttpPost("Post/Favorite/{id}")]
-    async public Task<IActionResult> Favorite(int id){                      //Just Favorite Post by PostId with current User logged in
-        var user = await _currentUser.GetCurrentUser();   
-        var post = await _db.Posts.FindAsync(id);
-        if (post == null) return NotFound("Post is not found.");
+    public async Task<IActionResult> Favorite(int id)
+    {
+        var user = await _currentUser.GetCurrentUser();
+        var post = await _db.Posts.Include(p => p.FavoritedBy).FirstOrDefaultAsync(p => p.PostId == id);
 
-        if (post.FavoritedBy.Any(u => u.Id == user.Id)){
-             post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
-         } else {
-             post.FavoritedBy.Add(user);
-         }
-         await _db.SaveChangesAsync();
+        if (post == null)
+        {
+            Console.WriteLine($"[ERROR] Post ID {id} not found.");
+            return NotFound("Post not found.");
+        }
+        if (user == null)
+        {
+            Console.WriteLine("[ERROR] User not logged in.");
+            return RedirectToAction("Login", "Auth");
+        }
 
-         return Ok();                                                        //Done
-     }
+        // Debug: เช็กว่าผู้ใช้กด Favorite หรือไม่
+        bool isAlreadyFavorited = post.FavoritedBy.Any(u => u.Id == user.Id);
+        Console.WriteLine($"[DEBUG] Post ID: {id}, User ID: {user.Id}, IsFav: {isAlreadyFavorited}");
+
+        if (isAlreadyFavorited)
+        {
+            post.FavoritedBy.Remove(post.FavoritedBy.First(u => u.Id == user.Id));
+        }
+        else
+        {
+            post.FavoritedBy.Add(user);
+        }
+
+        int result = await _db.SaveChangesAsync();
+        Console.WriteLine($"[DEBUG] SaveChangesAsync Result: {result}");
+
+        if (result > 0)
+        {
+            return Ok(new { success = true, isFav = !isAlreadyFavorited });
+        }
+        else
+        {
+            return BadRequest("Failed to update favorite.");
+        }
+    }
+
     
     [HttpGet("Post/Favorite")]
     async public Task<IActionResult> GetFavoritedPost(){                    //Get current User's Favorited Post (or maybe this should be in UserController?)

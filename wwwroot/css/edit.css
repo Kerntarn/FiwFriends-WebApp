@@ -1,0 +1,35 @@
+.edit-header {
+        font-weight: bold;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        
+}
+
+.full-div {
+        width: 100%;
+        
+}
+
+.container-span {
+        display: block;
+}
+
+.full-inp {
+        width: 90%;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        padding: 7px 0px 7px 20px;
+        box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.save-container {
+        margin-top: 15px;
+        display: flex;
+        gap: 20px;
+}
+      
