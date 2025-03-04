@@ -37,6 +37,14 @@ document.querySelectorAll(".tag-select").forEach(button => {
     });
 });
 
+document.querySelectorAll(".tag-button").forEach(button => {
+    button.addEventListener("click", function () {
+        document.querySelectorAll(".tag-button").forEach(btn => btn.classList.remove("selected"));
+
+        this.classList.add("selected");
+    });
+});
+
 function addQuestion(button) {
     let wrapper = document.getElementById("question-wrapper");
     let count = wrapper.getElementsByClassName("question-container").length; // นับจำนวนคำถามที่มีอยู่
@@ -99,4 +107,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (toastElement && toastElement.dataset.message) {
         showToast(toastElement.dataset.message);
     }
+});
+
+document.querySelectorAll('.tag-button').forEach(button => {
+    button.addEventListener('click', function() {
+        document.getElementById('selectedTag').value = this.dataset.tag;
+        document.getElementById('filterForm').submit();
+    });
 });

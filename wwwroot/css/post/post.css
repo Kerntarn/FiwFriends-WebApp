@@ -20,6 +20,7 @@ html {
 
 .search-text {
     resize: none;
+    font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     word-wrap: break-word;
@@ -28,6 +29,18 @@ html {
     outline: 0;
     height: auto;
     width: 100%;
+}
+
+.search-input {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.search-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 .new-post {
@@ -89,6 +102,12 @@ html {
     cursor: pointer;
   }
 
+.fav-btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
 .selected {
     background-color: #FF8A80;
 }
@@ -106,14 +125,6 @@ html {
     margin-right: 40px;
     display: flex;
     gap: 50px;
-}
-
-.button-container {
-    margin-left: 40px;
-    margin-right: 40px;
-    margin-top: 25px;
-    display: flex;
-    gap: 20px;
 }
 
 .search-container {
@@ -165,6 +176,37 @@ html {
     width: 100%;
 }
 
+.location-container {
+    display: flex;
+    gap: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
+.location-input {
+    font-weight: bold;
+    position: inherit;
+    width: 75%;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 7px 14px 7px 20px;
+    box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.location-btn {
+    background-color: #FEFEFE;
+    padding: 8px 24px;
+    border-radius: 5px;
+    border: 2px solid #242424;
+    text-decoration: none;
+    cursor: pointer;
+    margin-right: 0px;
+    font-weight: bold;
+    box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
 .question-container {
     display: flex;
     align-items: center;
@@ -211,13 +253,14 @@ html {
     width: 30px;
 }
 
-.pb-20 {
-    padding-bottom: 15px;
-}
 
 .flex-right {
     padding-top: 10px;
     justify-content: end;
+}
+
+.place-picker-container {
+    padding: 20px;
 }
 
 .ml-0 {
