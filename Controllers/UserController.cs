@@ -84,17 +84,30 @@ namespace FiwFriends.Controllers
         if (user == null)
             return Unauthorized(new { error = "User not found" });
 
-        var existingUser = await _userManager.FindByNameAsync(userEditor.Username);
-        if (existingUser != null && existingUser.Id != user.Id)
-        {
-            return BadRequest(new { error = "Username already exists" });
+        if (string.IsNullOrEmpty(userEditor.ConfirmPassword)){
+            return BadRequest(new {error = "Password confirmation is required to edit your profile" });
         }
 
-        user.UserName = userEditor.Username;
-        user.FirstName = userEditor.FirstName;
-        user.LastName = userEditor.LastName;
-        user.Bio = userEditor.Bio;
-        user.Contact = userEditor.Contact;
+        var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.ConfirmPassword);
+        if (!passwordcheck)
+        {
+            return BadRequest(new { error = "Password is incorrect" });
+        }
+
+        if(!string.IsNullOrEmpty(userEditor.Username) && userEditor.Username.Length < 3)
+        {
+            var existingUser = await _userManager.FindByNameAsync(userEditor.Username);
+            if (existingUser != null && existingUser.Id != user.Id)
+            {
+                return BadRequest(new { error = "Username already exists" });
+            }
+            user.UserName = userEditor.Username;
+        }
+ 
+        user.FirstName = string.IsNullOrEmpty(userEditor.FirstName) ? user.FirstName : userEditor.FirstName;
+        user.LastName = string.IsNullOrEmpty(userEditor.LastName) ? user.LastName : userEditor.LastName;
+        user.Bio = string.IsNullOrEmpty(userEditor.Bio) ? user.Bio : userEditor.Bio; 
+        user.Contact = string.IsNullOrEmpty(userEditor.Contact) ? user.Contact : userEditor.Contact; 
 
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
@@ -102,10 +115,10 @@ namespace FiwFriends.Controllers
             return BadRequest(new { error = "Failed to update user information" });
         }
 
-        if (!string.IsNullOrEmpty(userEditor.Password))
+        if (!string.IsNullOrEmpty(userEditor.NewPassword))
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetResult = await _userManager.ResetPasswordAsync(user, token, userEditor.Password);
+            var resetResult = await _userManager.ResetPasswordAsync(user, token, userEditor.NewPassword);
 
             if (!resetResult.Succeeded)
             {
