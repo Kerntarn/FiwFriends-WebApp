@@ -1,5 +1,11 @@
 @model FiwFriends.Models.DetailPost
 
+@inject Microsoft.AspNetCore.Identity.UserManager<FiwFriends.Models.User> UserManager
+
+@{
+    var owner = await UserManager.GetUserAsync(User);
+}
+
 @section Styles {
         <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
 }
@@ -40,7 +46,7 @@
                             <div >@Model.ParticipantsCount / @Model.Limit people</div>
                             <div>@foreach (var tag in Model.Tags)
                                 {
-                                    <div class="tag add-border">@tag.Name</div>
+                                    <div class="tag add-border">@await Html.PartialAsync("Tag/_"+@tag.Name)</div>
                                 }
                             </div>
                             <div class="detail">@Model.Description</div>
@@ -64,7 +70,7 @@
                                 <div class="people-container">
                                     @if (Model.Participants.Any())
                                     {
-                                        <p>People who have already joined</p>
+                                        <p><b>People who have already joined</b></p>
                                         <div class="people">
                                             @foreach (var user in Model.Participants)
                                             {
@@ -74,16 +80,25 @@
                                     }
                                     else
                                     {
-                                        <p>No people join yet!</p>
+                                        <p><b>No people join yet!</b></p>
                                     }
-                                            
                                     
                                 </div>
 
-                                <div class="button-container ml-0">
-                                    <a class="btn" asp-action="">back</a>
-                                    <button type="submit" class="btn">Join</button>
-                                </div>
+                                @if(Model.Owner.UserName == owner.UserName) {
+                                    <div class="button-container ml-0">
+                                        <a class="btn" asp-controller="User" asp-action="UserPendingStatus">back</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="button-container ml-0">
+                                        <a class="btn white" asp-action="">back</a>
+                                        <button type="submit" class="btn">Join</button>
+                                    </div>
+                                }
+
+                                
 
                             </form>
                         </div>

@@ -41,12 +41,16 @@
                                     </button>
                                 </div>
                                 <div>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</div>
+                                <div>Due : @post.ExpiredTime.DateTime</div>
                                 <div >@post.Location</div>
                                 <div >@post.ParticipantsCount / @post.Limit people</div>
                                 <div>
                                     <div>@foreach (var tag in post.Tags)
                                         {
-                                            <div class="tag add-border">@tag.Name</div>
+                                            <div class="tag add-border">
+                                                     @await Html.PartialAsync("Tag/_"+@tag.Name)
+                                            </div>
+                                            @* @await Html.PartialAsync(str); *@
                                         }
                                     </div>
                                 </div>
@@ -57,9 +61,13 @@
                                     <form asp-action="Delete" asp-controller="Post" asp-route-id="@post.PostId" method="post">
                                         <button type="submit" class="btn white">Delete</button>
                                     </form>
-                                    <form asp-action="Close" asp-controller="Post" asp-route-id="@post.PostId" method="post">
-                                        <button type="submit" class="btn">END</button>
-                                    </form>
+                                    @if (DateTime.Now < @post.ExpiredTime.DateTime)
+                                    {
+                                        <form asp-action="Close" asp-controller="Post" asp-route-id="@post.PostId" method="post">
+                                            <button type="submit" class="btn">END</button>
+                                        </form>
+                                    }
+                                    
                                 </div>
                                 
                             </div>

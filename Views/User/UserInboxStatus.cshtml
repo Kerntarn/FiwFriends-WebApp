@@ -38,6 +38,7 @@
                                         <th>User</th>
                                         <th>Date</th>
                                         <th>Status</th>
+                                        <th>Detail</th>
                                 </tr>
 
                                 @if (Model.Any())
@@ -49,6 +50,7 @@
                                                         <td>@post.Owner</td>
                                                         <td>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</td>
                                                         <td><b class="@post.Status" >@post.Status</b></td>
+                                                        <td><a class="detail-btn" asp-controller="Post" asp-action="Detail" asp-route-id="@post">See post</a></td>
                                                 </tr>
                                         }
                                 }

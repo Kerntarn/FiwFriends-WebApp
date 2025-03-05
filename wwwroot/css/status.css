@@ -81,7 +81,7 @@ tr.border-bottom {
 
 
 .btn_accept, .btn_reject {
-
+        font-weight: bold;
         margin-top: 5px;
         border: 0 solid #242424;
         border-radius: 5px;
@@ -138,4 +138,12 @@ tr.border-bottom {
 
 .pending-btn {
         padding-left: 2px;
+}
+
+.detail-btn {
+        font-weight: bold;
+        border: 1px solid #242424;
+        padding: 5px 12px;
+        border-radius: 5px;
+        box-shadow: 0px 4px 4px rgba(24,24,24,.25);
 }

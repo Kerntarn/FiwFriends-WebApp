@@ -1,0 +1,8 @@
+
+@section Styles {
+        <link rel="stylesheet" href="~/css/post/post.css" asp-append-version="true" />
+}
+
+<button class="tag tag-button @(ViewBag.SelectedTag == "Other" ? "selected" : "")" type="submit" data-tag="Other">
+        Other
+</button>

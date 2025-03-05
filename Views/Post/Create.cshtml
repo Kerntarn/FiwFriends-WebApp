@@ -10,9 +10,6 @@
 
 
 @section Scripts {
-    @* <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfFYxmDMi6CwNLPr2R9mh3zvQ27GTiZqI&callback=initMap&loading=async"></script> *@
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places&callback=initMap&loading=async"></script>
-    @* <script type="module" src="https://ajax.googleapis.com/ajax/libs/@("@")googlemaps/extended-component-library/0.6.11/index.min.js"></script> *@
     <script src="~/js/location.js"></script>
 }
 
@@ -46,9 +43,12 @@
 
                                         <div class="tag-container">
                                             <button type="button" class="tag-select" data-tag="Food" >Food</button>
+                                            <button type="button" class="tag-select" data-tag="Gaming" >Gaming</button>
+                                            <button type="button" class="tag-select" data-tag="Gym" >Gym</button>
+                                            <button type="button" class="tag-select" data-tag="Studying" >Studying</button>
+                                            <button type="button" class="tag-select" data-tag="Sports" >Sport</button>
                                             <button type="button" class="tag-select" data-tag="Relaxing">Relaxing</button>
-                                            <button type="button" class="tag-select" data-tag="Sports" >Sports</button>
-                                            <button type="button" class="tag-select" data-tag="Tag4" >Tag4</button>
+                                            <button type="button" class="tag-select" data-tag="Other" >Other</button>
                                         </div>
 
                                     <input type="hidden" id="tagInput" />

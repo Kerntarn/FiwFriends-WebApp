@@ -245,6 +245,12 @@ html {
     color: #FEFEFE;
 }
 
+.people {
+    font-weight: bold;
+    display: flex;
+    gap: 15px;
+}
+
 .white {
     background-color: #FEFEFE;
 }

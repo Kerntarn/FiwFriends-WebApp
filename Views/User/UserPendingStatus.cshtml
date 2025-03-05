@@ -56,13 +56,17 @@
                                                                         <div>Question : @question.Question</div>
                                                                         <div class="answer_detail">@question.Answer</div>
                                                                 }
-                                                                <div class="button-container ml-0 mt-0">
-                                                                        <form asp-action="Reject" asp-controller="Form" asp-route-formid="@info.FormId" method="post">
-                                                                        <button type="submit" class="btn_reject">reject</button>
-                                                                        </form>
-                                                                        <form asp-action="Approve" asp-controller="Form" asp-route-formid="@info.FormId" method="post">
-                                                                                <button type="submit" class="btn_accept">accept</button>
-                                                                        </form>
+                                                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                                        <div class="button-container ml-0 mt-0">
+                                                                                <form asp-action="Reject" asp-controller="Form" asp-route-formid="@info.FormId" method="post">
+                                                                                        <button type="submit" class="btn_reject">rejects</button>
+                                                                                </form>
+                                                                                <form asp-action="Approve" asp-controller="Form" asp-route-formid="@info.FormId" method="post">
+                                                                                        <button type="submit" class="btn_accept">accept</button>
+                                                                                </form>
+                                                                        </div>
+                                                                        <a class="detail-btn" asp-controller="Post" asp-action="Detail" asp-route-id="@info.PostId">See post</a>
+                                                                        
                                                                 </div>
                                                         </td>
                                                 </tr>
