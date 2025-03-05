@@ -15,10 +15,12 @@ public class PostController : Controller
     private readonly ApplicationDBContext _db;
     private readonly CurrentUserService _currentUser;
     private readonly MapperService _mapper;
-    public PostController(ApplicationDBContext db, CurrentUserService currentUser, MapperService mapperService){
+    private readonly string _apiKey;
+    public PostController(ApplicationDBContext db, CurrentUserService currentUser, MapperService mapperService, string apiKey){
         _db = db;
         _currentUser = currentUser;
         _mapper = mapperService;
+        _apiKey = apiKey;
     }
 
     public async Task<IActionResult> Index(){              
@@ -85,6 +87,7 @@ public class PostController : Controller
     //GET Create page
     [HttpGet("Post/Create")]
     public IActionResult Create(){                                              //Get Create page
+        ViewData["API_KEY"] = _apiKey;
         return View();
     }
 
