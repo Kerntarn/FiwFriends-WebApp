@@ -4,8 +4,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using FiwFriends.Models;
 using FiwFriends.Services;
+using DotNetEnv;    
 
 var builder = WebApplication.CreateBuilder(args);
+
+Env.Load();
+
+var apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? throw new Exception("Where's ur api key?????");
+
+builder.Services.AddSingleton(apiKey);
 
 // Enable console logging for debugging
 builder.Logging.AddConsole();
@@ -51,18 +58,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/Auth/Logout";
         options.AccessDeniedPath = "/Home/AccessDenied";
     });
-
-// Configure CORS
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(builder =>
-    {
-        builder.WithOrigins("https://yourfrontendurl.com")
-               .AllowAnyHeader()
-               .AllowAnyMethod()
-               .AllowCredentials(); // Allows cookies for authentication
-    });
-});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
