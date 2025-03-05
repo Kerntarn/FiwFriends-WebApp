@@ -15,32 +15,22 @@ public class PostController : Controller
     private readonly ApplicationDBContext _db;
     private readonly CurrentUserService _currentUser;
     private readonly MapperService _mapper;
-    public PostController(ApplicationDBContext db, CurrentUserService currentUser, MapperService mapperService){
+    private readonly string _apiKey;
+    public PostController(ApplicationDBContext db, CurrentUserService currentUser, MapperService mapperService, string apiKey){
         _db = db;
         _currentUser = currentUser;
         _mapper = mapperService;
-    }
-
-    private IQueryable<Post> BasePostQuery()
-    {
-        return _db.Posts.Include(p => p.Owner)
-                        .Include(p => p.Participants).ThenInclude(j => j.User)
-                        .Include(p => p.Tags)
-                        .Include(p => p.FavoritedBy);
+        _apiKey = apiKey;
     }
 
     public async Task<IActionResult> Index(){              
         var user = await _currentUser.GetCurrentUser();                     //Get all post
-        IEnumerable<Post> allPost = await BasePostQuery()
-                                            .Where(p => p.ExpiredTime > DateTimeOffset.UtcNow && 
-                                                        !p.Participants.Any(j => j.UserId == user.Id) &&        //exclude for joined post
-                                                        p.OwnerId != user.Id &&                                 //exclude for owner
-                                                        !p.Forms.Select(f => f.UserId).Contains(user.Id))                     //exclude for submitted user
-                                            .ToListAsync();
-        List<IndexPost> indexPosts = new List<IndexPost>();
-        foreach (var post in allPost){
-            indexPosts.Add(await _mapper.MapAsync<Post, IndexPost>(post));
-        }
+        IQueryable<Post> postCondition = _db.Posts.Where(p => p.ExpiredTime > DateTimeOffset.UtcNow && 
+                                                    !p.Participants.Any(j => j.UserId == user.Id) &&        //exclude for joined post
+                                                    p.OwnerId != user.Id &&                                 //exclude for owner
+                                                    !p.Forms.Select(f => f.UserId).Contains(user.Id));      //exclude for submitted user
+        
+        var indexPosts = await _mapper.MapAsync<IQueryable<Post>, IEnumerable<IndexPost>>(postCondition);
         return View(indexPosts);                                                //return view with List<IndexPost>
     }
 
@@ -49,23 +39,16 @@ public class PostController : Controller
     {
         if (string.IsNullOrWhiteSpace(search)) return RedirectToAction("Index");
 
-        var posts = await _db.Posts
-            .Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || 
-                        p.Description.ToLower().Contains(search.ToLower())) && 
-                        p.ExpiredTime > DateTimeOffset.UtcNow)
-            .Include(p => p.Owner)
-            .Include(p => p.Participants).ThenInclude(j => j.User)
-            .Include(p => p.Tags)
-            .Include(p => p.FavoritedBy)
-            .ToListAsync();
+        var user = await _currentUser.GetCurrentUser(); 
+        var postCondition = _db.Posts
+                        .Where(p => (p.Activity.ToLower().Contains(search.ToLower()) || 
+                                     p.Description.ToLower().Contains(search.ToLower())) && 
+                                     p.ExpiredTime > DateTimeOffset.UtcNow && 
+                                    !p.Participants.Any(j => j.UserId == user.Id) &&        //exclude for joined post
+                                    p.OwnerId != user.Id &&                                 //exclude for owner
+                                    !p.Forms.Select(f => f.UserId).Contains(user.Id));
 
-        // 🛠 แก้ไขจุดที่มีปัญหา โดย Map ทีละรายการ
-        var indexPosts = new List<IndexPost>();
-        foreach (var post in posts)
-        {
-            var mappedPost = await _mapper.MapAsync<Post, IndexPost>(post);
-            indexPosts.Add(mappedPost);
-        }
+        var indexPosts = await _mapper.MapAsync<IQueryable<Post>, IEnumerable<IndexPost>>(postCondition);
 
         return View("Index", indexPosts);
     }
@@ -75,35 +58,36 @@ public class PostController : Controller
     {
         if (string.IsNullOrEmpty(tag)) return RedirectToAction("Index");
 
-        var posts = await _db.Posts
-            .Where(p => p.ExpiredTime > DateTimeOffset.UtcNow &&
-                        p.Tags.Any(t => t.Name.ToLower() == tag.ToLower()))
-            .Include(p => p.Owner)
-            .Include(p => p.Participants).ThenInclude(j => j.User)
-            .Include(p => p.Tags)
-            .Include(p => p.FavoritedBy)
-            .ToListAsync();
+        var user = await _currentUser.GetCurrentUser(); 
+        var postCondition = _db.Posts
+                        .Where(p => p.ExpiredTime > DateTimeOffset.UtcNow && 
+                                    p.Tags.Any(t => t.Name.ToLower() == tag.ToLower()) && 
+                                    !p.Participants.Any(j => j.UserId == user.Id) &&        //exclude for joined post
+                                    p.OwnerId != user.Id &&                                 //exclude for owner
+                                    !p.Forms.Select(f => f.UserId).Contains(user.Id));
 
-        Console.WriteLine($"Total posts found: {posts.Count}");
-        var indexPosts = await Task.WhenAll(posts.Select(async post => await _mapper.MapAsync<Post, IndexPost>(post)));
+        var indexPosts = await _mapper.MapAsync<IQueryable<Post>, IEnumerable<IndexPost>>(postCondition);
         ViewBag.SelectedTag = tag;
         return View("Index", indexPosts.ToList());
     }
 
     [HttpGet("Post/Detail/{id}")]
     async public Task<IActionResult> Detail(int id){                            //Detail of Single Post exluded Forms
-        var post = await BasePostQuery()
-                        .Where(p => p.PostId == id)
-                        .Include(p => p.Questions)
-                        .FirstOrDefaultAsync();
-
-        if(post == null) return NotFound();
-        return View(await _mapper.MapAsync<Post, DetailPost>(post));            //Return view with DetailPost
+        var query = _db.Posts
+                        .Where(p => p.PostId == id);
+        try {
+            var post = await _mapper.MapAsync<IQueryable<Post>, DetailPost>(query);
+            return View(post);                                                  //Return view with DetailPost
+        }
+        catch {
+            return NotFound();
+        }
     }
 
     //GET Create page
     [HttpGet("Post/Create")]
     public IActionResult Create(){                                              //Get Create page
+        ViewData["API_KEY"] = _apiKey;
         return View();
     }
 
@@ -149,6 +133,9 @@ public class PostController : Controller
         if(user.Id != post.OwnerId) return Unauthorized("You don't have permission!");
 
         post.ExpiredTime = DateTimeOffset.UtcNow;
+        await _db.Forms
+                    .Where(f => f.PostId == postId && f.Status == FormStatus.Pending)
+                    .ExecuteDeleteAsync();
         await _db.SaveChangesAsync();
         TempData["Message"] = "Post closed successfully!";
         return RedirectToAction("MyPost", "User");                                               //Return to another View (or may be jsut Ok()?)
@@ -159,11 +146,17 @@ public class PostController : Controller
         var user = await _currentUser.GetCurrentUser();   
         var post = await _db.Posts.Where(p => p.PostId == id).Include(p => p.Participants).FirstOrDefaultAsync();
         if (post == null) return NotFound("Post is not found.");
+        if (post.ExpiredTime < DateTimeOffset.UtcNow) return BadRequest("It's already expired bro");
         
         var joined = post.Participants.Any(j => (j.UserId == user.Id  && j.PostId == post.PostId) || post.OwnerId == user.Id );        //Already Join
-        if ( joined ) return RedirectToAction("Detail", new { id = post.PostId});
+        if ( joined ) return BadRequest("You've already joined this post");
 
-        if (post.Participants.Count >= post.Limit) return BadRequest("The post has reached its participant limit.");
+        if (post.Participants.Count + 1 >= post.Limit){
+            post.ExpiredTime = DateTimeOffset.UtcNow;
+            await _db.Forms
+                    .Where(f => f.PostId == post.PostId && f.Status == FormStatus.Pending)
+                    .ExecuteDeleteAsync();
+        }
 
         await _db.Joins.AddAsync(new Join {
             UserId = user.Id,
@@ -221,15 +214,10 @@ public class PostController : Controller
     async public Task<IActionResult> GetFavoritedPost(){                    //Get current User's Favorited Post (or maybe this should be in UserController?)
         var user = await _currentUser.GetCurrentUser();
 
-        List<Post> posts = await BasePostQuery()
-                                    .Where(p => p.FavoritedBy.Any(u => u.Id == user.Id))
-                                    .ToListAsync();
+        var postCondition = _db.Posts
+                                .Where(p => p.FavoritedBy.Any(u => u.Id == user.Id));
                                                         
-        List<IndexPost> fav_post = new List<IndexPost>();
-        foreach (var post in posts){
-            fav_post.Add(await _mapper.MapAsync<Post, IndexPost>(post));
-        }
-            
-        return View(fav_post);                                              //Return view with List<IndexPost>
+        var indexPosts = await _mapper.MapAsync<IQueryable<Post>, IEnumerable<IndexPost>>(postCondition);
+        return View(indexPosts);                                              //Return view with List<IndexPost>
     }
 }   

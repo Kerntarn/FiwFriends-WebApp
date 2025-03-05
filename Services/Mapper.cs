@@ -2,6 +2,7 @@ using FiwFriends.Models;
 using FiwFriends.DTOs;
 using FiwFriends.Data;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
 namespace FiwFriends.Services;
 
@@ -19,12 +20,12 @@ public class MapperService{
             var postDTO = source as PostDTO ?? throw new InvalidCastException($"Mapping failed: {typeof(TSource)} is not PostDTO");;
             return (T)(object) await DTO2Post(postDTO);
         } 
-        else if (typeof(T) == typeof(IndexPost)){
-            var post = source as Post ?? throw new InvalidCastException($"Mapping failed: {typeof(TSource)} is not Post");;
+        else if (typeof(T) == typeof(IEnumerable<IndexPost>)){
+            var post = source as IQueryable<Post> ?? throw new InvalidCastException($"Mapping failed: {typeof(TSource)} is not Post");;
             return (T)(object) await Post2Index(post);
         }
         else if (typeof(T) == typeof(DetailPost)){
-            var post = source as Post ?? throw new InvalidCastException($"Mapping failed: {typeof(TSource)} is not Post");;
+            var post = source as IQueryable<Post> ?? throw new InvalidCastException($"Mapping failed: {typeof(TSource)} is not Post");;
             return (T)(object) await Post2Detail(post);
         }
         else
@@ -51,42 +52,47 @@ public class MapperService{
         };
     }
 
-    async private Task<IndexPost> Post2Index(Post post){
+    async private Task<IEnumerable<IndexPost>> Post2Index(IQueryable<Post> post){
         var user = await _currentUser.GetCurrentUser();
-
-        return new IndexPost{
-            PostId = post.PostId,
-            Activity = post.Activity,
-            Description = post.Description,
-            Location = post.Location,
-            AppointmentTime = post.AppointmentTime.ToLocalTime(),
-            ExpiredTime = post.ExpiredTime.ToLocalTime(),
-            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, IndexPost>"),
-            ParticipantsCount = post.Participants.Count(),
-            IsFav = post.FavoritedBy.Any(u => u.Id == user?.Id),
-            Tags = post.Tags,
-            Limit = post.Limit
-        };
+        var indexPost = await post
+                                .Select(p => new IndexPost {
+                                    PostId = p.PostId,
+                                    Activity = p.Activity,
+                                    Description = p.Description,
+                                    Location = p.Location,
+                                    AppointmentTime = p.AppointmentTime.ToLocalTime(),
+                                    ExpiredTime = p.ExpiredTime.ToLocalTime(),
+                                    Owner = p.Owner,
+                                    ParticipantsCount = p.Participants.Count(),
+                                    IsFav = p.FavoritedBy.Any(u => u.Id == user.Id),
+                                    Tags = p.Tags,
+                                    Limit = p.Limit
+                                    })
+                                .ToListAsync();
+        return indexPost;
     }
 
-    async private Task<DetailPost> Post2Detail(Post post){
+    async private Task<DetailPost> Post2Detail(IQueryable<Post> post){
         var user = await _currentUser.GetCurrentUser();
-        return new DetailPost{
-            PostId = post.PostId,
-            Activity = post.Activity,
-            Description = post.Description,
-            Location = post.Location,
-            AppointmentTime = post.AppointmentTime.ToLocalTime(),
-            ExpiredTime = post.ExpiredTime.ToLocalTime(),
-            Owner = await _db.Users.FindAsync(post.OwnerId) ?? throw new Exception("Just for not warning in MapAsync<Post, DetailPost>"),
-            ParticipantsCount = post.Participants.Count(),
-            IsFav = post.FavoritedBy.Any(u => u.Id == user?.Id),
-            Tags = post.Tags,
-            Participants = post.Participants.Select(j => j.User),
-            Questions = post.Questions,
-            Limit = post.Limit,
-            IsJoined = post.Participants.Any(j => j.UserId == user?.Id)
-        };
+        var detailPost = await post
+                                .Select(p => new DetailPost {
+                                    PostId = p.PostId,
+                                    Activity = p.Activity,
+                                    Description = p.Description,
+                                    Location = p.Location,
+                                    AppointmentTime = p.AppointmentTime.ToLocalTime(),
+                                    ExpiredTime = p.ExpiredTime.ToLocalTime(),
+                                    Owner = p.Owner,
+                                    ParticipantsCount = p.Participants.Count(),
+                                    IsFav = p.FavoritedBy.Any(u => u.Id == user.Id),
+                                    Tags = p.Tags,
+                                    Participants = p.Participants.Select(j => j.User),
+                                    Questions = p.Questions,
+                                    Limit = p.Limit,
+                                    IsJoined = p.Participants.Any(j => j.UserId == user.Id)
+                                })
+                                .FirstOrDefaultAsync();
+        return detailPost ?? throw new Exception("Not Found");
     }
 
 }

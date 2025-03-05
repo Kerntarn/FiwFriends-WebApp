@@ -47,9 +47,10 @@ public class FormController : Controller{
         var post = await _db.Posts.Where(p => p.PostId == form.PostId).Include(p => p.Questions).FirstOrDefaultAsync();
         if(post == null) return NotFound("Post not found");
 
-        var IsExisted = await _db.Forms.AnyAsync(f => f.UserId == user.Id && f.PostId == form.PostId);
+        var IsExisted = await _db.Forms.AnyAsync(f => f.UserId == user.Id && f.PostId == form.PostId) || 
+                        await _db.Joins.AnyAsync(j => j.UserId == user.Id && j.PostId == form.PostId);
         var IsOwned = user.Id == post.OwnerId;
-        if (IsExisted || IsOwned) return BadRequest("You can not submit this post");
+        if (IsExisted || IsOwned) return BadRequest("You've already joined");
 
         if ( post.Questions.Count == 0 ) return RedirectToAction("Join", "Post", new { id = post.PostId});     //if there's no question on post, just join
         
@@ -70,21 +71,38 @@ public class FormController : Controller{
 
     [HttpPost("Form/Approve/{FormId}")]
     async public Task<IActionResult> Approve(int FormId){                            //Approve post by PostId and UserId, only done by PostOwner
-        var form = await _db.Forms.Where(f => f.FormId == FormId && f.Status == FormStatus.Pending)
-                                    .Include(f => f.Post)
-                                    .FirstOrDefaultAsync();
-        if (form == null) return NotFound();
-
         var user = await _currentUser.GetCurrentUser();
-        if (form.Post.OwnerId != user.Id) return Unauthorized();
+        var query = await _db.Forms.Where(f => f.FormId == FormId && f.Status == FormStatus.Pending)
+                                    .Select(f => new {
+                                        form = f,
+                                        IsGonnaFull = f.Post.Participants.Count + 1 >= f.Post.Limit,
+                                        IsAllow = f.Post.OwnerId == user.Id,
+                                        post = f.Post
+                                    })
+                                    .FirstOrDefaultAsync();
+        if (query == null) return NotFound();
+        var form = query.form;
+        var IsGonnaFull = query.IsGonnaFull;
+        var IsAllow = query.IsAllow;
+        var post = query.post;
+
+        if ( !IsAllow ) return Unauthorized();
 
         form.Status = FormStatus.Approved;
         var join = new Join {
             UserId = form.UserId,
             PostId = form.PostId
         };
-
         await _db.Joins.AddAsync(join);
+        await _db.SaveChangesAsync();
+
+        if ( IsGonnaFull ){
+            post.ExpiredTime = DateTimeOffset.UtcNow;
+            await _db.Forms
+                    .Where(f => f.PostId == form.PostId && f.Status == FormStatus.Pending)
+                    .ExecuteDeleteAsync();
+
+        }
         await _db.SaveChangesAsync();
 
         TempData["Message"] = "Form has been approved successfully!";
