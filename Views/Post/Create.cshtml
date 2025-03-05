@@ -10,9 +10,7 @@
 
 
 @section Scripts {
-    @* <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfFYxmDMi6CwNLPr2R9mh3zvQ27GTiZqI&callback=initMap&loading=async"></script> *@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=@ViewData["API_KEY"]&libraries=places&callback=initMap&loading=async"></script>
-    @* <script type="module" src="https://ajax.googleapis.com/ajax/libs/@("@")googlemaps/extended-component-library/0.6.11/index.min.js"></script> *@
     <script src="~/js/location.js"></script>
 }
 
@@ -45,13 +43,13 @@
                                     <span asp-validation-for="Tags" class="error-text"></span>
 
                                         <div class="tag-container">
-                                            <button type="button" class="tag-select" data-tag="Food" >Food</button>
-                                            <button type="button" class="tag-select" data-tag="Gaming" >Gaming</button>
-                                            <button type="button" class="tag-select" data-tag="Gym" >Gym</button>
-                                            <button type="button" class="tag-select" data-tag="Studying" >Studying</button>
-                                            <button type="button" class="tag-select" data-tag="Sports" >Sport</button>
-                                            <button type="button" class="tag-select" data-tag="Relaxing">Relaxing</button>
-                                            <button type="button" class="tag-select" data-tag="Other" >Other</button>
+                                            <button type="button" class="tag-select" data-tag="Food" >@await Html.PartialAsync("Tag/_Food")</button>
+                                            <button type="button" class="tag-select" data-tag="Gaming" >@await Html.PartialAsync("Tag/_Gaming")</button>
+                                            <button type="button" class="tag-select" data-tag="Gym" >@await Html.PartialAsync("Tag/_Gym")</button>
+                                            <button type="button" class="tag-select" data-tag="Studying" >@await Html.PartialAsync("Tag/_Studying")</button>
+                                            <button type="button" class="tag-select" data-tag="Sports" >@await Html.PartialAsync("Tag/_Sports")</button>
+                                            <button type="button" class="tag-select" data-tag="Relaxing">@await Html.PartialAsync("Tag/_Relaxing")</button>
+                                            <button type="button" class="tag-select" data-tag="Other" >@await Html.PartialAsync("Tag/_Other")</button>
                                         </div>
 
                                     <input type="hidden" id="tagInput" />

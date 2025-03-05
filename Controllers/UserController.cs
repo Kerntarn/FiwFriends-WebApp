@@ -102,8 +102,21 @@ namespace FiwFriends.Controllers
 
         [Authorize]
         [HttpPost("user/edit")]
-        public async Task<IActionResult> Edit([FromBody] UpdateUserDto userEditor)
+        public async Task<IActionResult> Edit([FromForm] UpdateUserDto userEditor)
         {
+            if (userEditor == null)
+            {
+                return BadRequest("No data provided.");
+            }
+
+            Console.WriteLine($"Username: {userEditor.Username ?? "Not provided"}");
+            Console.WriteLine($"FirstName: {userEditor.FirstName ?? "Not provided"}");
+            Console.WriteLine($"LastName: {userEditor.LastName ?? "Not provided"}");
+            Console.WriteLine($"Bio: {userEditor.Bio ?? "Not provided"}");
+            Console.WriteLine($"Contact: {userEditor.Contact ?? "Not provided"}");
+            Console.WriteLine($"NewPassword: {userEditor.NewPassword ?? "Not provided"}");
+            Console.WriteLine($"ConfirmPassword: {userEditor.ConfirmPassword ?? "Not provided"}");
+            
             if (!ModelState.IsValid)
                 return BadRequest(new { error = "Invalid input data" });
 

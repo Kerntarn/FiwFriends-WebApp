@@ -8,7 +8,9 @@
 
 <div class="menu">
 
-        <div class="profile-img" style="background-image: url(https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg);"></div>
+        <div class="profile-img" style="background-image: url(@ViewBag.ImageData);"></div>
+        @* <div class="profile-img"><img id="profilePic" src="@ViewBag.ImageData" alt="Profile Picture" /></div> *@
+        
         
         <h2 class="username">@user?.UserName</h2>
         <p class="name">@user?.FirstName @user?.LastName</p>

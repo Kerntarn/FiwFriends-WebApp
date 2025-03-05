@@ -50,16 +50,28 @@
                                 </div>
 
                                 <div class="mh-40">
-                                        <p class="algn-start login-p">Password</p>
+                                        <p class="algn-start login-p">Profile picture</p>
+                                        <span class="error-text"></span>
+                                        <input type="file" id="profilePicInput" accept="image/*">
+                                </div>
+
+                                <div class="mh-40">
+                                        <p class="algn-start login-p">New password</p>
                                         <span class="error-text"></span>
                                         <input id="password" class="inp" type="password">
                                 </div>
 
+                                <div class="mh-40">
+                                        <p class="algn-start login-p">Confirm password</p>
+                                        <span class="error-text"></span>
+                                        <input id="confirmPassword" class="inp" type="password">
+                                </div>
+
                                 <div class="save-container">
-                                        <a class="btn" asp-action="">back</a>
+                                        <a class="btn" asp-controller="Post" asp-action="">back</a>
                                         <button type="button" class="btn" onclick="updateUser()">save</button>
                                 </div>
-                                </div>
+                        </div>
                             
                     </div>
 
