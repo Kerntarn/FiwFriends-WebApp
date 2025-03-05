@@ -59,18 +59,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Home/AccessDenied";
     });
 
-// Configure CORS
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(builder =>
-    {
-        builder.WithOrigins("https://yourfrontendurl.com")
-               .AllowAnyHeader()
-               .AllowAnyMethod()
-               .AllowCredentials(); // Allows cookies for authentication
-    });
-});
-
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Auth/Login";  // Redirect to login page
