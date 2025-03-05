@@ -84,17 +84,8 @@ namespace FiwFriends.Controllers
         if (user == null)
             return Unauthorized(new { error = "User not found" });
 
-        if (string.IsNullOrEmpty(userEditor.ConfirmPassword)){
-            return BadRequest(new {error = "Password confirmation is required to edit your profile" });
-        }
 
-        var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.ConfirmPassword);
-        if (!passwordcheck)
-        {
-            return BadRequest(new { error = "Password is incorrect" });
-        }
-
-        if(!string.IsNullOrEmpty(userEditor.Username) && userEditor.Username.Length < 3)
+        if(!string.IsNullOrEmpty(userEditor.Username))
         {
             var existingUser = await _userManager.FindByNameAsync(userEditor.Username);
             if (existingUser != null && existingUser.Id != user.Id)
@@ -109,23 +100,28 @@ namespace FiwFriends.Controllers
         user.Bio = string.IsNullOrEmpty(userEditor.Bio) ? user.Bio : userEditor.Bio; 
         user.Contact = string.IsNullOrEmpty(userEditor.Contact) ? user.Contact : userEditor.Contact; 
 
+
+        if (!string.IsNullOrEmpty(userEditor.NewPassword))
+        {
+            if (string.IsNullOrEmpty(userEditor.ConfirmPassword)){
+                return BadRequest(new {error = "Password confirmation is required to edit your profile" });
+            }
+            var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.ConfirmPassword);
+            if (!passwordcheck)
+            {
+                return BadRequest(new { error = "Password is incorrect" });
+            }
+            var ChangepasswordResult = await _userManager.ChangePasswordAsync(user, userEditor.ConfirmPassword, userEditor.NewPassword);
+            if (!ChangepasswordResult.Succeeded)
+            {
+                return BadRequest(new { error = "Password reset failed" });
+            }
+        }
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
             return BadRequest(new { error = "Failed to update user information" });
         }
-
-        if (!string.IsNullOrEmpty(userEditor.NewPassword))
-        {
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetResult = await _userManager.ResetPasswordAsync(user, token, userEditor.NewPassword);
-
-            if (!resetResult.Succeeded)
-            {
-                return BadRequest(new { error = "Password reset failed" });
-            }
-        }
-
         return Ok(new { message = "Profile updated successfully" });
     }
 
