@@ -8,7 +8,7 @@ public class User : IdentityUser
     public required string FirstName { get; set; }
     [Required]
     public required string LastName { get; set; }
-    public byte[]? ProfilePicture { get; set; } // Allows NULL
+    public byte[]? ProfilePic { get; set; } // Allows NULL
     public string? Bio { get; set; } // Allows NULL
     public string? Contact {get; set;} // Allows NULL
     public ICollection<Post> OwnPosts { get; set; } = new List<Post>();
