@@ -131,6 +131,7 @@ namespace FiwFriends.Controllers
                 .Select(f => new UserPostStatusViewModel
                 {
                     Activity = f.Post.Activity,
+                    PostID = f.Post.PostId.ToString(),
                     Owner = _db.Users
                         .Where(j => j.Id == f.Post.OwnerId)
                         .Select(k => k.UserName)
@@ -152,6 +153,7 @@ namespace FiwFriends.Controllers
                     .Select(f => new UserPostStatusViewModel
                     {
                         Activity = f.Post.Activity,
+                        PostID = f.Post.PostId.ToString(),
                         Owner = _db.Users
                             .Where(j => j.Id == f.Post.OwnerId)
                             .Select(k => k.UserName)
@@ -166,6 +168,7 @@ namespace FiwFriends.Controllers
                     .Select(f => new UserPostStatusViewModel
                     {
                         Activity = f.Post.Activity,
+                        PostID = f.Post.PostId.ToString(),
                         Owner = _db.Users
                             .Where(j => j.Id == f.Post.OwnerId)
                             .Select(k => k.UserName)
