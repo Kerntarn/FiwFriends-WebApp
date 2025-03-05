@@ -40,16 +40,41 @@ namespace FiwFriends.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Auth");
 
+            // Check if ProfilePic exists and convert to Base64 if not null
+            if (user.ProfilePic != null)
+            {
+                var base64Pic = Convert.ToBase64String(user.ProfilePic);
+                ViewBag.ImageData = string.Format("data:image/gif;base64,{0}", base64Pic);
+            }
+            else
+            {
+                ViewBag.ImageData = null;
+            }
+
             return View(user);
         }
-        
-        public async Task<IActionResult> people(string id){
-            if (id is null) return RedirectToAction("Index", "Home");
+
+        public async Task<IActionResult> People(string id)
+        {
+            if (id == null) return RedirectToAction("Index", "Home");
+
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (user == null)
             {
                 return NotFound();
             }
+
+            // Check if ProfilePic exists and convert to Base64 if not null
+            if (user.ProfilePic != null)
+            {
+                var base64Pic = Convert.ToBase64String(user.ProfilePic);
+                ViewBag.ImageData = string.Format("data:image/gif;base64,{0}", base64Pic);
+            }
+            else
+            {
+                ViewBag.ImageData = null;
+            }
+
             return View(user);
         }
 
@@ -61,91 +86,98 @@ namespace FiwFriends.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Auth");
 
-            var userDto = new UpdateUserDto
+            // Check if ProfilePic exists and convert to Base64 if not null
+            if (user.ProfilePic != null)
             {
-                Username = user.UserName ?? "",
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Bio = user.Bio,
-                Contact = user.Contact
-            };
+                var base64Pic = Convert.ToBase64String(user.ProfilePic);
+                ViewBag.ImageData = string.Format("data:image/gif;base64,{0}", base64Pic);
+            }
+            else
+            {
+                ViewBag.ImageData = null;
+            }
 
             return View(user);
         }
 
         [Authorize]
-    [HttpPost("user/edit")]
-    public async Task<IActionResult> Edit([FromBody] UpdateUserDto userEditor)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(new { error = "Invalid input data" });
-
-        var user = await GetCurrentUserAsync();
-        if (user == null)
-            return Unauthorized(new { error = "User not found" });
-
-
-        if(!string.IsNullOrEmpty(userEditor.Username))
+        [HttpPost("user/edit")]
+        public async Task<IActionResult> Edit([FromBody] UpdateUserDto userEditor)
         {
-            var existingUser = await _userManager.FindByNameAsync(userEditor.Username);
-            if (existingUser != null && existingUser.Id != user.Id)
-            {
-                return BadRequest(new { error = "Username already exists" });
-            }
-            user.UserName = userEditor.Username;
-        }
- 
-        user.FirstName = string.IsNullOrEmpty(userEditor.FirstName) ? user.FirstName : userEditor.FirstName;
-        user.LastName = string.IsNullOrEmpty(userEditor.LastName) ? user.LastName : userEditor.LastName;
-        user.Bio = string.IsNullOrEmpty(userEditor.Bio) ? user.Bio : userEditor.Bio; 
-        user.Contact = string.IsNullOrEmpty(userEditor.Contact) ? user.Contact : userEditor.Contact; 
+            if (!ModelState.IsValid)
+                return BadRequest(new { error = "Invalid input data" });
 
-        if (userEditor.ProfilePic != null && userEditor.ProfilePic.Length > 0)
-        {
-            if (userEditor.ProfilePic.Length > 2097152)
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+                return Unauthorized(new { error = "User not found" });
+
+
+            if(!string.IsNullOrEmpty(userEditor.Username))
             {
-                return BadRequest(new { error = "Profile picture size should not exceed 2MB" });
+                var existingUser = await _userManager.FindByNameAsync(userEditor.Username);
+                if (existingUser != null && existingUser.Id != user.Id)
+                {
+                    return BadRequest(new { error = "Username already exists" });
+                }
+                user.UserName = userEditor.Username;
             }
+    
+            user.FirstName = string.IsNullOrEmpty(userEditor.FirstName) ? user.FirstName : userEditor.FirstName;
+            user.LastName = string.IsNullOrEmpty(userEditor.LastName) ? user.LastName : userEditor.LastName;
+            user.Bio = string.IsNullOrEmpty(userEditor.Bio) ? user.Bio : userEditor.Bio; 
+            user.Contact = string.IsNullOrEmpty(userEditor.Contact) ? user.Contact : userEditor.Contact; 
             
-            var allowExtensions = new []{ ".jpg", ".jpeg", ".png", ".gif"};
-            var extension = Path.GetExtension(userEditor.ProfilePic.FileName).ToLower();
-            if (!allowExtensions.Contains(extension))
+            // Profile picture upload
+            if (userEditor.ProfilePic != null && userEditor.ProfilePic.Length > 0)
             {
-                return BadRequest(new { error = "Profile picture must be an image" });
+                // Check if the file size is greater than 2MB
+                if (userEditor.ProfilePic.Length > 2097152)
+                {
+                    return BadRequest(new { error = "Profile picture size should not exceed 2MB" });
+                }
+                // Check if the file is an image
+                var allowExtensions = new []{ ".jpg", ".jpeg", ".png", ".gif"};
+                var extension = Path.GetExtension(userEditor.ProfilePic.FileName).ToLower();
+                // Check if the file extension is allowed
+                if (!allowExtensions.Contains(extension))
+                {
+                    return BadRequest(new { error = "Profile picture must be an image" });
+                }
+                
+                using (var stream = new MemoryStream())
+                {
+                    // Copy the file to the memory stream
+                    await userEditor.ProfilePic.CopyToAsync(stream);
+                    // Set the profile picture to the byte array of the memory stream
+                    user.ProfilePic = stream.ToArray();
+                }
             }
-            using (var stream = new MemoryStream())
-            {
-                await userEditor.ProfilePic.CopyToAsync(stream);
-                user.ProfilePic = stream.ToArray();
-            }
-        }
 
-        if (!string.IsNullOrEmpty(userEditor.NewPassword))
-        {
-            if (string.IsNullOrEmpty(userEditor.ConfirmPassword)){
-                return BadRequest(new {error = "Password confirmation is required to edit your profile" });
-            }
-            var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.ConfirmPassword);
-            if (!passwordcheck)
+            if (!string.IsNullOrEmpty(userEditor.NewPassword))
             {
-                return BadRequest(new { error = "Password is incorrect" });
+                if (string.IsNullOrEmpty(userEditor.ConfirmPassword)){
+                    return BadRequest(new {error = "Password confirmation is required to edit your profile" });
+                }
+                var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.ConfirmPassword);
+                if (!passwordcheck)
+                {
+                    return BadRequest(new { error = "Password is incorrect" });
+                }
+                var ChangepasswordResult = await _userManager.ChangePasswordAsync(user, userEditor.ConfirmPassword, userEditor.NewPassword);
+                if (!ChangepasswordResult.Succeeded)
+                {
+                    return BadRequest(new { error = "Password reset failed" });
+                }
             }
-            var ChangepasswordResult = await _userManager.ChangePasswordAsync(user, userEditor.ConfirmPassword, userEditor.NewPassword);
-            if (!ChangepasswordResult.Succeeded)
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
             {
-                return BadRequest(new { error = "Password reset failed" });
+                return BadRequest(new { error = "Failed to update user information" });
             }
+            await _db.SaveChangesAsync();
+            return Ok(new { message = "Profile updated successfully" });
         }
-
-        var result = await _userManager.UpdateAsync(user);
-        if (!result.Succeeded)
-        {
-            return BadRequest(new { error = "Failed to update user information" });
-        }
-        await _db.SaveChangesAsync();
-        return Ok(new { message = "Profile updated successfully" });
-    }
-
 
         [HttpGet("Inbox")]
         public async Task<IActionResult> UserInboxStatus()

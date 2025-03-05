@@ -13,7 +13,8 @@ namespace FiwFriends.DTOs
         public string? Bio {get; set;}
         public string? Contact {get; set;}
         public IFormFile? ProfilePic { get; set; }
-         public string ConfirmPassword { get; set; }
+        public string? ConfirmPassword { get; set; }
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 50 characters long")]
         public string NewPassword { get; set; }
     }
 }
