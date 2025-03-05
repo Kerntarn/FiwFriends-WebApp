@@ -12,7 +12,7 @@ namespace FiwFriends.DTOs
         public required string LastName { get; set; }
         public string? Bio {get; set;}
         public string? Contact {get; set;}
-        public byte[]? ProfilePic { get; set; }
+        public IFormFile? ProfilePic { get; set; }
          public string ConfirmPassword { get; set; }
         public string NewPassword { get; set; }
     }

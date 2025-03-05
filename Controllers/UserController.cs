@@ -100,6 +100,25 @@ namespace FiwFriends.Controllers
         user.Bio = string.IsNullOrEmpty(userEditor.Bio) ? user.Bio : userEditor.Bio; 
         user.Contact = string.IsNullOrEmpty(userEditor.Contact) ? user.Contact : userEditor.Contact; 
 
+        if (userEditor.ProfilePic != null && userEditor.ProfilePic.Length > 0)
+        {
+            if (userEditor.ProfilePic.Length > 2097152)
+            {
+                return BadRequest(new { error = "Profile picture size should not exceed 2MB" });
+            }
+            
+            var allowExtensions = new []{ ".jpg", ".jpeg", ".png", ".gif"};
+            var extension = Path.GetExtension(userEditor.ProfilePic.FileName).ToLower();
+            if (!allowExtensions.Contains(extension))
+            {
+                return BadRequest(new { error = "Profile picture must be an image" });
+            }
+            using (var stream = new MemoryStream())
+            {
+                await userEditor.ProfilePic.CopyToAsync(stream);
+                user.ProfilePic = stream.ToArray();
+            }
+        }
 
         if (!string.IsNullOrEmpty(userEditor.NewPassword))
         {
@@ -117,11 +136,13 @@ namespace FiwFriends.Controllers
                 return BadRequest(new { error = "Password reset failed" });
             }
         }
+
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
             return BadRequest(new { error = "Failed to update user information" });
         }
+        await _db.SaveChangesAsync();
         return Ok(new { message = "Profile updated successfully" });
     }
 
