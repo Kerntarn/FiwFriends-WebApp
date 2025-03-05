@@ -70,7 +70,7 @@ namespace FiwFriends.Controllers
                 Contact = user.Contact
             };
 
-            return View();
+            return View(user);
         }
 
         [Authorize]
