@@ -116,7 +116,6 @@ namespace FiwFriends.Controllers
             Console.WriteLine($"Contact: {userEditor.Contact ?? "Not provided"}");
             Console.WriteLine($"NewPassword: {userEditor.NewPassword ?? "Not provided"}");
             Console.WriteLine($"ConfirmPassword: {userEditor.ConfirmPassword ?? "Not provided"}");
-            
             if (!ModelState.IsValid)
                 return BadRequest(new { error = "Invalid input data" });
 

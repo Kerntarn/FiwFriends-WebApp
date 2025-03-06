@@ -4,6 +4,7 @@
 
 @section Scripts {
   <script src="~/js/editProfile.js"></script>
+  <script src="~/js/cropImage.js"></script>
 }
 
 @section Styles {
@@ -53,6 +54,14 @@
                                         <p class="algn-start login-p">Profile picture</p>
                                         <span class="error-text"></span>
                                         <input type="file" id="profilePicInput" accept="image/*">
+                                        
+                                        <div class="cropPopup" id="cropPopup" onclick="closeCropPopup()">
+                                                <div class="cropContainer" id="cropContainer">
+                                                        <p>Adjust and Crop</p>
+                                                        <canvas class="cropCanvas" id="cropCanvas"></canvas>
+                                                        <button onclick="saveCroppedImage()">Save Crop</button>
+                                                </div>
+                                        </div>
                                 </div>
 
                                 <div class="mh-40">
