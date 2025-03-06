@@ -104,9 +104,6 @@ namespace FiwFriends.Controllers
         [HttpPost("user/edit")]
         public async Task<IActionResult> Edit([FromBody] UpdateUserDto userEditor)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(new { error = "Invalid input data" });
-
             var user = await GetCurrentUserAsync();
             if (user == null)
                 return Unauthorized(new { error = "User not found" });
