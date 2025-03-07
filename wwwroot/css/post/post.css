@@ -290,3 +290,11 @@ html {
 .mt-0 {
     margin-top: 0px;
 }
+
+.new-post {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: #000; 
+}
