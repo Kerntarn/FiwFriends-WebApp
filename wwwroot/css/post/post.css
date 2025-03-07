@@ -176,6 +176,20 @@ html {
     width: 100%;
 }
 
+.user-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: transparent no-repeat center;
+    background-size: cover;
+  }
+
 .location-container {
     display: flex;
     gap: 15px;

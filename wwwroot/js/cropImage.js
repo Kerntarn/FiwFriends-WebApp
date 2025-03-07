@@ -1,4 +1,4 @@
-let cropCanvas, cropCtx, img;
+let cropCtx, img;
 let cropX = 50, cropY = 50, cropSize = 100;
 let isDragging = false, isResizing = false, resizeCorner = "";
 let startX, startY, startCropX, startCropY, startCropSize;
@@ -198,10 +198,13 @@ function closeCropPopup() {
     document.getElementById("cropPopup").style.display = "none";
 }
 
-// เพิ่ม event listeners
-document.getElementById("profilePicInput").addEventListener("change", openCropPopup);
-document.getElementById("cropCanvas").addEventListener("mousedown", startInteraction);
-document.addEventListener("mousemove", handleMouseMove);
-document.addEventListener("mouseup", stopInteraction);
-document.getElementById("cropPopup").onclick = closeCropPopup;
-document.getElementById("cropContainer").onclick = (e) => e.stopPropagation();
+
+document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("profilePicInput").addEventListener("change", openCropPopup);
+        document.getElementById("cropCanvas").addEventListener("mousedown", startInteraction);
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", stopInteraction);
+        document.getElementById("cropPopup").onclick = closeCropPopup;
+        document.getElementById("cropContainer").onclick = (e) => e.stopPropagation();
+});
+

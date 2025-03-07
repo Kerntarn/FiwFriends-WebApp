@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FiwFriends</title>
     <script type="importmap"></script>
-    <script src="~/js/cropImage.js"></script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FiwFriends.styles.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
@@ -17,15 +16,6 @@
 
                     <div class="navbar-menu">
                         <a class="" style="font-size: larger;" asp-area="" asp-controller="Home" asp-action="Index">FiwFriends</a>
-                    </div>
-
-                   <div class="navbar-menu">
-                        @* @if(User.Identity?.IsAuthenticated ?? false){
-                            
-                        } else {
-                            <a class="navbar-item" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
-                            <a class="navbar-item" asp-area="" asp-controller="Auth" asp-action="Register">Sign up</a>
-                        } *@
                     </div>
 
             </div>
@@ -40,13 +30,7 @@
         </main>
     </div>
 
-    <div class="cropPopup" id="cropPopup" onclick="closeCropPopup()">
-            <div class="cropContainer" id="cropContainer">
-                    <p>Adjust and Crop</p>
-                    <canvas class="cropCanvas" id="cropCanvas"></canvas>
-                    <button onclick="saveCroppedImage()">Save Crop</button>
-            </div>
-    </div>
+    
 
     <footer class="border-top footer text-muted">
         <div class="container">
