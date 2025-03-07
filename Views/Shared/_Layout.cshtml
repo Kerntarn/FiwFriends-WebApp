@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FiwFriends</title>
     <script type="importmap"></script>
+    <script src="~/js/cropImage.js"></script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FiwFriends.styles.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
@@ -37,6 +38,14 @@
             </div>
             @RenderBody()
         </main>
+    </div>
+
+    <div class="cropPopup" id="cropPopup" onclick="closeCropPopup()">
+            <div class="cropContainer" id="cropContainer">
+                    <p>Adjust and Crop</p>
+                    <canvas class="cropCanvas" id="cropCanvas"></canvas>
+                    <button onclick="saveCroppedImage()">Save Crop</button>
+            </div>
     </div>
 
     <footer class="border-top footer text-muted">

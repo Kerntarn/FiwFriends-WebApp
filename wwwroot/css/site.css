@@ -49,11 +49,10 @@ a {
 }
 
 .navbar {
-  overflow: hidden;
+  overflow: visible;
   background-color: #B2DFDC;
   padding: 10px 0px;
   box-shadow: 0px 4px 4px rgba(24,24,24,.25);
-  z-index: 3;
 }
 
 .navbar-contain {
