@@ -88,11 +88,9 @@
                     
                     @foreach (var post in Model)
                     {
-                        @{
-                            string userUrl = post.Owner.ProfilePic != null
-                                ? $"data:image/png;base64,{Convert.ToBase64String(post.Owner.ProfilePic)}"
-                                : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg";
-                        }
+                        string userUrl = post.Owner.ProfilePic != null
+                            ? $"data:image/png;base64,{Convert.ToBase64String(post.Owner.ProfilePic)}"
+                            : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg";
 
                         <div class="card">
                             <div class="card-header">@post.Activity</div>
