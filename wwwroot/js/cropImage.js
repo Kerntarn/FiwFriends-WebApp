@@ -111,32 +111,61 @@ function handleMouseMove(event) {
         const dy = mouseY - startY;
     
         if (isDragging) {
-            cropX = Math.max(0, Math.min(startCropX + dx, cropCanvas.width - cropSize));
-            cropY = Math.max(0, Math.min(startCropY + dy, cropCanvas.height - cropSize));
-        } else if (isResizing) {
-            switch (resizeCorner) {
-                case "top-left":
-                    let newSizeTL = Math.max(50, startCropSize + Math.max(-dx, -dy));
-                    cropX = startCropX + (startCropSize - newSizeTL);
-                    cropY = startCropY + (startCropSize - newSizeTL);
-                    cropSize = newSizeTL;
-                    break;
-                case "top-right":
-                    let newSizeTR = Math.max(50, startCropSize + Math.max(dx, -dy));
-                    cropY = startCropY + (startCropSize - newSizeTR);
-                    cropSize = newSizeTR;
-                    break;
-                case "bottom-left":
-                    let newSizeBL = Math.max(50, startCropSize + Math.max(-dx, dy));
-                    cropX = startCropX + (startCropSize - newSizeBL);
-                    cropSize = newSizeBL;
-                    break;
-                case "bottom-right":
-                    cropSize = Math.max(50, startCropSize + Math.max(dx, dy));
-                    break;
+                cropX = Math.max(0, Math.min(startCropX + dx, cropCanvas.width - cropSize));
+                cropY = Math.max(0, Math.min(startCropY + dy, cropCanvas.height - cropSize));
+            } else if (isResizing) {
+                switch (resizeCorner) {
+                        case "top-left":
+                                let newSizeTL = Math.max(50, startCropSize + Math.max(-dx, -dy));
+                                let tempCropX_TL = startCropX + startCropSize - newSizeTL;
+                                let tempCropY_TL = startCropY + startCropSize - newSizeTL;
+                            
+                                if (newSizeTL > startCropX + startCropSize || newSizeTL > startCropY + startCropSize) {
+                                    newSizeTL = Math.min(startCropX + startCropSize, startCropY + startCropSize);
+                                } else {
+                                    cropX = Math.max(0, tempCropX_TL);
+                                    cropY = Math.max(0, tempCropY_TL);
+                                }
+                            
+                                cropSize = newSizeTL;
+                                break;
+                            
+                            case "top-right":
+                                let newSizeTR = Math.max(50, startCropSize + Math.max(dx, -dy));
+                                let tempCropY_TR = startCropY + startCropSize - newSizeTR;
+                            
+                                if (newSizeTR > startCropY + startCropSize || cropX + newSizeTR > cropCanvas.width) {
+                                    newSizeTR = Math.min(cropCanvas.width - cropX, startCropY + startCropSize);
+                                } else {
+                                    cropY = Math.max(0, tempCropY_TR);
+                                }
+                            
+                                cropSize = newSizeTR;
+                                break;
+            
+                        case "bottom-left":
+                                let newSizeBL = Math.max(50, startCropSize + Math.max(-dx, dy));
+                                let tempCropX = Math.min(startCropX + startCropSize - newSizeBL, cropCanvas.width - newSizeBL);
+                                
+                                if (newSizeBL > cropCanvas.height - cropY) {
+                                        newSizeBL = cropCanvas.height - cropY; // จำกัดขนาดให้ไม่เกินขอบล่าง
+                                } else {
+                                        cropX = Math.max(0, tempCropX); // อัปเดตตำแหน่ง cropX เฉพาะเมื่อไม่เกินขอบ
+                                }
+                                
+                                cropSize = Math.min(newSizeBL, cropCanvas.width - cropX, cropCanvas.height - cropY);
+                                break;
+            
+                    case "bottom-right":
+                        cropSize = Math.max(50, startCropSize + Math.max(dx, dy));
+                        console.log("Good", cropSize, cropCanvas.width - cropX, cropCanvas.height - cropY)
+                        cropSize = Math.min(cropSize, cropCanvas.width - cropX, cropCanvas.height - cropY);
+                        break;
+                }
             }
-            cropSize = Math.min(cropSize, cropCanvas.width - cropX, cropCanvas.height - cropY);
-        }
+            
+            
+                    
     
         drawImage();
     }
@@ -193,9 +222,28 @@ async function saveCroppedImage() {
     }, "image/jpeg");
 }
 
-// ปิด popup เมื่อกดนอก popup
-function closeCropPopup() {
-    document.getElementById("cropPopup").style.display = "none";
+
+let isMouseDownInside = false;
+
+function onMouseDown(event) {
+    const cropPopup = document.getElementById("cropContainer");
+
+    // ถ้ากดเมาส์ที่ popup ให้บันทึกสถานะ
+    isMouseDownInside = cropPopup.contains(event.target);
+    
+}
+
+function onMouseUp(event) {
+    const cropPopup = document.getElementById("cropPopup");
+
+    console.log("inside",isMouseDownInside)
+    console.log("outside",event.target)
+    if (!isMouseDownInside) {
+        cropPopup.style.display = "none";
+    }
+
+    // รีเซ็ตสถานะ
+    isMouseDownInside = false;
 }
 
 
@@ -204,7 +252,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("cropCanvas").addEventListener("mousedown", startInteraction);
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", stopInteraction);
-        document.getElementById("cropPopup").onclick = closeCropPopup;
+        document.addEventListener("mousedown", onMouseDown);
+        document.addEventListener("mouseup", onMouseUp);
         document.getElementById("cropContainer").onclick = (e) => e.stopPropagation();
 });
 
