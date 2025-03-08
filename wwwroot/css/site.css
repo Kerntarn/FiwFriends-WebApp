@@ -121,6 +121,7 @@ a {
   justify-content: center;
   margin-top: 30px;
   scrollbar-gutter: stable;
+  margin-bottom: 100px;
 }
 
 
@@ -511,3 +512,6 @@ a {
   padding-bottom: 15px;
 }
 
+.white {
+  background-color: #FEFEFE;
+}

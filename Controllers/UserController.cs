@@ -210,7 +210,7 @@ namespace FiwFriends.Controllers
                         .Where(j => j.Id == f.Post.OwnerId)
                         .Select(k => k.UserName)
                         .FirstOrDefault() ?? "Unknown",
-                        AppointmentTime = f.Post.AppointmentTime,
+                        AppointmentTime = f.Post.AppointmentTime.ToOffset(new TimeSpan(7,0,0)),
                         Status = "Joined"
                     })
                     .ToListAsync();
@@ -232,7 +232,7 @@ namespace FiwFriends.Controllers
                             .Where(j => j.Id == f.Post.OwnerId)
                             .Select(k => k.UserName)
                             .FirstOrDefault() ?? "Unknown",
-                        AppointmentTime = f.Post.AppointmentTime,
+                        AppointmentTime = f.Post.AppointmentTime.ToOffset(new TimeSpan(7,0,0)),
                         Status = "Pending"
                     })
                     .ToList();
@@ -247,7 +247,7 @@ namespace FiwFriends.Controllers
                             .Where(j => j.Id == f.Post.OwnerId)
                             .Select(k => k.UserName)
                             .FirstOrDefault() ?? "Unknown",
-                        AppointmentTime = f.Post.AppointmentTime,
+                        AppointmentTime = f.Post.AppointmentTime.ToOffset(new TimeSpan(7,0,0)),
                         Status = "Rejected"
                     })
                     .ToList();

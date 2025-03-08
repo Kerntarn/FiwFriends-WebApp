@@ -1,23 +1,13 @@
-
-
-// ฟังก์ชันอัปโหลดข้อมูลไปยังเซิร์ฟเวอร์
 async function updateUser() {
     const formData = new FormData();
 
-    formData.append("Username", document.getElementById("username")?.value || "");
     formData.append("FirstName", document.getElementById("firstName")?.value || "");
     formData.append("LastName", document.getElementById("lastName")?.value || "");
-    formData.append("Bio", document.getElementById("bio")?.value || "");
     formData.append("Contact", document.getElementById("contact")?.value || "");
-    formData.append("NewPassword", document.getElementById("password")?.value || "");
-    formData.append("ConfirmPassword", document.getElementById("confirmPassword")?.value || "");
+    formData.append("Bio", "");
+    formData.append("NewPassword", "");
+    formData.append("ConfirmPassword", "");
 
-    const fileInput = document.getElementById("profilePicInput");
-    if (fileInput?.files.length > 0) {
-        formData.append("ProfilePic", fileInput.files[0]);
-    }
-
-    // ✅ Debug: ตรวจสอบว่ามีค่าถูกต้องหรือไม่
     for (let pair of formData.entries()) {
         console.log(pair[0], pair[1]);
     }
