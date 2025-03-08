@@ -176,6 +176,20 @@ html {
     width: 100%;
 }
 
+.user-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: transparent no-repeat center;
+    background-size: cover;
+  }
+
 .location-container {
     display: flex;
     gap: 15px;
@@ -245,6 +259,12 @@ html {
     color: #FEFEFE;
 }
 
+.people {
+    font-weight: bold;
+    display: flex;
+    gap: 15px;
+}
+
 .white {
     background-color: #FEFEFE;
 }
@@ -269,4 +289,12 @@ html {
 
 .mt-0 {
     margin-top: 0px;
+}
+
+.new-post {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: #000; 
 }

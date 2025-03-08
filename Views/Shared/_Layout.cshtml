@@ -15,16 +15,10 @@
             <div class="navbar-contain">
 
                     <div class="navbar-menu">
-                        <a class="" style="font-size: larger;" asp-area="" asp-controller="Home" asp-action="Index">FiwFriends</a>
-                    </div>
+                        <a target='_blank'>
+                            <img src='https://i.postimg.cc/PpSScGbM/logo-fiwfriend.png' border='0' alt='logo-fiwfriend' style="width: 70px; height: auto;"/>
+                        </a>
 
-                   <div class="navbar-menu">
-                        @* @if(User.Identity?.IsAuthenticated ?? false){
-                            
-                        } else {
-                            <a class="navbar-item" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
-                            <a class="navbar-item" asp-area="" asp-controller="Auth" asp-action="Register">Sign up</a>
-                        } *@
                     </div>
 
             </div>
@@ -38,6 +32,8 @@
             @RenderBody()
         </main>
     </div>
+
+    
 
     <footer class="border-top footer text-muted">
         <div class="container">

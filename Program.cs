@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using FiwFriends.Models;
 using FiwFriends.Services;
-using DotNetEnv;    
-
-var builder = WebApplication.CreateBuilder(args);
+using DotNetEnv;
 
 Env.Load();
+
+var builder = WebApplication.CreateBuilder(args);
 
 var apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? throw new Exception("Where's ur api key?????");
 

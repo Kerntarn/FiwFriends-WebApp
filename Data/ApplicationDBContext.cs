@@ -94,12 +94,13 @@ public class ApplicationDBContext : IdentityDbContext<User>
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Tag>().HasData(
-            new Tag { TagId = 1, Name = "Sports"},
-            new Tag { TagId = 2, Name = "Gaming"},
-            new Tag { TagId = 3, Name = "Studying"},
-            new Tag { TagId = 4, Name = "Relaxing"},
-            new Tag { TagId = 5, Name = "Dancing"},
-            new Tag { TagId = 6, Name = "Singing"}
+            new Tag { TagId = 1, Name = "Food"},
+            new Tag { TagId = 2, Name = "Relaxing"},
+            new Tag { TagId = 3, Name = "Gaming"},
+            new Tag { TagId = 4, Name = "Studying"},
+            new Tag { TagId = 5, Name = "Gym"},
+            new Tag { TagId = 6, Name = "Sport"},
+            new Tag { TagId = 7, Name = "Other"}
 
         );
     }   
