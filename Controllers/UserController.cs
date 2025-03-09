@@ -109,16 +109,6 @@ namespace FiwFriends.Controllers
                 return BadRequest("No data provided.");
             }
 
-            Console.WriteLine($"Username: {userEditor.Username ?? "Not provided"}");
-            Console.WriteLine($"FirstName: {userEditor.FirstName ?? "Not provided"}");
-            Console.WriteLine($"LastName: {userEditor.LastName ?? "Not provided"}");
-            Console.WriteLine($"Bio: {userEditor.Bio ?? "Not provided"}");
-            Console.WriteLine($"Contact: {userEditor.Contact ?? "Not provided"}");
-            Console.WriteLine($"NewPassword: {userEditor.NewPassword ?? "Not provided"}");
-            Console.WriteLine($"ConfirmPassword: {userEditor.ConfirmPassword ?? "Not provided"}");
-            if (!ModelState.IsValid)
-                return BadRequest(new { error = "Invalid input data" });
-
             var user = await GetCurrentUserAsync();
             if (user == null)
                 return Unauthorized(new { error = "User not found" });
@@ -167,15 +157,15 @@ namespace FiwFriends.Controllers
 
             if (!string.IsNullOrEmpty(userEditor.NewPassword))
             {
-                if (string.IsNullOrEmpty(userEditor.ConfirmPassword)){
-                    return BadRequest(new {error = "Password confirmation is required to edit your profile" });
+                if (string.IsNullOrEmpty(userEditor.OldPassword)){
+                    return BadRequest(new {error = "Old Password is required to edit your profile" });
                 }
-                var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.ConfirmPassword);
+                var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.OldPassword);
                 if (!passwordcheck)
                 {
                     return BadRequest(new { error = "Password is incorrect" });
                 }
-                var ChangepasswordResult = await _userManager.ChangePasswordAsync(user, userEditor.ConfirmPassword, userEditor.NewPassword);
+                var ChangepasswordResult = await _userManager.ChangePasswordAsync(user, userEditor.OldPassword, userEditor.NewPassword);
                 if (!ChangepasswordResult.Succeeded)
                 {
                     return BadRequest(new { error = "Password reset failed" });
