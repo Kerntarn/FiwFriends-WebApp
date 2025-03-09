@@ -3,14 +3,17 @@
 
 @{
     var user = await UserManager.GetUserAsync(User);
+
+    // เช็คว่ามีรูปไหม ถ้ามีให้แปลงเป็น Base64 URL
+    string profilePicUrl = user?.ProfilePic != null
+        ? $"data:image/png;base64,{Convert.ToBase64String(user.ProfilePic)}"
+        : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg"; // ถ้าไม่มีรูป ใช้รูป default
 }
 
 
 <div class="menu">
 
-        <div class="profile-img" style="background-image: url(@ViewBag.ImageData);"></div>
-        @* <div class="profile-img"><img id="profilePic" src="@ViewBag.ImageData" alt="Profile Picture" /></div> *@
-        
+        <div class="profile-img" style="background-image: url('@profilePicUrl');"></div>
         
         <h2 class="username">@user?.UserName</h2>
         <p class="name">@user?.FirstName @user?.LastName</p>

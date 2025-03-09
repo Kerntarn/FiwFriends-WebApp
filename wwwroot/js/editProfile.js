@@ -1,3 +1,6 @@
+
+
+// ฟังก์ชันอัปโหลดข้อมูลไปยังเซิร์ฟเวอร์
 async function updateUser() {
     const formData = new FormData();
 
