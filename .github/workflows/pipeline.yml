@@ -1,0 +1,33 @@
+name: FiwFriends-CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    
+    - uses: actions/checkout@v4
+
+    - name: Create env variebles
+      run: |
+        touch .env
+        echo GOOGLE-API-KEY=${{ secrets.GOOGLE-API-KEY }} >> .env
+        echo .env
+
+    - name: Delete old container
+      run: docker rm -f FiwFriends || true
+
+    - name: Delete old images
+      run: docker image prune -f --filter "label=FiwFriends-image" || true
+
+    - name: Build image
+      run: docker build --rm -t FiwFriends-image .
+
+    - name: Run container
+      run: docker run -d --name FiwFriends FiwFriends-image
