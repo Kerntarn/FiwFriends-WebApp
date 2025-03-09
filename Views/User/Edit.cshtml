@@ -5,6 +5,7 @@
 @section Scripts {
   <script src="~/js/editProfile.js"></script>
   <script src="~/js/cropImage.js" defer></script>
+  <script src="~/js/changePassword.js" defer></script>
 }
 
 @section Styles {
@@ -18,18 +19,13 @@
 
             @await Html.PartialAsync("_Menu")
 
-            <div class="home-body">
+            <div class="home-body-new">
 
                 <div class="card">
                         <div class="edit-header">
-                                Edit
+                                Edit user profile
                         </div>
                         <div class="card-body pb-20">
-                                <div class="">
-                                        <p class="algn-start login-p w-auto">Username</p>
-                                        <span class="error-text"></span>
-                                        <input id="username" class="inp" type="text">
-                                </div>
 
                                 <div class="flex-row">
                                         <div class="full-div">
@@ -53,37 +49,61 @@
                                 <div class="mh-40">
                                         <p class="algn-start login-p">Profile picture</p>
                                         <span class="error-text"></span>
-                                        <input type="file" id="profilePicInput" accept="image/*">
+                                        <label for="profilePicInput" class="imgField">
+                                                Upload profile picture
+                                        </label>
+                                        <input class="imgField" type="file" id="profilePicInput" accept="image/*">
                                 
-                                        <div class="cropPopup" id="cropPopup" onclick="closeCropPopup()">
-                                                <div class="cropContainer" id="cropContainer">
-                                                        <p>Adjust and Crop</p>
-                                                        <canvas class="cropCanvas" id="cropCanvas"></canvas>
-                                                        <button onclick="saveCroppedImage()">Save Crop</button>
-                                                </div>
-                                        </div>
+                                        
 
+                                </div>
+
+                                <div class="save-container">
+                                        <a class="btn white" asp-controller="Post" asp-action="">back</a>
+                                        <button type="button" class="btn" onclick="updateUser()">save</button>
+                                </div>
+                        </div>
+                            
+                </div>
+
+                <div class="card">
+                        <div class="edit-header">
+                                Change password
+                        </div>
+                        <div class="card-body pb-20">
+                                <div class="">
+                                        <p class="algn-start login-p w-auto">Old password</p>
+                                        <span class="error-text"></span>
+                                        <input id="oldPassword" class="inp" type="text">
                                 </div>
 
                                 <div class="mh-40">
                                         <p class="algn-start login-p">New password</p>
                                         <span class="error-text"></span>
-                                        <input id="password" class="inp" type="password">
+                                        <input id="newPassword" class="inp" type="password">
                                 </div>
 
                                 <div class="mh-40">
-                                        <p class="algn-start login-p">Confirm password</p>
+                                        <p class="algn-start login-p">Confirm new password</p>
                                         <span class="error-text"></span>
-                                        <input id="confirmPassword" class="inp" type="password">
+                                        <input id="confirmPassword" class="inp mb-20" type="password">
                                 </div>
 
                                 <div class="save-container">
-                                        <a class="btn" asp-controller="Post" asp-action="">back</a>
-                                        <button type="button" class="btn" onclick="updateUser()">save</button>
+                                        <a class="btn white" asp-controller="Post" asp-action="">back</a>
+                                        <button type="button" class="btn" onclick="changePassword()">save</button>
                                 </div>
                         </div>
                             
-                    </div>
+                </div>
+
+                <div class="cropPopup" id="cropPopup">
+                        <div class="cropContainer" id="cropContainer">
+                                <p class="cropTxt">Crop your new profile picture</p>
+                                <canvas class="cropCanvas" id="cropCanvas"></canvas>
+                                <button class="cropSave" onclick="saveCroppedImage()">Save Crop</button>
+                        </div>
+                </div>
 
             </div>
 
