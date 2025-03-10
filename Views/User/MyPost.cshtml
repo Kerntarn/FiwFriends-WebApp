@@ -86,7 +86,7 @@
                                 <div class="detail">
                                     @post.Description
                                 </div>
-                                <div class="button-container flex-right">
+                                <div class="button-container flex-left">
                                     <form asp-action="Delete" asp-controller="Post" asp-route-id="@post.PostId" method="post">
                                         <button type="submit" class="btn white">Delete</button>
                                     </form>
@@ -95,8 +95,9 @@
                                         <form asp-action="Close" asp-controller="Post" asp-route-id="@post.PostId" method="post">
                                             <button type="submit" class="btn">END</button>
                                         </form>
+                                <a class="btn right" asp-controller="Post" asp-action="Detail" asp-route-id="@post.PostId">info</a>
                                     }
-                                    
+
                                 </div>
                                 
                             </div>
