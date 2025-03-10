@@ -106,7 +106,12 @@
                                 </div>
 
                                 <div class="button-container ml-0">
-                                    <a class="btn white" onclick="window.history.back();">back</a>
+                                    @if ((string)(ViewData["prev_page"] ?? "") == "Post/Create"){
+                                        <a class="btn white" asp-controller="Post" asp-action="Index">back</a>
+                                    }else{
+                                        <a class="btn white" onclick="window.history.back();">back</a>
+                                    }
+                                    
                                     @if (!Model.IsJoined) { <button type="submit" class="btn">Join</button> }
                                 </div>
 
