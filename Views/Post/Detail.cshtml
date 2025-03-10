@@ -106,7 +106,7 @@
                                             </div>
                                         } else{
                                             foreach (var answer in question.Answers){
-                                                <div class="algn-start login-p">Answer : @answer.Content</div>
+                                                <div class="answer-detail">@answer.Content</div>
                                             }
                                         }
                                         index++;
@@ -121,7 +121,10 @@
                                         <div class="people">
                                             @foreach (var user in Model.Participants)
                                             {
-                                                <div class="user">@user.UserName</div>
+                                                string userUrl = user.ProfilePic != null
+                                                ? $"data:image/png;base64,{Convert.ToBase64String(user.ProfilePic)}"
+                                                : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg";
+                                                <div class="user"><div class="user-img" style="background-image: url('@userUrl');"></div>@user.UserName</div>
                                             }
                                         </div>
                                     }

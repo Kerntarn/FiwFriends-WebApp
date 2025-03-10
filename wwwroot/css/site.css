@@ -8,6 +8,10 @@ html {
   font-family: 'Inter', sans-serif;
 }
 
+div {
+  word-break: break-all;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -59,6 +63,7 @@ a {
   justify-content: center;
   width: 60%;
   margin: auto;
+  align-items: center;
   
 }
 
@@ -66,6 +71,11 @@ a {
   display:flex;
   justify-content: center;
   align-items:center;
+}
+
+.menu-icon {
+  display: none;
+  cursor: pointer;
 }
 
 .navbar-item {
@@ -122,7 +132,6 @@ a {
   scrollbar-gutter: stable;
   margin-bottom: 100px;
 }
-
 
 .menu {
   margin: 0px;
@@ -552,7 +561,7 @@ a {
     margin: 0px 25px;
   }
 
-  .menu {
+  /* .menu {
     padding-right: 0;
     border-right: 0;
   }
@@ -584,16 +593,16 @@ a {
 
   .menu-my_post {
     order: 6;
-  }
+  } */
 
-  .profile-container {
+  /* .profile-container {
     flex-direction: row;
     gap: 25px;
   }
 
   .profile-info {
     align-items: start;
-  }
+  } */
 
   .home-body{
     width: auto;
@@ -613,6 +622,74 @@ a {
 
   .flex-row {
     flex-direction: column;
+  }
+
+}
+
+@media only screen and (max-width: 990px) {
+  .navbar-contain {
+    justify-content: space-between;
+    width: 90%;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  .menu {
+    display: none;
+    position: fixed;
+    top: 6%;
+    left: 0;
+    width: 100%;
+    background: lightblue;
+    padding-right: 0;
+    border-right: 0;
+    background-color: #FEFEFE;
+    z-index: 99;
+    padding-top: 10px;
+    box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+    
+  }
+
+  .profile-img {
+    width: 85px;
+    height: 85px;
+  }
+
+  .menu.responsive {
+    display: flex;
+  }
+
+  .profile-container {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 90%;
+    border-bottom: 1px solid rgba(24,24,24,.6);
+  }
+
+  .profile-info {
+    align-items: start;
+  }
+
+  .menu-container {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 90%;
+    gap: 10px;
+  }
+
+  .menu-container > a {
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(24,24,24,.6);
+    display: flex;
+    justify-content: center;
+  }
+
+  .edit-btn {
+    border: 0;
+    box-shadow: none;
   }
 
 }
