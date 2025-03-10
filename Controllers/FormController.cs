@@ -25,7 +25,7 @@ public class FormController : Controller{
             Console.WriteLine($"Answer: QuestionId={answer.QuestionId}, Content={answer.Content}");
         }
 
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid) return RedirectToAction("Detail", "Post", new { id = form.PostId });
 
         var validQuestionIds = await _db.Questions.Select(q => q.QuestionId).ToHashSetAsync();
         var validAnswers = (form.Answers ?? new List<AnswerDTO>())
