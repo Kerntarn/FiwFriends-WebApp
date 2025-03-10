@@ -9,7 +9,7 @@ html {
 }
 
 div {
-  word-break: break-all;
+  word-break: break-word;
 }
 
 @media (min-width: 768px) {
@@ -554,55 +554,24 @@ a {
 }
 
 @media only screen and (max-width: 990px) {
+  .login-body {
+    padding: 5px 15px;
+    padding-bottom: 35px;
+    margin: 0px 10px;
+  }
+
+  .w-auto {
+    width: 95%;
+  }
+}
+
+@media only screen and (max-width: 990px) {
   .home-container {
     flex-direction: column;
-    width: auto;
     justify-content: center;
     margin: 0px 25px;
+    width: 100%;
   }
-
-  /* .menu {
-    padding-right: 0;
-    border-right: 0;
-  }
-
-  .menu-container {
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: 20px 0px;
-    gap: 1px;
-  }
-
-  .menu-logout {
-    order: 2;
-    margin-left: 35px;
-    margin-right: 35px;
-  }
-
-  .menu-home {
-    order: 3;
-  }
-
-  .menu-status {
-    order: 4;
-  }
-
-  .menu-like {
-    order: 5;
-  }
-
-  .menu-my_post {
-    order: 6;
-  } */
-
-  /* .profile-container {
-    flex-direction: row;
-    gap: 25px;
-  }
-
-  .profile-info {
-    align-items: start;
-  } */
 
   .home-body{
     width: auto;
@@ -617,7 +586,7 @@ a {
   }
 
   .category {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 
   .flex-row {
