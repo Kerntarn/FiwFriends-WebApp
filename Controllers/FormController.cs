@@ -19,12 +19,6 @@ public class FormController : Controller{
     [HttpPost("Form/Submit")]
     public async Task<IActionResult> Submit(FormDTO form)
     {
-        Console.WriteLine($"Received Answers Count: {form.Answers?.Count ?? -1}");
-        foreach (var answer in form.Answers ?? new List<AnswerDTO>())
-        {
-            Console.WriteLine($"Answer: QuestionId={answer.QuestionId}, Content={answer.Content}");
-        }
-
         if (!ModelState.IsValid) return RedirectToAction("Detail", "Post", new { id = form.PostId });
 
         var validQuestionIds = await _db.Questions.Select(q => q.QuestionId).ToHashSetAsync();

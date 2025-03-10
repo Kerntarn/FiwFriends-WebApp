@@ -30,7 +30,7 @@
                                     <p class="algn-start login-p">Post name</p>
                                     @if (ViewData.ModelState["Activity"]?.Errors.Count > 0)
                                     {
-                                        <div class="text-danger">@ViewData.ModelState["Activity"].Errors[0].ErrorMessage</div>
+                                        <div class="text-danger">@ViewData.ModelState["Activity"]?.Errors[0].ErrorMessage</div>
                                     }
                                     <input class="inp" type="text"  asp-for="Activity" >
                                 </div>

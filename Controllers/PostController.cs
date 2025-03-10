@@ -80,7 +80,6 @@ public class PostController : Controller
             var uri = new Uri(Request.Headers["Referer"].ToString());
             ViewData["prev_page"] = uri.AbsolutePath.TrimStart('/');
 
-            Console.WriteLine($"[DEBUG] Previous page: {ViewData["prev_page"]}");
             return View(post);                                                  //Return view with DetailPost
         }
         catch (Exception e){
@@ -102,11 +101,6 @@ public class PostController : Controller
             ViewData["API_KEY"] = _apiKey;
             return View(post);
         } 
-
-        foreach (var tag in post.Tags)
-        {
-            Console.WriteLine($"Tag: {tag.Name}");
-        }
 
         var postModel = await _mapper.MapAsync<PostDTO, Post>(post);
         

@@ -26,20 +26,9 @@ namespace FiwFriends.Controllers
             _mapper = mapperService;
             _uFormStatus = updateFormStatusService;
         }
-
-        private async Task<User?> GetCurrentUserAsync()
-        {
-            var user = await _currentUserService.GetCurrentUser();
-            if (user is null) return null;
-            return await _db.Users.FirstOrDefaultAsync(u => u.Id == user.Id.ToString());
-        }
-
-        [Authorize]
         public async Task<IActionResult> Profile()
         {
-            var user = await GetCurrentUserAsync();
-            if (user == null)
-                return RedirectToAction("Login", "Auth");
+            var user = await _currentUserService.GetCurrentUser();
 
             // Check if ProfilePic exists and convert to Base64 if not null
             if (user.ProfilePic != null)
@@ -79,13 +68,10 @@ namespace FiwFriends.Controllers
             return View(user);
         }
 
-        [Authorize]
         [HttpGet("User/Edit")]
         public async Task<IActionResult> Edit()
         {
-            var user = await GetCurrentUserAsync();
-            if (user == null)
-                return RedirectToAction("Login", "Auth");
+            var user = await _currentUserService.GetCurrentUser();
 
             // Check if ProfilePic exists and convert to Base64 if not null
             if (user.ProfilePic != null)
@@ -101,7 +87,6 @@ namespace FiwFriends.Controllers
             return View(user);
         }
 
-        [Authorize]
         [HttpPost("User/Edit")]
         public async Task<IActionResult> Edit([FromForm] UpdateUserDto userEditor)
         {
@@ -110,10 +95,7 @@ namespace FiwFriends.Controllers
                 return BadRequest("No data provided.");
             }
 
-            var user = await GetCurrentUserAsync();
-            if (user == null)
-                return Unauthorized(new { error = "User not found" });
-
+            var user = await _currentUserService.GetCurrentUser();
 
             if(!string.IsNullOrEmpty(userEditor.Username))
             {
@@ -158,6 +140,10 @@ namespace FiwFriends.Controllers
 
             if (!string.IsNullOrEmpty(userEditor.NewPassword))
             {
+                if (string.IsNullOrEmpty(userEditor.OldPassword))
+                {
+                    return BadRequest(new { error = "Old Password is required to edit your profile" });
+                }
                 // Ensure both new password and confirm new password are provided
                 if (string.IsNullOrEmpty(userEditor.ConfirmNewPassword))
                 {
@@ -167,11 +153,6 @@ namespace FiwFriends.Controllers
                 if (userEditor.NewPassword != userEditor.ConfirmNewPassword)
                 {
                     return BadRequest(new { error = "New password and Confirm new password do not match" });
-                }
-
-                if (string.IsNullOrEmpty(userEditor.OldPassword))
-                {
-                    return BadRequest(new { error = "Old Password is required to edit your profile" });
                 }
 
                 var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.OldPassword);
@@ -273,16 +254,11 @@ namespace FiwFriends.Controllers
         {
             await _uFormStatus.Update();
             var user = await _currentUserService.GetCurrentUser();
-            if (user == null)
-            {
-                return BadRequest(new { message = "There is no user" });
-            }
 
             var userPostIds = await _db.Posts
                 .Where(f => f.Owner == user)
                 .Select(f => f.PostId)
                 .ToListAsync();
-
 
             var userPostForms = await _db.Forms
                 .Where(f => userPostIds.Contains(f.PostId) && f.Status == FormStatus.Pending)
@@ -321,8 +297,7 @@ namespace FiwFriends.Controllers
 
         [HttpGet("/MyPosts")]
         public async Task<IActionResult> MyPost(){
-            User? user = await _currentUserService.GetCurrentUser();
-            if( user == null ) return RedirectToAction("Login", "Auth");
+            User user = await _currentUserService.GetCurrentUser();
             var postCondition = _db.Posts.Where(p => p.Owner == user);   
             var own_post = await _mapper.MapAsync<IQueryable<Post>, IEnumerable<IndexPost>>(postCondition);
             return View(own_post);
