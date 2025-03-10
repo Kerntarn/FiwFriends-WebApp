@@ -28,20 +28,16 @@ function signup() {
 
 document.querySelectorAll(".tag-select").forEach(button => {
     button.addEventListener("click", function () {
-        document.querySelectorAll(".tag-select").forEach(btn => btn.classList.remove("selected"));
-
-        this.classList.add("selected");
-
-        document.getElementById("tagInput").name = "Tags[0].Name"
-        document.getElementById("tagInput").value = this.getAttribute("data-tag");
-    });
-});
-
-document.querySelectorAll(".tag-button").forEach(button => {
-    button.addEventListener("click", function () {
-        document.querySelectorAll(".tag-button").forEach(btn => btn.classList.remove("selected"));
-
-        this.classList.add("selected");
+        if (this.classList.contains("selected")) {
+            document.querySelectorAll(".tag-select").forEach(btn => btn.classList.remove("selected"));
+            document.getElementById("tagInput").name = ""
+            document.getElementById("tagInput").value = "";
+        }else {
+            document.querySelectorAll(".tag-select").forEach(btn => btn.classList.remove("selected"));
+            this.classList.add("selected");
+            document.getElementById("tagInput").name = "Tags[0].Name"
+            document.getElementById("tagInput").value = this.getAttribute("data-tag");
+        }
     });
 });
 
@@ -111,7 +107,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.querySelectorAll('.tag-button').forEach(button => {
     button.addEventListener('click', function() {
-        document.getElementById('selectedTag').value = this.dataset.tag;
+        if (this.classList.contains('selected')) {
+            document.getElementById('selectedTag').value = "";
+        }else{
+            document.getElementById('selectedTag').value = this.dataset.tag;
+        }
         document.getElementById('filterForm').submit();
     });
 });
