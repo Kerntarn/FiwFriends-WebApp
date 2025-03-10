@@ -157,22 +157,38 @@ namespace FiwFriends.Controllers
 
             if (!string.IsNullOrEmpty(userEditor.NewPassword))
             {
-                if (string.IsNullOrEmpty(userEditor.OldPassword)){
-                    return BadRequest(new {error = "Old Password is required to edit your profile" });
+                // Ensure both new password and confirm new password are provided
+                if (string.IsNullOrEmpty(userEditor.ConfirmNewPassword))
+                {
+                    return BadRequest(new { error = "Confirm New password is required to edit your profile" });
                 }
-                if (string.IsNullOrEmpty(userEditor.ConfirmNewPassword)){
-                    return BadRequest(new {error = "Confirm New password is required to edit your profile" });
+
+                if (userEditor.NewPassword != userEditor.ConfirmNewPassword)
+                {
+                    return BadRequest(new { error = "New password and Confirm new password do not match" });
                 }
+
+                if (string.IsNullOrEmpty(userEditor.OldPassword))
+                {
+                    return BadRequest(new { error = "Old Password is required to edit your profile" });
+                }
+
                 var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.OldPassword);
                 if (!passwordcheck)
                 {
                     return BadRequest(new { error = "Password is incorrect" });
                 }
+
                 var ChangepasswordResult = await _userManager.ChangePasswordAsync(user, userEditor.OldPassword, userEditor.NewPassword);
                 if (!ChangepasswordResult.Succeeded)
                 {
                     return BadRequest(new { error = "Password reset failed" });
                 }
+            }
+            else if (!string.IsNullOrEmpty(userEditor.ConfirmNewPassword))
+            {
+                // If NewPassword is empty but ConfirmNewPassword is not, return an error
+                return BadRequest(new { error = "New Password is required to confirm your new password" });
             }
 
             var result = await _userManager.UpdateAsync(user);
