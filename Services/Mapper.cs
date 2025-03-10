@@ -87,7 +87,7 @@ public class MapperService{
                                     IsFav = p.FavoritedBy.Any(u => u.Id == user.Id),
                                     Tags = p.Tags,
                                     Participants = p.Participants.Select(j => j.User),
-                                    Questions = p.Questions,
+                                    Questions = _db.Questions.Where(q => q.PostId == p.PostId).Include(q => q.Answers.Where(a => a.Form.UserId == user.Id)).ToList(),
                                     Limit = p.Limit,
                                     IsJoined = p.Participants.Any(j => j.UserId == user.Id) || p.Forms.Any(f => f.UserId == user.Id && f.PostId == p.PostId) || p.OwnerId == user.Id
                                 })

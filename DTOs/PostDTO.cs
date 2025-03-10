@@ -29,7 +29,6 @@ namespace FiwFriends.DTOs
         public required string Location { get; set; }
 
         public List<TagDTO> Tags { get; set; } = new List<TagDTO>();
-
         public List<QuestionDTO> Questions { get; set; } = new List<QuestionDTO>();
     }
 

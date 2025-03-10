@@ -72,10 +72,16 @@
                                     @foreach (var question in Model.Questions)
                                     {
                                         <p class="algn-start login-p">Question : @question.Content</p>
-                                        <div class="question-container">
-                                            <input type="hidden" name="Answers[@index].QuestionId" value="@question.QuestionId" />
-                                            <input class="question-input" type="text" name="Answers[@index].Content">
-                                        </div>
+                                        @if (!Model.IsJoined){
+                                            <div class="question-container">
+                                                <input type="hidden" name="Answers[@index].QuestionId" value="@question.QuestionId" />
+                                                <input class="question-input" type="text" name="Answers[@index].Content" maxlength="1000">
+                                            </div>
+                                        } else{
+                                            foreach (var answer in question.Answers){
+                                                <div class="algn-start login-p">Answer : @answer.Content</div>
+                                            }
+                                        }
                                         index++;
                                     }
                                     
