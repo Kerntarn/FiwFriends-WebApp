@@ -294,3 +294,13 @@ html {
     text-decoration: none;
     color: #000; 
 }
+
+.inp_detail {
+    overflow: hidden;
+}
+
+.detail {
+    overflow-y: auto;
+    word-wrap: break-word;     /* Breaks long words */
+  }
+  

@@ -8,7 +8,7 @@ namespace FiwFriends.DTOs
         public required string Activity { get; set; }
 
         [Required(ErrorMessage = "Description is required.")]
-        [StringLength(50, ErrorMessage = "Description cannot exceed 50 characters.")]
+        [StringLength(300, ErrorMessage = "Description cannot exceed 50 characters.")]
         public required string Description { get; set; }
 
         [Required(ErrorMessage = "Expired time is required.")]
