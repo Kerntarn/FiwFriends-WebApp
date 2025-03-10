@@ -37,6 +37,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 
 builder.Services.AddScoped<CurrentUserService>();
 builder.Services.AddScoped<MapperService>();
+builder.Services.AddScoped<UpdateFormStatusService>();
 // Add memory cache
 builder.Services.AddMemoryCache();
 

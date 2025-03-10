@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using FiwFriends.Services;
 using FiwFriends.DTOs;
-using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace FiwFriends.Controllers
 {
@@ -17,13 +16,15 @@ namespace FiwFriends.Controllers
         private readonly UserManager<User> _userManager;
         private readonly CurrentUserService _currentUserService;
         private readonly MapperService _mapper;
+        private readonly UpdateFormStatusService _uFormStatus;
 
-        public UserController(ApplicationDBContext db, UserManager<User> userManager, CurrentUserService currentUserService, MapperService mapperService)
+        public UserController(ApplicationDBContext db, UserManager<User> userManager, CurrentUserService currentUserService, MapperService mapperService, UpdateFormStatusService updateFormStatusService)
         {
             _db = db;
             _userManager = userManager;
             _currentUserService = currentUserService;
             _mapper = mapperService;
+            _uFormStatus = updateFormStatusService;
         }
 
         private async Task<User?> GetCurrentUserAsync()
@@ -203,11 +204,8 @@ namespace FiwFriends.Controllers
         [HttpGet("Inbox")]
         public async Task<IActionResult> UserInboxStatus()
         {
+            await _uFormStatus.Update();
             var user = await _currentUserService.GetCurrentUser();
-            if (user == null)
-            {
-                return NoContent();
-            }
 
             var joinedPosts = await _db.Joins
                 .Where(f => f.User == user)
@@ -273,6 +271,7 @@ namespace FiwFriends.Controllers
         [HttpGet("Pending")]
         public async Task<IActionResult> UserPendingStatus()
         {
+            await _uFormStatus.Update();
             var user = await _currentUserService.GetCurrentUser();
             if (user == null)
             {

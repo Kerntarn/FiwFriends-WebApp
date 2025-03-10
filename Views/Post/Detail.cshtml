@@ -139,7 +139,7 @@
                                         <a class="btn white" onclick="window.history.back();">back</a>
                                     }
                                     
-                                    @if (!Model.IsJoined) { <button type="submit" class="btn">Join</button> }
+                                    @if (!Model.IsJoined && Model.ExpiredTime > DateTimeOffset.UtcNow) { <button type="submit" class="btn">Join</button> }
                                 </div>
 
                             </form>
