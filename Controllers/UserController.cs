@@ -79,7 +79,7 @@ namespace FiwFriends.Controllers
         }
 
         [Authorize]
-        [HttpGet("user/edit")]
+        [HttpGet("User/Edit")]
         public async Task<IActionResult> Edit()
         {
             var user = await GetCurrentUserAsync();
@@ -101,7 +101,7 @@ namespace FiwFriends.Controllers
         }
 
         [Authorize]
-        [HttpPost("user/edit")]
+        [HttpPost("User/Edit")]
         public async Task<IActionResult> Edit([FromForm] UpdateUserDto userEditor)
         {
             if (userEditor == null)
