@@ -60,6 +60,7 @@ html {
     display: flex;
     margin: 10px 0px;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .tag {
@@ -124,6 +125,7 @@ html {
     margin-left: 40px;
     margin-right: 40px;
     display: flex;
+    flex-wrap: wrap;
     gap: 50px;
 }
 
@@ -294,3 +296,19 @@ html {
     text-decoration: none;
     color: #000; 
 }
+
+@media only screen and (max-width: 990px) {
+    .question-container{
+        width: 90%;
+    }
+
+    .tag-container {
+        justify-content: space-around;
+        gap: 5px;
+    }
+
+    .search-container {
+        width: 90%;
+    }
+
+  }

@@ -56,28 +56,51 @@
                                 </div>
 
                                 <div class="mh-40">
+                                    <div div style="display: flex; align-items: center; gap: 2px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#00000">
+                                    <path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
+                                    </svg>
                                     <p class="algn-start login-p">How many people can join?</p>
+                                    </div>
                                     <span asp-validation-for="Limit" class="error-text"></span>
                                     <input class="inp w-auto" type="number" asp-for="Limit" min="1" max="1000000">
                                 </div>
-
-                                <div class="time-container">
-                                    <div>
-                                        <p class="algn-start login-p">Appointment Time</p>
+                                
+                                <div class="time-container" style="display: flex; gap: 20px;">
+                                    <!-- Appointment Time -->
+                                    <div style="flex: 1;">
+                                        <label style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000">
+                                                <path d="M360-300q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/>
+                                            </svg>
+                                            <p class="algn-start login-p" style="margin: 0;">Appointment Time</p>
+                                        </label>
                                         <span asp-validation-for="AppointmentTime" class="error-text"></span>
-                                        <input class="inp" type="datetime-local"  asp-for="AppointmentTime" >
+                                        <input class="inp" type="datetime-local" asp-for="AppointmentTime">
                                     </div>
-                                    
-                                    <div>
-                                        <p class="algn-start login-p">Due date</p>
+
+                                    <!-- Due Date -->
+                                    <div style="flex: 1;">
+                                        <label style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000">
+                                                <path d="m388-212-56-56 92-92-92-92 56-56 92 92 92-92 56 56-92 92 92 92-56 56-92-92-92 92ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/>
+                                            </svg>
+                                            <p class="algn-start login-p" style="margin: 0;">Due Date</p>
+                                        </label>
                                         <span asp-validation-for="ExpiredTime" class="error-text"></span>
-                                        <input class="inp" type="datetime-local"  asp-for="ExpiredTime" >
+                                        <input class="inp" type="datetime-local" asp-for="ExpiredTime">
                                     </div>
-                                    
                                 </div>
 
+
                                 <div class="mh-40">
+                                    <div style="display: flex; align-items: center; gap: 2px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
+                                    <path d="M480-80Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880h20q10 0 20 2v81q-10-2-19.5-2.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186q122-112 181-203.5T720-552v-8h80v8q0 100-79.5 217.5T480-80Zm0-400q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0-80Zm240-80h80v-120h120v-80H800v-120h-80v120H600v80h120v120Z"/>
+                                    </svg>
+                                
                                     <p class="algn-start login-p">Location</p>
+                                </div>
                                     <div class="location-container">
                                         <input class="location-input" id="locationInput" type="text" asp-for="Location" name="location" maxlength="1000" placeholder="เลือกสถานที่..." autocomplete="off">
                                         <button type="button" class="location-btn" onclick="useCurrentLocation()">ที่อยู่ปัจจุบัน</button>

@@ -60,6 +60,8 @@ input[type="file"] {
         margin-top: 15px;
         display: flex;
         gap: 20px;
+        justify-content: end;
+        padding-right: 20px;
 }
 
 .cropPopup {
@@ -112,3 +114,19 @@ input[type="file"] {
 .mb-20 {
         margin-bottom: 20px;
 }
+
+.profile-input {
+        width: 100%;
+}
+
+@media only screen and (max-width: 990px) {
+        .home-body-new {
+                width: auto;
+                padding-left: 0;
+        }
+
+        .profile-input {
+                width: 95%;
+        }
+    
+      }

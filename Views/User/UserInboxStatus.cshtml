@@ -47,7 +47,7 @@
                                         {
                                                 <tr class="border-bottom">
                                                         <td class="p-50">@post.Activity</td>
-                                                        <td>@post.Owner</td>
+                                                        <td><b>@post.Owner</b></td>
                                                         <td>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</td>
                                                         <td><b class="@post.Status" >@post.Status</b></td>
                                                         <td><a class="detail-btn" asp-controller="Post" asp-action="Detail" asp-route-id="@post.PostID">See post</a></td>

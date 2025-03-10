@@ -41,13 +41,13 @@
                                         </div>
                                 </div>
 
-                                <div class="mh-40">
+                                <div class="profile-input">
                                         <p class="algn-start login-p">Contact</p>
                                         <span class="error-text"></span>
                                         <input id="contact" class="inp" type="text" placeholder=@Model.Contact>
                                 </div>
 
-                                <div class="mh-40">
+                                <div class="profile-input">
                                         <p class="algn-start login-p">Profile picture</p>
                                         <span class="error-text"></span>
                                         <label for="profilePicInput" class="imgField">
@@ -60,8 +60,8 @@
                                 </div>
 
                                 <div class="save-container">
-                                        <a class="btn white" asp-controller="Post" asp-action="">back</a>
-                                        <button type="button" class="btn" onclick="updateUser()">save</button>
+                                        @* <a class="btn white" asp-controller="Post" asp-action="">back</a> *@
+                                        <button type="button" class="btn" onclick="updateUser()">save change</button>
                                 </div>
                         </div>
                             
@@ -72,27 +72,27 @@
                                 Change password
                         </div>
                         <div class="card-body pb-20">
-                                <div class="">
+                                <div class="profile-input">
                                         <p class="algn-start login-p w-auto">Old password</p>
                                         <span class="error-text"></span>
-                                        <input id="oldPassword" class="inp" type="text">
+                                        <input id="oldPassword" class="inp" type="password">
                                 </div>
 
-                                <div class="mh-40">
+                                <div class="profile-input">
                                         <p class="algn-start login-p">New password</p>
                                         <span class="error-text"></span>
                                         <input id="newPassword" class="inp" type="password">
                                 </div>
 
-                                <div class="mh-40">
+                                <div class="profile-input">
                                         <p class="algn-start login-p">Confirm new password</p>
                                         <span class="error-text"></span>
                                         <input id="confirmPassword" class="inp mb-20" type="password">
                                 </div>
 
                                 <div class="save-container">
-                                        <a class="btn white" asp-controller="Post" asp-action="">back</a>
-                                        <button type="button" class="btn" onclick="changePassword()">save</button>
+                                        @* <a class="btn white" asp-controller="Post" asp-action="">back</a> *@
+                                        <button type="button" class="btn" onclick="changePassword()">change password</button>
                                 </div>
                         </div>
                             

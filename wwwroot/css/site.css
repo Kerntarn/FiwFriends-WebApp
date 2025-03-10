@@ -49,7 +49,6 @@ a {
 }
 
 .navbar {
-  overflow: visible;
   background-color: #B2DFDC;
   padding: 10px 0px;
   box-shadow: 0px 4px 4px rgba(24,24,24,.25);
@@ -177,8 +176,8 @@ a {
 } */
 
 .home-container {
-  display: inline-flex;
-  max-width: 1260px;
+  display: flex;
+  max-width: 100%;
 }
 
 .home-body {
@@ -189,9 +188,8 @@ a {
 
 .category {
   display: grid;
-  grid-template-columns: repeat(2, 400px);
+  grid-template-columns: repeat(2, 2fr);
   grid-gap: 15px;
-  /* width: auto; */
 
 }
 
@@ -374,6 +372,18 @@ a {
   transform: translate(-60%, -0%);
 }
 
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
 
 .profile-img {
   width: 100px;
@@ -416,8 +426,12 @@ a {
   background: #555; 
 }
 
+.menu-edit_profile {
+  order: 1;
+}
 
 .menu-home {
+  order: 2;
   height: auto;
   font-weight: bold;
   display: flex;
@@ -431,6 +445,7 @@ a {
 }
 
 .menu-status {
+  order: 3;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -443,6 +458,7 @@ a {
 }
 
 .menu-like {
+  order: 4;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -456,6 +472,7 @@ a {
 }
 
 .menu-my_post {
+  order: 5;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -466,6 +483,9 @@ a {
   padding-left: 2px;
 }
 
+.menu-logout {
+  order: 6;
+}
 
 .edit-btn {
   background-color: transparent;
@@ -521,4 +541,77 @@ a {
 
 .white {
   background-color: #FEFEFE;
+}
+
+@media only screen and (max-width: 990px) {
+  .home-container {
+    flex-direction: column;
+    width: auto;
+    justify-content: center;
+    margin: 0px 25px;
+  }
+
+  .menu {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .menu-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 20px 0px;
+    gap: 1px;
+  }
+
+  .menu-logout {
+    order: 2;
+    margin-left: 35px;
+    margin-right: 35px;
+  }
+
+  .menu-home {
+    order: 3;
+  }
+
+  .menu-status {
+    order: 4;
+  }
+
+  .menu-like {
+    order: 5;
+  }
+
+  .menu-my_post {
+    order: 6;
+  }
+
+  .profile-container {
+    flex-direction: row;
+    gap: 25px;
+  }
+
+  .profile-info {
+    align-items: start;
+  }
+
+  .home-body{
+    width: auto;
+    padding-left: 0;
+  }
+
+  .property {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .category {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .flex-row {
+    flex-direction: column;
+  }
+
 }
