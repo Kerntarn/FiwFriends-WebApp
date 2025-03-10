@@ -35,7 +35,7 @@
                                 <div class="mh-40">
                                     <p class="algn-start login-p">Post detail</p>
                                     <span asp-validation-for="Description" class="error-text"></span>
-                                    <input class="inp" type="text"  asp-for="Description" >
+                                    <input class="inp" type="text" asp-for="Description" maxlength="1000">
                                 </div>
 
                                 <div class="mh-40">
@@ -63,7 +63,7 @@
                                     <p class="algn-start login-p">How many people can join?</p>
                                     </div>
                                     <span asp-validation-for="Limit" class="error-text"></span>
-                                    <input class="inp w-auto" type="number"  asp-for="Limit" >
+                                    <input class="inp w-auto" type="number" asp-for="Limit" min="1" max="1000000">
                                 </div>
                                 
                                 <div class="time-container" style="display: flex; gap: 20px;">
@@ -102,7 +102,7 @@
                                     <p class="algn-start login-p">Location</p>
                                 </div>
                                     <div class="location-container">
-                                        <input class="location-input" id="locationInput" type="text" asp-for="Location" name="location" placeholder="เลือกสถานที่..." autocomplete="off">
+                                        <input class="location-input" id="locationInput" type="text" asp-for="Location" name="location" maxlength="1000" placeholder="เลือกสถานที่..." autocomplete="off">
                                         <button type="button" class="location-btn" onclick="useCurrentLocation()">ที่อยู่ปัจจุบัน</button>
                                     </div>
                                     <div id="map" style="height: 300px; width: 100%;"></div>
@@ -113,7 +113,7 @@
                                     <span asp-validation-for="Questions" class="error-text"></span>
                                     <div id="question-wrapper">
                                         <div class="question-container">
-                                            <input class="question-input" type="text" name="Questions[0].Content">
+                                            <input class="question-input" type="text" name="Questions[0].Content"  maxlength="1000">
                                             <button class="question-more" type="button" onclick="addQuestion(this)">+</button>
                                         </div>
                                     </div>

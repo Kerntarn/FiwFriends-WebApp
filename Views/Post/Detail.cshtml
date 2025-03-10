@@ -99,10 +99,16 @@
                                     @foreach (var question in Model.Questions)
                                     {
                                         <p class="algn-start login-p">Question : @question.Content</p>
-                                        <div class="question-container">
-                                            <input type="hidden" name="Answers[@index].QuestionId" value="@question.QuestionId" />
-                                            <input class="question-input" type="text" name="Answers[@index].Content">
-                                        </div>
+                                        @if (!Model.IsJoined){
+                                            <div class="question-container">
+                                                <input type="hidden" name="Answers[@index].QuestionId" value="@question.QuestionId" />
+                                                <input class="question-input" type="text" name="Answers[@index].Content" maxlength="1000">
+                                            </div>
+                                        } else{
+                                            foreach (var answer in question.Answers){
+                                                <div class="algn-start login-p">Answer : @answer.Content</div>
+                                            }
+                                        }
                                         index++;
                                     }
                                     
@@ -126,28 +132,10 @@
                                     
                                 </div>
 
-                                @if(Model.Owner.UserName == owner.UserName) {
-                                    <div class="button-container ml-0">
-                                        <a class="btn" asp-controller="User" asp-action="UserPendingStatus">back</a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    if (Model.IsJoined) {
-                                        <div class="button-container ml-0">
-                                            <a class="btn white" asp-action="">back</a>
-                                        </div>
-                                    }
-                                    else{
-                                        <div class="button-container ml-0">
-                                            <a class="btn white" asp-action="">back</a>
-                                            <button type="submit" class="btn">Join</button>
-                                        </div>
-                                    }
-                                    
-                                }
-
-                                
+                                <div class="button-container ml-0">
+                                    <a class="btn white" onclick="window.history.back();">back</a>
+                                    @if (!Model.IsJoined) { <button type="submit" class="btn">Join</button> }
+                                </div>
 
                             </form>
                         </div>

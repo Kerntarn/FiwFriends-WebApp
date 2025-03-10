@@ -79,8 +79,8 @@ public class PostController : Controller
             var post = await _mapper.MapAsync<IQueryable<Post>, DetailPost>(query);
             return View(post);                                                  //Return view with DetailPost
         }
-        catch {
-            return NotFound();
+        catch (Exception e){
+            return NotFound(e.Message);
         }
     }
 

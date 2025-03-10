@@ -16,4 +16,6 @@ public class Question{
 public class ViewQuestion{
     public required int QuestionId { get; set; }
     public required string Content { get; set; }
+    public required int PostId { get; set; }
+    public IEnumerable<Answer> Answers { get; set; } = new List<Answer>();
 }
