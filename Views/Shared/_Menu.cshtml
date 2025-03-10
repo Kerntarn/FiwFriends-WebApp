@@ -13,11 +13,16 @@
 
 <div class="menu">
 
-        <div class="profile-img" style="background-image: url('@profilePicUrl');"></div>
-        
-        <h2 class="username">@user?.UserName</h2>
-        <p class="name">@user?.FirstName @user?.LastName</p>
-        <p class="contact">@user?.Contact</p>
+        <div class="profile-container">
+                <div class="profile-img" style="background-image: url('@profilePicUrl');"></div>
+                
+                <div class="profile-info">
+                        <h2 class="username">@user?.UserName</h2>
+                        <p class="name">@user?.FirstName @user?.LastName</p>
+                        <p class="contact">@user?.Contact</p>
+                </div>
+                
+        </div>
         
         <div class="menu-container">
 
@@ -60,7 +65,7 @@
                         My post
                 </a>
 
-                <form method="post" asp-controller="Auth" asp-action="Logout">
+                <form class="menu-logout" method="post" asp-controller="Auth" asp-action="Logout">
                         
                         <button type="submit" class="logout-btn">
                                 <div class="align-center">
