@@ -57,7 +57,7 @@ public class PostController : Controller
     public async Task<IActionResult> Filter(string tag)
     {
         if (string.IsNullOrEmpty(tag)) return RedirectToAction("Index");
-
+        
         var user = await _currentUser.GetCurrentUser(); 
         var postCondition = _db.Posts
                         .Where(p => p.ExpiredTime > DateTimeOffset.UtcNow && 
@@ -77,6 +77,10 @@ public class PostController : Controller
                         .Where(p => p.PostId == id);
         try {
             var post = await _mapper.MapAsync<IQueryable<Post>, DetailPost>(query);
+            var uri = new Uri(Request.Headers["Referer"].ToString());
+            ViewData["prev_page"] = uri.AbsolutePath.TrimStart('/');
+
+            Console.WriteLine($"[DEBUG] Previous page: {ViewData["prev_page"]}");
             return View(post);                                                  //Return view with DetailPost
         }
         catch (Exception e){
