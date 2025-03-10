@@ -98,7 +98,10 @@ public class PostController : Controller
     //POST Create
     [HttpPost("Post/Create")]
     async public Task<IActionResult> Create(PostDTO post){                      //Create Post by PostDTO
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid) {
+            ViewData["API_KEY"] = _apiKey;
+            return View(post);
+        } 
 
         foreach (var tag in post.Tags)
         {

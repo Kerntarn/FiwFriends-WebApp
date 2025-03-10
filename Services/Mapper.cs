@@ -55,6 +55,7 @@ public class MapperService{
     async private Task<IEnumerable<IndexPost>> Post2Index(IQueryable<Post> post){
         var user = await _currentUser.GetCurrentUser();
         var indexPost = await post
+                                .OrderByDescending(p => p.CreatedAt)
                                 .Select(p => new IndexPost {
                                     PostId = p.PostId,
                                     Activity = p.Activity,
