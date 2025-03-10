@@ -236,8 +236,6 @@ function onMouseDown(event) {
 function onMouseUp(event) {
     const cropPopup = document.getElementById("cropPopup");
 
-    console.log("inside",isMouseDownInside)
-    console.log("outside",event.target)
     if (!isMouseDownInside) {
         cropPopup.style.display = "none";
     }

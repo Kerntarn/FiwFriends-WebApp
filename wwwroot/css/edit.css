@@ -60,6 +60,8 @@ input[type="file"] {
         margin-top: 15px;
         display: flex;
         gap: 20px;
+        justify-content: end;
+        padding-right: 20px;
 }
 
 .cropPopup {
