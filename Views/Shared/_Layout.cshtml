@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FiwFriends</title>
     <script type="importmap"></script>
+    <script src="~/js/showMenu.js"></script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FiwFriends.styles.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
@@ -19,8 +20,12 @@
                             <img src='https://i.postimg.cc/PpSScGbM/logo-fiwfriend.png' border='0' alt='logo-fiwfriend' style="width: 70px; height: auto;"/>
                         </a>
 
+
                     </div>
 
+                    <a class="menu-icon" onclick="showMenu()">
+                        @await Html.PartialAsync("_Menu_Icon")
+                    </a>
             </div>
         </nav>
     </header>

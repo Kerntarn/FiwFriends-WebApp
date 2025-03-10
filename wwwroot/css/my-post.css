@@ -1,0 +1,12 @@
+.mypost-button-container {
+  display: flex;
+  flex-direction: row;
+  padding-top: 10px;
+  justify-content: space-between;
+}
+
+.end-delete {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
