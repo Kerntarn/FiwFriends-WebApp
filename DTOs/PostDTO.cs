@@ -27,7 +27,6 @@ namespace FiwFriends.DTOs
         public required int Limit { get; set; }
 
         [Required(ErrorMessage = "Location is required.")]
-        [StringLength(100, ErrorMessage = "Location cannot exceed 100 characters.")]
         public required string Location { get; set; }
 
         public List<TagDTO> Tags { get; set; } = new List<TagDTO>();
