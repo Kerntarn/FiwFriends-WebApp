@@ -34,7 +34,7 @@
                         </div>
                         <table>
                                 <tr class="head">
-                                        <th class="p-50">Post name</th>
+                                        <th class="table-head">Post name</th>
                                         <th>User</th>
                                         <th>Date</th>
                                         <th>Status</th>
@@ -46,11 +46,11 @@
                                         @foreach (var post in Model)
                                         {
                                                 <tr class="border-bottom">
-                                                        <td class="p-50">@post.Activity</td>
+                                                        <td class="table-first">@post.Activity</td>
                                                         <td><b>@post.Owner</b></td>
                                                         <td>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</td>
                                                         <td><b class="@post.Status" >@post.Status</b></td>
-                                                        <td><a class="detail-btn" asp-controller="Post" asp-action="Detail" asp-route-id="@post.PostID">See post</a></td>
+                                                        <td class="detail-response"><a class="detail-btn" asp-controller="Post" asp-action="Detail" asp-route-id="@post.PostID">See post</a></td>
                                                 </tr>
                                         }
                                 }

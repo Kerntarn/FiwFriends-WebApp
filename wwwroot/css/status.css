@@ -47,8 +47,14 @@ td, th {
 
 }
 
+button {
+        white-space: nowrap;
+}
+      
+
 th {
         background-color: #B2DFDC;
+        word-break: break-word;
 }
 
 .head {
@@ -59,6 +65,10 @@ th {
 
 tr.border-bottom {
         border-bottom: 1px solid #D9D9D9;
+}
+
+.activity {
+        max-width: 90%;
 }
 
 .flex {
@@ -107,6 +117,10 @@ tr.border-bottom {
         padding-left: 50px;
 }
 
+.table-first {
+        padding-left: 50px;
+}
+
 .spacing > * {
         margin-bottom: 10px;
 }
@@ -152,5 +166,38 @@ tr.border-bottom {
         .status-container {
                 justify-content: center;
         }
-    
+
+        .table-head {
+                padding: 12px 10px;
+        }
+
+        .table-first {
+                padding-left: 10px;
+        }
+
+        .activity {
+                max-width: 80%;
+        }
+
+        table {
+                font-size: 12px;
+                /* white-space: nowrap; */
+                word-break: break-word;
+        }
+
+        .detail-btn {
+                padding: 5px 2px;
+        }
+
+        .detail-response {
+                min-width: 60px;
+        }
+
+        th {
+                white-space: nowrap;
+                min-width: 10px;
+        }
+              
+
+
       }
