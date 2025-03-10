@@ -160,6 +160,9 @@ namespace FiwFriends.Controllers
                 if (string.IsNullOrEmpty(userEditor.OldPassword)){
                     return BadRequest(new {error = "Old Password is required to edit your profile" });
                 }
+                if (string.IsNullOrEmpty(userEditor.ConfirmNewPassword)){
+                    return BadRequest(new {error = "Confirm New password is required to edit your profile" });
+                }
                 var passwordcheck = await _userManager.CheckPasswordAsync(user, userEditor.OldPassword);
                 if (!passwordcheck)
                 {
