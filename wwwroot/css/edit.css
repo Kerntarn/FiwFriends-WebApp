@@ -6,13 +6,23 @@
         background-position: left center;
         background-repeat: no-repeat;
         background-size: 24px;
-        
+        margin-bottom: 15px;
 }
 
 .full-div {
         width: 100%;
         
 }
+
+.home-body-new {
+        display: flex;
+        flex-direction: column;
+        margin: 0px;
+        padding-left: 20px;
+        width: 800px;
+        gap: 25px;
+}
+
 
 .container-span {
         display: block;
@@ -24,6 +34,25 @@
         border-radius: 5px;
         font-size: 16px;
         padding: 7px 0px 7px 20px;
+        box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+input[type="file"] {
+        display: none;
+}
+      
+
+.imgField {
+        width: 95%;
+        display: block;
+        cursor: pointer;
+        font-weight: bold;
+        background-color: #FEFEFE;
+        border-radius: 5px;
+        padding: 40px 10px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        text-align: center;
         box-shadow: 0px 4px 4px rgba(24,24,24,.25);
 }
 
@@ -40,10 +69,11 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.7);
+        background: rgba(24,24,24,0.25);
         justify-content: center;
         align-items: center;
         z-index: 9999;
+        font-weight: bold;
 }
 
 .cropContainer {
@@ -51,10 +81,34 @@
         padding: 20px;
         border-radius: 10px;
         position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 15px;
+        box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+}
+
+.cropTxt {
+        margin: 10px 0px;
+}
+
+.cropSave {
+        font-weight: bold;
+        border: 2px solid #242424;
+        background-color: #FF8A80;
+        border-radius: 5px;
+        padding: 5px 15px;
+        box-shadow: 0px 4px 4px rgba(24,24,24,.25);
+        cursor: pointer;
 }
 
 .cropCanvas {
         border: 1px solid black;
+        border-radius: 10px;
         max-width: 400px;
         max-height: 400px;
+}
+
+.mb-20 {
+        margin-bottom: 20px;
 }

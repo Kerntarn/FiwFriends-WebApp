@@ -47,6 +47,7 @@
                 <form id="filterForm" asp-action="Filter" asp-controller="Post" method="post">
                         <input type="hidden" name="tag" id="selectedTag">
                 </form>
+
                 <div class="tag-container">
                     
                     <button class="tag tag-button @(ViewBag.SelectedTag == "Food" ? "selected" : "")" type="submit" data-tag="Food">
@@ -87,6 +88,10 @@
                     
                     @foreach (var post in Model)
                     {
+                        string userUrl = post.Owner.ProfilePic != null
+                            ? $"data:image/png;base64,{Convert.ToBase64String(post.Owner.ProfilePic)}"
+                            : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg";
+
                         <div class="card">
                             <div class="card-header">@post.Activity</div>
                             <div class="card-body">

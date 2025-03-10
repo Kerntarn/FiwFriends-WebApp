@@ -4,6 +4,11 @@
 
 @{
     var owner = await UserManager.GetUserAsync(User);
+
+    // เช็คว่ามีรูปไหม ถ้ามีให้แปลงเป็น Base64 URL
+    string profilePicUrl = owner?.ProfilePic != null
+        ? $"data:image/png;base64,{Convert.ToBase64String(owner.ProfilePic)}"
+        : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg"; // ถ้าไม่มีรูป ใช้รูป default
 }
 
 @section Styles {
@@ -16,6 +21,12 @@
 
 @{  //Razor view of home's index
     ViewData["Title"] = "Detail Page";
+}
+
+@{
+    string userUrl = Model.Owner.ProfilePic != null
+        ? $"data:image/png;base64,{Convert.ToBase64String(Model.Owner.ProfilePic)}"
+        : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg";
 }
 
 
