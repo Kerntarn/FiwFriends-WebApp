@@ -122,6 +122,7 @@ html {
 }
 
 .time-container {
+    margin-top: 15px;
     margin-left: 40px;
     margin-right: 40px;
     display: flex;
@@ -267,10 +268,32 @@ html {
     gap: 15px;
 }
 
+.people-container {
+    padding-left: 5px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.answer-detail {
+    display: block;
+    background-color: #FEFEFE;
+    padding: 10px 10px;
+    border-radius: 5px;
+}
+
 .w-auto {
     width: 30px;
 }
 
+.white {
+    background-color: #FEFEFE;
+  }
 
 .flex-right {
     padding-top: 10px;

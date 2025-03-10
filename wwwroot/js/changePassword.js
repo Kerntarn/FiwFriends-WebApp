@@ -1,14 +1,14 @@
 async function changePassword() {
         const formData = new FormData();
     
-        formData.append("Username", "");
-        formData.append("FirstName", "");
-        formData.append("LastName", "");
-        formData.append("Bio", "");
-        formData.append("Contact", "");
-        formData.append("OldPassword", document.getElementById("oldPassword")?.value || "");
-        formData.append("NewPassword", document.getElementById("newPassword")?.value || "");
-        formData.append("ConfirmPassword", document.getElementById("confirmPassword")?.value || "");
+        // formData.append("Username", "");
+        // formData.append("FirstName", "");
+        // formData.append("LastName", "");
+        // formData.append("Bio", "");
+        // formData.append("Contact", "");
+        formData.append("OldPassword", document.getElementById("oldPassword")?.value);
+        formData.append("NewPassword", document.getElementById("newPassword")?.value);
+        formData.append("ConfirmNewPassword", document.getElementById("confirmPassword")?.value);
     
         for (let pair of formData.entries()) {
                 console.log(pair[0], pair[1]);
