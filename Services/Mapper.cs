@@ -89,7 +89,7 @@ public class MapperService{
                                     Participants = p.Participants.Select(j => j.User),
                                     Questions = p.Questions,
                                     Limit = p.Limit,
-                                    IsJoined = p.Participants.Any(j => j.UserId == user.Id)
+                                    IsJoined = p.Participants.Any(j => j.UserId == user.Id) || p.Forms.Any(f => f.UserId == user.Id && f.PostId == p.PostId) || p.OwnerId == user.Id
                                 })
                                 .FirstOrDefaultAsync();
         return detailPost ?? throw new Exception("Not Found");

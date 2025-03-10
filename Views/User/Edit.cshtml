@@ -1,3 +1,4 @@
+@model FiwFriends.Models.User
 @{  //Razor view of home's index
     ViewData["Title"] = "Edit Page";
 }
@@ -31,19 +32,19 @@
                                         <div class="full-div">
                                         <p class="algn-start login-p w-auto">Name</p>
                                         <span class="error-text"></span>
-                                        <input id="firstName" class="full-inp" type="text">
+                                        <input id="firstName" class="full-inp" type="text" placeholder=@Model.FirstName>
                                         </div>
                                         <div class="full-div">
                                         <p class="algn-start login-p w-auto">Last Name</p>
                                         <span class="error-text"></span>
-                                        <input id="lastName" class="full-inp" type="text">
+                                        <input id="lastName" class="full-inp" type="text" placeholder=@Model.LastName>
                                         </div>
                                 </div>
 
                                 <div class="mh-40">
                                         <p class="algn-start login-p">Contact</p>
                                         <span class="error-text"></span>
-                                        <input id="contact" class="inp" type="text">
+                                        <input id="contact" class="inp" type="text" placeholder=@Model.Contact>
                                 </div>
 
                                 <div class="mh-40">

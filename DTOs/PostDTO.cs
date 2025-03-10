@@ -8,7 +8,6 @@ namespace FiwFriends.DTOs
         public required string Activity { get; set; }
 
         [Required(ErrorMessage = "Description is required.")]
-        [StringLength(50, ErrorMessage = "Description cannot exceed 50 characters.")]
         public required string Description { get; set; }
 
         [Required(ErrorMessage = "Expired time is required.")]
@@ -23,7 +22,7 @@ namespace FiwFriends.DTOs
         public required DateTimeOffset AppointmentTime { get; set; }
 
         [Required(ErrorMessage = "Limit is required.")]
-        [Range(1, int.MaxValue, ErrorMessage = "Limit must be at least 1.")]
+        [Range(1, 1000000, ErrorMessage = "Limit must be at least 1.")]
         public required int Limit { get; set; }
 
         [Required(ErrorMessage = "Location is required.")]
