@@ -519,7 +519,7 @@ a {
 
 .toast-container {
   position: fixed;
-  top: 50px;
+  top: 75px;
   right: 20px;
   background: rgba(168, 234, 168, 0.9); /* สีเขียว */
   color: #242424;
