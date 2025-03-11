@@ -121,10 +121,10 @@
                                         <div class="people">
                                             @foreach (var user in Model.Participants)
                                             {
-                                                string userUrl = user.ProfilePic != null
+                                                string userUrli = user.ProfilePic != null
                                                 ? $"data:image/png;base64,{Convert.ToBase64String(user.ProfilePic)}"
                                                 : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg";
-                                                <div class="user"><div class="user-img" style="background-image: url('@userUrl');"></div>@user.UserName</div>
+                                                <div class="user"><div class="user-img" style="background-image: url('@userUrli');"></div>@user.UserName</div>
                                             }
                                         </div>
                                     }
