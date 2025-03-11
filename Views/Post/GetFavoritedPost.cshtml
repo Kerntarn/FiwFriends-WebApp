@@ -77,7 +77,7 @@
                                 <div>
                                     <div>@foreach (var tag in post.Tags)
                                         {
-                                            <div class="tag add-border">@tag.Name</div>
+                                            <div class="tag add-border">@await Html.PartialAsync("Tag/_"+@tag.Name)</div>
                                         }
                                     </div>
                                 </div>

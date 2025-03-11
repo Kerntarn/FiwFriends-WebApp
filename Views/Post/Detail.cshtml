@@ -45,7 +45,10 @@
                             <div class="user-and-like">
                                 <div class="user-container">
                                         <div class="user-img" style="background-image: url('@userUrl');"></div>
-                                        <div><b>@Model.Owner</b></div>
+                                        <div style="display: flex; flex-direction: column;">
+                                            <b>@Model.Owner</b>
+                                            <b style="color: rgba(24, 24, 24, 0.6);">@Model.Owner.Contact</b>
+                                        </div>
                                     </div>
                                 <button class="fav-btn" data-post-id="@Model.PostId" data-is-fav="@Model.IsFav">
                                     <svg viewBox="0 0 24 24" fill="@((Model.IsFav) ? "#FF8A80" : "none")" xmlns="http://www.w3.org/2000/svg" width="30px" height="30px">
