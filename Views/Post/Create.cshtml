@@ -28,17 +28,17 @@
                             <form asp-action="Create" method="post">
                                 <div class="mh-40">
                                     <p class="algn-start login-p">Post name</p>
+                                    <input class="inp" type="text"  asp-for="Activity" >
                                     @if (ViewData.ModelState["Activity"]?.Errors.Count > 0)
                                     {
                                         <div class="text-danger">@ViewData.ModelState["Activity"]?.Errors[0].ErrorMessage</div>
                                     }
-                                    <input class="inp" type="text"  asp-for="Activity" >
                                 </div>
 
                                 <div class="mh-40">
                                     <p class="algn-start login-p">Post detail</p>
-                                    <span asp-validation-for="Description" class="error-text"></span>
                                     <input class="inp" type="text" asp-for="Description" maxlength="1000">
+                                    <span asp-validation-for="Description" class="text-danger"></span>
                                 </div>
 
                                 <div class="mh-40">
@@ -65,8 +65,8 @@
                                     </svg>
                                     <p class="algn-start login-p">How many people can join?</p>
                                     </div>
-                                    <span asp-validation-for="Limit" class="error-text"></span>
                                     <input class="inp w-auto" type="number" asp-for="Limit" min="1" max="1000000">
+                                    <span asp-validation-for="Limit" class="text-danger"></span>
                                 </div>
                                 
                                 <div class="time-container" style="display: flex; gap: 20px;">
@@ -78,8 +78,8 @@
                                             </svg>
                                             <p class="algn-start login-p" style="margin: 0;">Appointment Time</p>
                                         </label>
-                                        <span asp-validation-for="AppointmentTime" class="error-text"></span>
                                         <input class="inp" type="datetime-local" asp-for="AppointmentTime">
+                                        <span asp-validation-for="AppointmentTime" class="text-danger"></span>
                                     </div>
 
                                     <!-- Due Date -->
@@ -90,8 +90,8 @@
                                             </svg>
                                             <p class="algn-start login-p" style="margin: 0;">Due Date</p>
                                         </label>
-                                        <span asp-validation-for="ExpiredTime" class="error-text"></span>
                                         <input class="inp" type="datetime-local" asp-for="ExpiredTime">
+                                        <span asp-validation-for="ExpiredTime" class="text-danger"></span>
                                     </div>
                                 </div>
 
@@ -103,6 +103,7 @@
                                     </svg>
                                 
                                     <p class="algn-start login-p">Location</p>
+                                    <span asp-validation-for="Location" class="text-danger"></span>
                                 </div>
                                     <div class="location-container">
                                         <input class="location-input" id="locationInput" type="text" asp-for="Location" name="location" maxlength="1000" placeholder="เลือกสถานที่..." autocomplete="off">
