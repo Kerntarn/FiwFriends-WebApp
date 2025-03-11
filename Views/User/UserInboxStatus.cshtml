@@ -32,30 +32,34 @@
                                         PENDING
                                 </a>
                         </div>
-                        <table>
-                                <tr class="head">
-                                        <th class="table-head">Post name</th>
-                                        <th>User</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Detail</th>
-                                </tr>
 
-                                @if (Model.Any())
-                                {
-                                        @foreach (var post in Model)
+                        <div class="table-container">
+
+                                <table class="scroll-table">
+                                        <tr class="head">
+                                                <th class="table-head">Post name</th>
+                                                <th>User</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Detail</th>
+                                        </tr>
+
+                                        @if (Model.Any())
                                         {
-                                                <tr class="border-bottom">
-                                                        <td class="table-first">@post.Activity</td>
-                                                        <td><b>@post.Owner</b></td>
-                                                        <td>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</td>
-                                                        <td><b class="@post.Status" >@post.Status</b></td>
-                                                        <td class="detail-response"><a class="detail-btn" asp-controller="Post" asp-action="Detail" asp-route-id="@post.PostID">See post</a></td>
-                                                </tr>
+                                                @foreach (var post in Model)
+                                                {
+                                                        <tr class="border-bottom">
+                                                                <td class="table-first">@post.Activity</td>
+                                                                <td><b>@post.Owner</b></td>
+                                                                <td>@post.AppointmentTime.DayOfWeek, @post.AppointmentTime.DateTime</td>
+                                                                <td><b class="@post.Status" >@post.Status</b></td>
+                                                                <td class="detail-response"><a class="detail-btn" asp-controller="Post" asp-action="Detail" asp-route-id="@post.PostID">See post</a></td>
+                                                        </tr>
+                                                }
                                         }
-                                }
-                                
-                        </table>
+                                        
+                                </table>
+                        </div>
                         @if (Model.Any() == false)
                         {
                                 <h1 style="text-align: center; color: rgba(24, 24, 24, 0.75)">You have no history of participating in posts.</h1>

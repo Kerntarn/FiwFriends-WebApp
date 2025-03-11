@@ -162,6 +162,8 @@ tr.border-bottom {
         box-shadow: 0px 4px 4px rgba(24,24,24,.25);
 }
 
+
+
 @media only screen and (max-width: 990px) {
         .status-container {
                 justify-content: center;
@@ -196,6 +198,23 @@ tr.border-bottom {
         th {
                 white-space: nowrap;
                 min-width: 10px;
+        }
+
+        .table-container {
+                overflow-x: auto;
+                white-space: nowrap;
+                display: block;
+                margin: 0px 15px;
+        }
+
+                .scroll-table {
+                border-collapse: collapse;
+                width: 100%;
+                min-width: 600px;
+        }
+
+                .scroll-table th, .scroll-table td {
+                min-width: 80px;
         }
               
 

@@ -33,7 +33,10 @@
                                         PENDING
                                 </a>
                         </div>
-                        <table>
+
+                        <div class="table-container">
+
+                                <table class="scroll-table">
                                 <tr class="head">
                                         <th class="table-head">Post Details</th>
                                 </tr>
@@ -79,7 +82,8 @@
                                         }
                                 }
 
-                        </table>
+                                </table>
+                        </div>
                         @if (Model.Any() == false)
                         {
                                 <h1 style="text-align: center; color: rgba(24, 24, 24, 0.75)">There is no history of responding to posts.</h1>
