@@ -14,7 +14,10 @@ public class UpdateFormStatusService{
 
     async public Task Update(){
         var user = await _currentUser.GetCurrentUser();
-        var forms = await _db.Forms.Where(f => (f.UserId == user.Id || f.Post.OwnerId == user.Id) && f.Status == FormStatus.Pending && f.Post.ExpiredTime < DateTimeOffset.UtcNow).ExecuteDeleteAsync();
+        var forms = await _db.Forms.Where(f => (f.UserId == user.Id || f.Post.OwnerId == user.Id) && 
+                                                f.Status == FormStatus.Pending && 
+                                                f.Post.ExpiredTime < DateTimeOffset.UtcNow)
+                                    .ExecuteDeleteAsync();
         await _db.SaveChangesAsync();
     }
 }

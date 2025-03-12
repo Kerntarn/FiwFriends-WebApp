@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using FiwFriends.DTOs.Auth;
 using FiwFriends.Models;
-using System.Threading.Tasks;
 
 namespace FiwFriends.Controllers
 {

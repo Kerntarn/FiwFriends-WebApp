@@ -5,10 +5,6 @@ namespace FiwFriends.DTOs
 {
     public class UpdateUserDto
     {
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 50 characters long")]
-        [Display(Name = "Username")]
-        public string? Username { get; set; } = string.Empty;
-
         [StringLength(50, MinimumLength = 1, ErrorMessage = "First name must be between 1 and 50 characters long")]
         [Display(Name = "First Name")]
         public string? FirstName { get; set; } = string.Empty;
@@ -16,9 +12,6 @@ namespace FiwFriends.DTOs
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Last name must be between 1 and 50 characters long")]
         [Display(Name = "Last Name")]
         public string? LastName { get; set; } = string.Empty;
-
-        [Display(Name = "Bio")]
-        public string? Bio { get; set; }
 
         [Display(Name = "Contact")]
         public string? Contact { get; set; }

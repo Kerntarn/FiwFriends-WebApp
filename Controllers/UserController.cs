@@ -26,48 +26,7 @@ namespace FiwFriends.Controllers
             _mapper = mapperService;
             _uFormStatus = updateFormStatusService;
         }
-        public async Task<IActionResult> Profile()
-        {
-            var user = await _currentUserService.GetCurrentUser();
-
-            // Check if ProfilePic exists and convert to Base64 if not null
-            if (user.ProfilePic != null)
-            {
-                var base64Pic = Convert.ToBase64String(user.ProfilePic);
-                ViewBag.ImageData = string.Format("data:image/gif;base64,{0}", base64Pic);
-            }
-            else
-            {
-                ViewBag.ImageData = null;
-            }
-
-            return View(user);
-        }
-
-        public async Task<IActionResult> People(string id)
-        {
-            if (id == null) return RedirectToAction("Index", "Home");
-
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            // Check if ProfilePic exists and convert to Base64 if not null
-            if (user.ProfilePic != null)
-            {
-                var base64Pic = Convert.ToBase64String(user.ProfilePic);
-                ViewBag.ImageData = string.Format("data:image/gif;base64,{0}", base64Pic);
-            }
-            else
-            {
-                ViewBag.ImageData = null;
-            }
-
-            return View(user);
-        }
-
+        
         [HttpGet("User/Edit")]
         public async Task<IActionResult> Edit()
         {
@@ -96,20 +55,9 @@ namespace FiwFriends.Controllers
             }
 
             var user = await _currentUserService.GetCurrentUser();
-
-            if(!string.IsNullOrEmpty(userEditor.Username))
-            {
-                var existingUser = await _userManager.FindByNameAsync(userEditor.Username);
-                if (existingUser != null && existingUser.Id != user.Id)
-                {
-                    return BadRequest(new { error = "Username already exists" });
-                }
-                user.UserName = userEditor.Username;
-            }
     
             user.FirstName = string.IsNullOrEmpty(userEditor.FirstName) ? user.FirstName : userEditor.FirstName;
             user.LastName = string.IsNullOrEmpty(userEditor.LastName) ? user.LastName : userEditor.LastName;
-            user.Bio = string.IsNullOrEmpty(userEditor.Bio) ? user.Bio : userEditor.Bio; 
             user.Contact = string.IsNullOrEmpty(userEditor.Contact) ? user.Contact : userEditor.Contact; 
             
             // Profile picture upload
@@ -186,68 +134,21 @@ namespace FiwFriends.Controllers
         public async Task<IActionResult> UserInboxStatus()
         {
             await _uFormStatus.Update();
-            var user = await _currentUserService.GetCurrentUser();
+            var user = await _currentUserService.GetCurrentUser();           
+            var allPosts = await _db.Forms
+                                    .Where(f => f.UserId == user.Id && f.Post != null)
+                                    .Select(f => new UserPostStatusViewModel{
+                                        Activity = f.Post.Activity,
+                                        PostID = f.Post.PostId.ToString(),
+                                        Owner = f.Post.Owner.UserName ?? "",
+                                        AppointmentTime = f.Post.AppointmentTime,
+                                        Status = f.Status == FormStatus.Approved ? "Joined" : f.Status.ToString()
+                                    })
+                                    .OrderBy(f => f.AppointmentTime)
+                                    .ToListAsync();
 
-            var joinedPosts = await _db.Joins
-                .Where(f => f.User == user)
-                .Select(f => new UserPostStatusViewModel
-                {
-                    Activity = f.Post.Activity,
-                    PostID = f.Post.PostId.ToString(),
-                    Owner = _db.Users
-                        .Where(j => j.Id == f.Post.OwnerId)
-                        .Select(k => k.UserName)
-                        .FirstOrDefault() ?? "Unknown",
-                        AppointmentTime = f.Post.AppointmentTime.ToOffset(new TimeSpan(7,0,0)),
-                        Status = "Joined"
-                    })
-                    .ToListAsync();
-
-                var userForms = await _db.Forms
-                    .Where(f => f.User == user)
-                    .Include(f => f.Post)
-                    .ThenInclude(p => p.Tags)
-                    .Include(f => f.Post.Questions)
-                    .ToListAsync();
-
-                var pendingPosts = userForms
-                    .Where(f => f.Status == FormStatus.Pending && f.Post != null)
-                    .Select(f => new UserPostStatusViewModel
-                    {
-                        Activity = f.Post.Activity,
-                        PostID = f.Post.PostId.ToString(),
-                        Owner = _db.Users
-                            .Where(j => j.Id == f.Post.OwnerId)
-                            .Select(k => k.UserName)
-                            .FirstOrDefault() ?? "Unknown",
-                        AppointmentTime = f.Post.AppointmentTime.ToOffset(new TimeSpan(7,0,0)),
-                        Status = "Pending"
-                    })
-                    .ToList();
-
-                var rejectedPosts = userForms
-                    .Where(f => f.Status == FormStatus.Rejected && f.Post != null)
-                    .Select(f => new UserPostStatusViewModel
-                    {
-                        Activity = f.Post.Activity,
-                        PostID = f.Post.PostId.ToString(),
-                        Owner = _db.Users
-                            .Where(j => j.Id == f.Post.OwnerId)
-                            .Select(k => k.UserName)
-                            .FirstOrDefault() ?? "Unknown",
-                        AppointmentTime = f.Post.AppointmentTime.ToOffset(new TimeSpan(7,0,0)),
-                        Status = "Rejected"
-                    })
-                    .ToList();
-
-                var allPosts = joinedPosts
-                    .Concat(pendingPosts)
-                    .Concat(rejectedPosts)
-                    .OrderBy(s => s.AppointmentTime)
-                    .ToList();
-
-                return View(allPosts);
-            }
+            return View(allPosts);
+        }
 
         [HttpGet("Pending")]
         public async Task<IActionResult> UserPendingStatus()
@@ -255,42 +156,25 @@ namespace FiwFriends.Controllers
             await _uFormStatus.Update();
             var user = await _currentUserService.GetCurrentUser();
 
-            var userPostIds = await _db.Posts
-                .Where(f => f.Owner == user)
-                .Select(f => f.PostId)
-                .ToListAsync();
-
             var userPostForms = await _db.Forms
-                .Where(f => userPostIds.Contains(f.PostId) && f.Status == FormStatus.Pending)
-                .Select(f => new UserPendingStatusViewModel
-                {
-                    Activity = f.Post.Activity,
-                    FormId = f.FormId.ToString(),
-                    UserId = _db.Users
-                        .Where(u => u.Id == f.UserId)
-                        .Select(u => u.Id)
-                        .FirstOrDefault() ?? "Unknown",
-                    Username = _db.Users
-                        .Where(u => u.Id == f.UserId)
-                        .Select(u => u.UserName)
-                        .FirstOrDefault() ?? "Unknown",
-                    PostId = f.PostId.ToString(),
-                    Status = f.Status.ToString(),
-                    QnAs = f.Answers
-                        .Select(a => new QnA
-                        {
-                            Question = a.Question.Content, // Get the question content
-                            Answer = a.Content // Get the answer content
-                        })
-                        .ToList()
-                })
-                .OrderBy(f => f.FormId)
-                .ToListAsync();
-
-            if (userPostIds.Any() != true)
-            {
-                return View(userPostForms);
-            }
+                                .Where(f => f.Post.OwnerId == user.Id && f.Status == FormStatus.Pending)
+                                .Select(f => new UserPendingStatusViewModel{
+                                    Activity = f.Post.Activity,
+                                    FormId = f.FormId.ToString(),
+                                    UserId = f.UserId,
+                                    Username = f.User.UserName ?? "",
+                                    PostId = f.PostId.ToString(),
+                                    Status = f.Status.ToString(),
+                                    QnAs = f.Answers
+                                        .Select(a => new QnA
+                                        {
+                                            Question = a.Question.Content, // Get the question content
+                                            Answer = a.Content // Get the answer content
+                                        })
+                                        .ToList()
+                                })
+                                .OrderBy(f => f.FormId)
+                                .ToListAsync();
 
             return View(userPostForms);
         }

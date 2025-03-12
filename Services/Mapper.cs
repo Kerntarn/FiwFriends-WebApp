@@ -36,7 +36,6 @@ public class MapperService{
 
     async private Task<Post> DTO2Post([NotNull] PostDTO post){
         var user = await _currentUser.GetCurrentUser();
-        if ( user == null ){ throw new Exception("Just for not warning in MapAsync<PostDTO, Post>"); }
         return new Post {
             Activity = post.Activity,   
             Description = post.Description,
