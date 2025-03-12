@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'); */
-
 html {
   font-size: 14px;
   background-color: #FFF9F0;
@@ -179,10 +177,6 @@ a {
 .contact {
   margin: 15px 0px;
 }
-
-/* .menu-container > a {
-  padding: 5px 0px;
-} */
 
 .home-container {
   display: flex;
@@ -453,7 +447,6 @@ a {
   display: flex;
   align-items: center;
   gap: 8px;
-  /* background-image: url('data:image/svg+xml,<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><g clip-path="url(%23clip0_15_3)"><rect width="24" height="24"></rect><path d="M9 21H4C3.44772 21 3 20.5523 3 20V12.4142C3 12.149 3.10536 11.8946 3.29289 11.7071L11.2929 3.70711C11.6834 3.31658 12.3166 3.31658 12.7071 3.70711L20.7071 11.7071C20.8946 11.8946 21 12.149 21 12.4142V20C21 20.5523 20.5523 21 20 21H15M9 21H15M9 21V15C9 14.4477 9.44772 14 10 14H14C14.5523 14 15 14.4477 15 15V21" stroke="%23000000" stroke-linejoin="round"></path></g><defs><clipPath id="clip0_15_3"><rect width="24" height="24" fill="white"></rect></clipPath></defs></g></svg>'); */
   background-repeat: no-repeat;
   background-position: left center;
   background-size: 26px;
@@ -466,8 +459,6 @@ a {
   display: flex;
   align-items: center;
   gap: 8px;
-  /* background-image: url('data:image/svg+xml,<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="17" cy="8" r="4" fill="%2333363F"></circle><path fill-rule="evenodd" clip-rule="evenodd" d="M15 8C15 6.89543 15.8954 6 17 6C18.1046 6 19 6.89543 19 8H15ZM11 8C11 7.29873 11.1203 6.62556 11.3414 6H5C4.44772 6 4 6.44772 4 7C4 7.55228 4.44772 8 5 8H11ZM11.8027 11C12.2671 11.8028 12.9121 12.488 13.6822 13H5C4.44772 13 4 12.5523 4 12C4 11.4477 4.44772 11 5 11H11.8027ZM5 16C4.44772 16 4 16.4477 4 17C4 17.5523 4.44772 18 5 18H19C19.5523 18 20 17.5523 20 17C20 16.4477 19.5523 16 19 16H5Z" fill="%2333363F"></path></g></svg>'); */
-  background-position: left center;
   background-repeat: no-repeat;
   background-size: 28px;
   padding-left: 2px;
@@ -479,8 +470,6 @@ a {
   display: flex;
   align-items: center;
   gap: 8px;
-  /* if want to change heart to be fill change fill to be color you want */
-  /* background-image: url('data:image/svg+xml,<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z" stroke="%23000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></g></svg>'); */
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 24px;
@@ -522,12 +511,11 @@ a {
   color: #000;
 }
 
-
 .toast-container {
   position: fixed;
   top: 75px;
   right: 20px;
-  background: rgba(168, 234, 168, 0.9); /* สีเขียว */
+  background: rgba(168, 234, 168, 0.9);
   color: #242424;
   padding: 5px 10px;
   border-radius: 8px;
