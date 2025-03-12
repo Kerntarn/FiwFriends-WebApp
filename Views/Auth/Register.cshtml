@@ -28,17 +28,13 @@
                     <h2>Create Account</h2>
 
                     <form asp-action="Register" id="form" class="field">
-                        @* <div asp-validation-summary="ModelOnly"></div> *@
-
                         <div class="login-body blue mh-40 ">
 
                             <div class="mh-40">
                                 <p class="algn-start login-p" >Username</p>
                                 <input class="inp" type="text" asp-for="Username" >
                             
-
                                 <div class="flex-row">
-
                                     <div>
                                         <p class="algn-start login-p " ><b>First name</b></p>
                                         <input class="inp w-auto" type="text" asp-for="FirstName" >
@@ -48,33 +44,31 @@
                                         <p class="algn-start login-p " ><b>Last name</b></p>
                                         <input class="inp w-auto" type="text" asp-for="LastName" >
                                     </div>
+                                </div> 
 
-                                </div>     
-                                    <p class="algn-start login-p">Password</p>
-                                    <input class="inp" type="password" asp-for="Password" id="password">
+                                <p class="algn-start login-p">Password</p>
+                                <input class="inp" type="password" asp-for="Password" id="password">
 
-                                    <p class="algn-start login-p">Confirm password</p>
-                                    <input class="inp" type="password" id="confirm-password">
+                                <p class="algn-start login-p">Confirm password</p>
+                                <input class="inp" type="password" id="confirm-password">
 
-                            @if (!ViewData.ModelState.IsValid)
-                            {
-                                <div>
-                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                                    {
-                                        <p class="text-danger">@error.ErrorMessage</p>
-                                    }
-                                </div>
-                            }
-                            else
-                            {
-                                <p>* Password must be 8-50 characters. *</p>
-                                <p>* Must include at least one special character. *</p>
-                                <p>* Must contain both uppercase and lowercase letters. *</p>
-                            }
+                                @if (!ViewData.ModelState.IsValid)
+                                {
+                                    <div>
+                                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                        {
+                                            <p class="text-danger">@error.ErrorMessage</p>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>* Password must be 8-50 characters. *</p>
+                                    <p>* Must include at least one special character. *</p>
+                                    <p>* Must contain both uppercase and lowercase letters. *</p>
+                                }
 
                             </div>
-
-                            
 
                             <div><p class="text-danger" id="error-text"></p></div>
 
@@ -82,8 +76,11 @@
                             <p>Already have an account? <a asp-controller="Auth" asp-action="Login" class="login-link"><u>login</u></a></p>
                         
                         </div>
+
                     </form>
+                    
             </div>
+
         </div>
 
 </div>
