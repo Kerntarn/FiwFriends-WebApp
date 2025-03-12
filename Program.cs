@@ -57,7 +57,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true; // Reset expiration on activity
         options.LoginPath = "/Auth/Login"; // Redirect to login if not authenticated
         options.LogoutPath = "/Auth/Logout";
-        options.AccessDeniedPath = "/Home/AccessDenied";
+        options.AccessDeniedPath = "/Auth/Login";
     });
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -86,9 +86,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
-
-app.UseCors();
 
 app.UseSession(); 
 app.UseAuthentication();
