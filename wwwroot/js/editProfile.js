@@ -4,13 +4,6 @@ async function updateUser() {
     formData.append("FirstName", document.getElementById("firstName")?.value || "");
     formData.append("LastName", document.getElementById("lastName")?.value || "");
     formData.append("Contact", document.getElementById("contact")?.value || "");
-    formData.append("Bio", "");
-    formData.append("NewPassword", "");
-    formData.append("ConfirmPassword", "");
-
-    for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-    }
 
     try {
         const response = await fetch("/user/edit", {

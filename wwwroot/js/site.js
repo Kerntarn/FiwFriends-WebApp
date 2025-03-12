@@ -1,13 +1,4 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
-// function login() {
-//         document.getElementById("login-text").textContent="incorrect username or password"
-// }
-
-function strcmp(a, b)
+﻿function strcmp(a, b)
 {   
     return (a<b?-1:(a>b?1:0));  
 }
@@ -23,7 +14,6 @@ function signup() {
         else {
                 document.getElementById("error-text").textContent = "unmatch password"
         }
-
 }
 
 document.querySelectorAll(".tag-select").forEach(button => {
@@ -43,20 +33,17 @@ document.querySelectorAll(".tag-select").forEach(button => {
 
 function addQuestion(button) {
     let wrapper = document.getElementById("question-wrapper");
-    let count = wrapper.getElementsByClassName("question-container").length; // นับจำนวนคำถามที่มีอยู่
+    let count = wrapper.getElementsByClassName("question-container").length;
 
-    // เปลี่ยนปุ่ม + เป็นปุ่ม -
-    // button.innerText = "-";
     button.setAttribute('onclick', 'addQuestion(this)');
 
-    // สร้างกล่อง input ใหม่
     const container = document.createElement("div");
     container.classList.add("question-container");
 
     const input = document.createElement("input");
     input.type = "text";
     input.classList.add("question-input");
-    input.name = `Questions[${count}].Content`; // ตั้งค่า name ตาม index
+    input.name = `Questions[${count}].Content`;
     input.required = true;
 
     const newButton = document.createElement("button");
@@ -68,14 +55,12 @@ function addQuestion(button) {
     container.appendChild(input);
     container.appendChild(newButton);
 
-    // เพิ่มกล่องใหม่ลงใน wrapper
     wrapper.appendChild(container);
 }
 
 function removeQuestion(button) {
-    button.parentElement.remove(); // ลบ element ที่เป็น parent ของปุ่มออก
+    button.parentElement.remove();
 
-    // อัปเดต name ของ input ใหม่หลังจากลบ
     let inputs = document.querySelectorAll("#question-wrapper .question-input");
     inputs.forEach((input, index) => {
         input.name = `Questions[${index}].Content`;
@@ -86,18 +71,16 @@ function showToast(message) {
     var toast = document.getElementById("toast");
     var toastMessage = document.getElementById("toast-message");
 
-    toastMessage.textContent = message; // ใส่ข้อความ
+    toastMessage.textContent = message;
     toast.classList.remove("hide");
     toast.classList.add("show");
 
-    // ซ่อน Toast หลังจาก 3 วินาที
     setTimeout(function () {
         toast.classList.remove("show");
         toast.classList.add("hide");
     }, 3000);
 }
 
-// เรียกใช้งานเมื่อ DOM โหลดเสร็จ
 document.addEventListener("DOMContentLoaded", function () {
     var toastElement = document.getElementById("toast");
     if (toastElement && toastElement.dataset.message) {
