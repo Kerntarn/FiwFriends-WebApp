@@ -1,12 +1,12 @@
 @model FiwFriends.Models.User
-@{  //Razor view of home's index
-    ViewData["Title"] = "Edit Page";
+@{  
+        ViewData["Title"] = "Edit Page";
 }
 
 @section Scripts {
-  <script src="~/js/editProfile.js"></script>
-  <script src="~/js/cropImage.js" defer></script>
-  <script src="~/js/changePassword.js" defer></script>
+        <script src="~/js/editProfile.js"></script>
+        <script src="~/js/cropImage.js" defer></script>
+        <script src="~/js/changePassword.js" defer></script>
 }
 
 @section Styles {
@@ -26,6 +26,7 @@
                         <div class="edit-header">
                                 Edit user profile
                         </div>
+
                         <div class="card-body pb-20">
 
                                 <div class="flex-row">
@@ -54,15 +55,12 @@
                                                 Upload profile picture
                                         </label>
                                         <input class="imgField" type="file" id="profilePicInput" accept="image/*">
-                                
-                                        
-
                                 </div>
 
                                 <div class="save-container">
-                                        @* <a class="btn white" asp-controller="Post" asp-action="">back</a> *@
                                         <button type="button" class="btn" onclick="updateUser()">save change</button>
                                 </div>
+
                         </div>
                             
                 </div>
@@ -71,6 +69,7 @@
                         <div class="edit-header">
                                 Change password
                         </div>
+
                         <div class="card-body pb-20">
                                 <div class="profile-input">
                                         <p class="algn-start login-p w-auto">Old password</p>
@@ -91,9 +90,9 @@
                                 </div>
 
                                 <div class="save-container">
-                                        @* <a class="btn white" asp-controller="Post" asp-action="">back</a> *@
                                         <button type="button" class="btn" onclick="changePassword()">change password</button>
                                 </div>
+
                         </div>
                             
                 </div>
