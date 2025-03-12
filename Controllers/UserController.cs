@@ -136,18 +136,26 @@ namespace FiwFriends.Controllers
             await _uFormStatus.Update();
             var user = await _currentUserService.GetCurrentUser();           
             var allPosts = await _db.Forms
-                                    .Where(f => f.UserId == user.Id && f.Post != null)
+                                    .Where(f => f.UserId == user.Id && f.Post != null && f.Status != FormStatus.Approved)
                                     .Select(f => new UserPostStatusViewModel{
                                         Activity = f.Post.Activity,
                                         PostID = f.Post.PostId.ToString(),
                                         Owner = f.Post.Owner.UserName ?? "",
-                                        AppointmentTime = f.Post.AppointmentTime,
-                                        Status = f.Status == FormStatus.Approved ? "Joined" : f.Status.ToString()
+                                        AppointmentTime = f.Post.AppointmentTime.ToLocalTime(),
+                                        Status = f.Status.ToString()
                                     })
-                                    .OrderBy(f => f.AppointmentTime)
                                     .ToListAsync();
-
-            return View(allPosts);
+            allPosts.AddRange(await _db.Joins
+                                    .Where(j => j.UserId == user.Id)
+                                    .Select(j => new UserPostStatusViewModel{
+                                        Activity = j.Post.Activity,
+                                        PostID = j.Post.PostId.ToString(),
+                                        Owner = j.Post.Owner.UserName ?? "",
+                                        AppointmentTime = j.Post.AppointmentTime.ToLocalTime(),
+                                        Status = "Joined"
+                                    })
+                                    .ToListAsync());
+            return View(allPosts.OrderBy(f => f.AppointmentTime));
         }
 
         [HttpGet("Pending")]
