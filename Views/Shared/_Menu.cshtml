@@ -4,10 +4,9 @@
 @{
     var user = await UserManager.GetUserAsync(User);
 
-    // เช็คว่ามีรูปไหม ถ้ามีให้แปลงเป็น Base64 URL
     string profilePicUrl = user?.ProfilePic != null
         ? $"data:image/png;base64,{Convert.ToBase64String(user.ProfilePic)}"
-        : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg"; // ถ้าไม่มีรูป ใช้รูป default
+        : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg";
 }
 
 
@@ -79,7 +78,9 @@
                                 </div>
                                 
                         </button>
+
                 </form>
 
         </div>
+        
 </div>

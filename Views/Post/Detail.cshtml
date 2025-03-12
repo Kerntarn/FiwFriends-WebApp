@@ -4,11 +4,9 @@
 
 @{
     var owner = await UserManager.GetUserAsync(User);
-
-    // เช็คว่ามีรูปไหม ถ้ามีให้แปลงเป็น Base64 URL
     string profilePicUrl = owner?.ProfilePic != null
         ? $"data:image/png;base64,{Convert.ToBase64String(owner.ProfilePic)}"
-        : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg"; // ถ้าไม่มีรูป ใช้รูป default
+        : "https://ultrasabers.com/wp-content/uploads/2018/05/DarthVader.jpg";
 }
 
 @section Styles {
@@ -19,7 +17,7 @@
       <script src="~/js/favorite.js"></script>
 }
 
-@{  //Razor view of home's index
+@{
     ViewData["Title"] = "Detail Page";
 }
 
@@ -86,13 +84,12 @@
                                     </svg>
                                 <div >@Model.ParticipantsCount / @Model.Limit people</div>
                             </div>
-
                             
-                            <div>@foreach (var tag in Model.Tags)
-                                {
-                                    <div class="tag add-border">@await Html.PartialAsync("Tag/_"+@tag.Name)</div>
-                                }
-                            </div>
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <div class="tag add-border">@await Html.PartialAsync("Tag/_"+@tag.Name)</div>
+                            }
+
                             <div class="detail">@Model.Description</div>
 
                             <form asp-action="submit" asp-controller="Form">

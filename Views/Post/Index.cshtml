@@ -1,6 +1,6 @@
 @model IEnumerable<FiwFriends.Models.IndexPost>
 
-@{  //Razor view of home's index
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -78,9 +78,7 @@
                             @await Html.PartialAsync("Tag/_Other")
                     </button>
 
-
                 </div>
-
 
 
                 <div class="category">
@@ -107,8 +105,6 @@
                                         </svg>
                                     </button>
 
-                                    
-
                                 </div>
 
                                 <div style="display: flex; align-items: center; gap: 4px;">
@@ -133,14 +129,11 @@
                                     <div >@post.ParticipantsCount / @post.Limit people</div>
                                 </div>
 
+                                    @foreach (var tag in post.Tags)
+                                    {
+                                        <div class="tag add-border">@await Html.PartialAsync("Tag/_"+@tag.Name)</div>
+                                    }
 
-                                <div>
-                                    <div>@foreach (var tag in post.Tags)
-                                        {
-                                            <div class="tag add-border">@await Html.PartialAsync("Tag/_"+@tag.Name)</div>
-                                        }
-                                    </div>
-                                </div>
                                 <div class="detail">
                                     @post.Description
                                 </div>
@@ -149,7 +142,6 @@
                         </div>
                     }
 
-                    
                 </div>
 
             </div>

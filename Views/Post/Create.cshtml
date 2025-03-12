@@ -1,6 +1,6 @@
 @model FiwFriends.DTOs.PostDTO
 
-@{  //Razor view of home's index
+@{
     ViewData["Title"] = "Create Page";
 }
 
@@ -13,7 +13,6 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=@ViewData["API_KEY"]&libraries=places&callback=initMap&loading=async"></script>
     <script src="~/js/location.js"></script>
 }
-
 
 <div class="main">
 
@@ -45,15 +44,15 @@
                                     <p class="algn-start login-p">Tag</p>
                                     <span asp-validation-for="Tags" class="error-text"></span>
 
-                                        <div class="tag-container">
-                                            <button type="button" class="tag-select" data-tag="Food" >@await Html.PartialAsync("Tag/_Food")</button>
-                                            <button type="button" class="tag-select" data-tag="Gaming" >@await Html.PartialAsync("Tag/_Gaming")</button>
-                                            <button type="button" class="tag-select" data-tag="Gym" >@await Html.PartialAsync("Tag/_Gym")</button>
-                                            <button type="button" class="tag-select" data-tag="Studying" >@await Html.PartialAsync("Tag/_Studying")</button>
-                                            <button type="button" class="tag-select" data-tag="Sports" >@await Html.PartialAsync("Tag/_Sports")</button>
-                                            <button type="button" class="tag-select" data-tag="Relaxing">@await Html.PartialAsync("Tag/_Relaxing")</button>
-                                            <button type="button" class="tag-select" data-tag="Other" >@await Html.PartialAsync("Tag/_Other")</button>
-                                        </div>
+                                    <div class="tag-container">
+                                        <button type="button" class="tag-select" data-tag="Food" >@await Html.PartialAsync("Tag/_Food")</button>
+                                        <button type="button" class="tag-select" data-tag="Gaming" >@await Html.PartialAsync("Tag/_Gaming")</button>
+                                        <button type="button" class="tag-select" data-tag="Gym" >@await Html.PartialAsync("Tag/_Gym")</button>
+                                        <button type="button" class="tag-select" data-tag="Studying" >@await Html.PartialAsync("Tag/_Studying")</button>
+                                        <button type="button" class="tag-select" data-tag="Sports" >@await Html.PartialAsync("Tag/_Sports")</button>
+                                        <button type="button" class="tag-select" data-tag="Relaxing">@await Html.PartialAsync("Tag/_Relaxing")</button>
+                                        <button type="button" class="tag-select" data-tag="Other" >@await Html.PartialAsync("Tag/_Other")</button>
+                                    </div>
 
                                     <input type="hidden" id="tagInput" />
                                 </div>
@@ -70,7 +69,7 @@
                                 </div>
                                 
                                 <div class="time-container" style="display: flex; gap: 20px;">
-                                    <!-- Appointment Time -->
+
                                     <div style="flex: 1;">
                                         <label style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000">
@@ -82,7 +81,6 @@
                                         <span asp-validation-for="AppointmentTime" class="text-danger"></span>
                                     </div>
 
-                                    <!-- Due Date -->
                                     <div style="flex: 1;">
                                         <label style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000">
@@ -93,22 +91,23 @@
                                         <input class="inp" type="datetime-local" asp-for="ExpiredTime">
                                         <span asp-validation-for="ExpiredTime" class="text-danger"></span>
                                     </div>
-                                </div>
 
+                                </div>
 
                                 <div class="mh-40">
                                     <div style="display: flex; align-items: center; gap: 2px; margin-top: 10px;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
-                                    <path d="M480-80Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880h20q10 0 20 2v81q-10-2-19.5-2.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186q122-112 181-203.5T720-552v-8h80v8q0 100-79.5 217.5T480-80Zm0-400q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0-80Zm240-80h80v-120h120v-80H800v-120h-80v120H600v80h120v120Z"/>
-                                    </svg>
-                                
-                                    <p class="algn-start login-p">Location</p>
-                                    <span asp-validation-for="Location" class="text-danger"></span>
-                                </div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
+                                        <path d="M480-80Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880h20q10 0 20 2v81q-10-2-19.5-2.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186q122-112 181-203.5T720-552v-8h80v8q0 100-79.5 217.5T480-80Zm0-400q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0-80Zm240-80h80v-120h120v-80H800v-120h-80v120H600v80h120v120Z"/>
+                                        </svg>
+                                        <p class="algn-start login-p">Location</p>
+                                        <span asp-validation-for="Location" class="text-danger"></span>
+                                    </div>
+
                                     <div class="location-container">
                                         <input class="location-input" id="locationInput" type="text" asp-for="Location" name="location" maxlength="1000" placeholder="เลือกสถานที่..." autocomplete="off">
                                         <button type="button" class="location-btn" onclick="useCurrentLocation()">ที่อยู่ปัจจุบัน</button>
                                     </div>
+                                    
                                     <div id="map" style="height: 300px; width: 100%;"></div>
                                 </div>
 
